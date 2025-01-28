@@ -37,7 +37,7 @@ ADMIN_PORT = $(SERVICE_PORT)
 # use alternate TMPDIR as /tmp might be too small and not accessible on DSM >= 7.1.
 USE_ALTERNATE_TMPDIR = 1
 
-include ../../mk/spksrc.common.mk
+include ../../mk/spksrc.python.mk
 
 # [lxml]
 DEPENDS += cross/libxml2
@@ -46,12 +46,5 @@ ifeq ($(call version_lt, $(TC_GCC), 5.0),1)
 WHEELS_CFLAGS += [lxml] -std=c11
 endif
 
-# [numpy]
-ifeq ($(call version_gt, $(TC_GCC), 5.0),1)
-WHEELS += src/requirements-crossenv-numpy.txt
-endif
-
 # [Pillow]
 DEPENDS += cross/pillow
-
-include ../../mk/spksrc.python.mk
