@@ -57,6 +57,11 @@ endif
 # [numpy] <= 1.24.4 last working version with gcc-4.9
 ifeq ($(call version_le, $(TC_GCC), 5.0),1)
 WHEELS += src/requirements-crossenv-numpy-py311-gcc4.txt
+# workaround for compiler bug:
+# https://github.com/numpy/numpy/issues/13622
+ifeq ($(findstring $(ARCH),$(ARMv8_ARCHS)),$(ARCH))
+WHEELS_CFLAGS += [numpy] -O0
+endif
 # [numpy] >= 1.25.0 requires c++17
 else ifeq ($(call version_gt, $(TC_GCC), 5.0),1)
 ifeq ($(PYTHON_PACKAGE),python311)
