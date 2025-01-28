@@ -5,8 +5,8 @@
 ##
 
 # [numpy]
-#   - Require Cython in cross/python311 crossenv
-#   - Numpy 1.25.x require c++17
-#numpy==1.25.1
-#   - Temp. reverted to 1.24.x
-numpy==1.24.4
+#   - Require Cython in crossenv
+#   - Numpy >= 1.26.x requires:
+#           c++17, meson-python, scikit-build-core
+#   - Older version <= 1.25.x no longer supported
+numpy==2.2.2
