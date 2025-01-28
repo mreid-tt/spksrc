@@ -1,13 +1,6 @@
 # [lxml]
 # Depends: libxml2, libxslt
 lxml==4.9.4
-
-# [numpy]
-#   - Require Cython in crossenv
-#   - Numpy >= 1.26.x requires:
-#           c++17, meson-python, scikit-build-core
-#   - Older version <= 1.25.x no longer supported
-numpy==2.2.2
-
+#numpy          => supported version depends on python and gcc versions
 #pillow         => cross/pillow
 webrtcvad-wheels==2.0.14
