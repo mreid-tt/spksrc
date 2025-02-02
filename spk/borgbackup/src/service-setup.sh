@@ -9,4 +9,3 @@ service_postinst ()
     # Install the wheels
     install_python_wheels
 }
-

@@ -41,6 +41,7 @@ SPK_USR_LOCAL_LINKS = bin:env/bin/borg bin:env/bin/borgmatic bin:env/bin/emborg
 
 include ../../mk/spksrc.common.mk
 
+# [borgbackup]
 # Use OpenSSL path as defined by either
 # spksrc.wheel-env.mk or spksrc.python.mk
 ENV += BORG_OPENSSL_PREFIX="$(OPENSSL_STAGING_PREFIX)"
@@ -51,6 +52,21 @@ ENV += BORG_LIBXXHASH_PREFIX="$(STAGING_INSTALL_PREFIX)"
 ENV += BORG_LIBZSTD_PREFIX="$(STAGING_INSTALL_PREFIX)"
 ifeq ($(call version_lt, $(TC_GCC), 5.0),1)
 WHEELS_CFLAGS += [borgbackup] -std=c11
+endif
+
+# [llfuse]
+ifeq ($(call version_lt, $(TC_GCC), 5.0),1)
+WHEELS_CFLAGS += [llfuse] -std=c11
+endif
+
+# [msgpack]
+ifeq ($(call version_lt, $(TC_GCC), 5.0),1)
+WHEELS_CFLAGS += [msgpack] -std=c11
+endif
+
+# [ruamel.yaml.clib]
+ifeq ($(call version_lt, $(TC_GCC), 5.0),1)
+WHEELS_CFLAGS += [ruamel.yaml.clib] -std=c11
 endif
 
 include ../../mk/spksrc.python.mk
