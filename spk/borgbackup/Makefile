@@ -5,9 +5,9 @@ SPK_ICON = src/borgbackup.png
 
 PYTHON_PACKAGE = python312
 SPK_DEPENDS = "python312"
-UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS) $(ARMv5_ARCHS)
+UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS) $(ARMv5_ARCHS) $(ARMv7L_ARCHS)
 
-DEPENDS = cross/attr cross/acl cross/openssl3 cross/lz4 cross/zstd cross/libb2 cross/fuse cross/xxhash
+DEPENDS = cross/attr cross/acl cross/openssl3 cross/lz4 cross/libb2 cross/fuse cross/xxhash cross/zstd
 
 # Requirements file generation
 # - first create borgbackup wheel defined in src/requirements-crossenv.txt
@@ -39,19 +39,18 @@ SERVICE_SETUP = src/service-setup.sh
 
 SPK_USR_LOCAL_LINKS = bin:env/bin/borg bin:env/bin/borgmatic bin:env/bin/emborg
 
+include ../../mk/spksrc.common.mk
+
 # Use OpenSSL path as defined by either
 # spksrc.wheel-env.mk or spksrc.python.mk
 ENV += BORG_OPENSSL_PREFIX="$(OPENSSL_STAGING_PREFIX)"
-ENV += BORG_LIBLZ4_PREFIX="$(STAGING_INSTALL_PREFIX)"
-ENV += BORG_LIBZSTD_PREFIX="$(STAGING_INSTALL_PREFIX)"
-ENV += BORG_LIBB2_PREFIX="$(STAGING_INSTALL_PREFIX)"
-ENV += BORG_LIBXXHASH_PREFIX="$(STAGING_INSTALL_PREFIX)"
 ENV += BORG_LIBACL_PREFIX="$(STAGING_INSTALL_PREFIX)"
-
-include ../../mk/spksrc.common.mk
-
-# [rpds-py]
-# Requires path to maturin from crossenv
-ENV += PATH=$(WORK_DIR)/crossenv/build/bin:$(PATH)
+ENV += BORG_LIBB2_PREFIX="$(STAGING_INSTALL_PREFIX)"
+ENV += BORG_LIBLZ4_PREFIX="$(STAGING_INSTALL_PREFIX)"
+ENV += BORG_LIBXXHASH_PREFIX="$(STAGING_INSTALL_PREFIX)"
+ENV += BORG_LIBZSTD_PREFIX="$(STAGING_INSTALL_PREFIX)"
+ifeq ($(call version_lt, $(TC_GCC), 5.0),1)
+WHEELS_CFLAGS += [borgbackup] -std=c11
+endif
 
 include ../../mk/spksrc.python.mk

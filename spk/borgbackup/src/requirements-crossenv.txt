@@ -4,5 +4,5 @@ borgbackup==1.4.0
 charset-normalizer==3.4.1
 llfuse==1.5.1
 msgpack==1.1.0
-rpds-py==0.22.3
+rpds-py==0.22.3                         # Version >= 0.22.3 requires rustc >= 1.80
 ruamel.yaml.clib==0.2.12
