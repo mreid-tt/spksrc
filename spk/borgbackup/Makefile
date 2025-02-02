@@ -1,11 +1,11 @@
 SPK_NAME = borgbackup
 SPK_VERS = 1.4.0
-SPK_REV = 15
+SPK_REV = 16
 SPK_ICON = src/borgbackup.png
 
-PYTHON_PACKAGE = python311
-SPK_DEPENDS = "python311>=3.11.5-8"
-UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS)
+PYTHON_PACKAGE = python312
+SPK_DEPENDS = "python312"
+UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS) $(ARMv5_ARCHS)
 
 DEPENDS = cross/attr cross/acl cross/openssl3 cross/lz4 cross/zstd cross/libb2 cross/fuse cross/xxhash
 
@@ -30,7 +30,7 @@ DESCRIPTION = BorgBackup \(short: Borg\) is a deduplicating backup program. Opti
 
 DISPLAY_NAME = Borg
 STARTABLE = no
-CHANGELOG = "1. Update borgmatic to v1.9.5. <br/>2. Update emborg to v1.41."
+CHANGELOG = "1. Update borgmatic to v1.9.8. <br/>2. Update emborg to v1.41. <br/>3. Migrate to Python 3.12."
 
 HOMEPAGE = https://borgbackup.readthedocs.io
 LICENSE  = 3-Clause BSD
