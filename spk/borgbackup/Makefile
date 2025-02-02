@@ -4,7 +4,7 @@ SPK_REV = 16
 SPK_ICON = src/borgbackup.png
 
 PYTHON_PACKAGE = python312
-SPK_DEPENDS = "python312"
+SPK_DEPENDS = "$(PYTHON_PACKAGE)"
 UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS) $(ARMv5_ARCHS) $(ARMv7L_ARCHS)
 
 DEPENDS = cross/attr cross/acl cross/openssl3 cross/lz4 cross/libb2 cross/fuse cross/xxhash cross/zstd
@@ -39,7 +39,7 @@ SERVICE_SETUP = src/service-setup.sh
 
 SPK_USR_LOCAL_LINKS = bin:env/bin/borg bin:env/bin/borgmatic bin:env/bin/emborg
 
-include ../../mk/spksrc.common.mk
+include ../../mk/spksrc.python.mk
 
 # [borgbackup]
 # Use OpenSSL path as defined by either
@@ -68,5 +68,3 @@ endif
 ifeq ($(call version_lt, $(TC_GCC), 5.0),1)
 WHEELS_CFLAGS += [ruamel.yaml.clib] -std=c11
 endif
-
-include ../../mk/spksrc.python.mk
