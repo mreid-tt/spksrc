@@ -37,38 +37,6 @@ include ../../mk/spksrc.python.mk
 # [cryptography]
 DEPENDS += cross/cryptography
 
-# [duplicity]
-ifeq ($(findstring $(ARCH),$(ARMv7_ARCHS)),$(ARCH))
-WHEELS_CFLAGS += [duplicity] -D__NO_FLOAT128
-WHEELS_CFLAGS += [duplicity] -DNO_FLOAT128
-WHEELS_CFLAGS += [duplicity] -D__NO_FLOAT64X
-WHEELS_CFLAGS += [duplicity] -DNO_FLOAT64X
-WHEELS_CFLAGS += [duplicity] -U_Float128
-WHEELS_CFLAGS += [duplicity] -U_Float64x
-WHEELS_CFLAGS += [duplicity] -march=armv7-a
-WHEELS_CFLAGS += [duplicity] -U_Float128
-WHEELS_CFLAGS += [duplicity] -mfloat-abi=hard
-ifeq ($(findstring $(ARCH),comcerto2k),$(ARCH))
-WHEELS_CFLAGS += [duplicity] -mfpu=neon
-else
-WHEELS_CFLAGS += [duplicity] -mfpu=vfpv3-d16
-endif
-else ifeq ($(findstring $(ARCH),$(ARMv8_ARCHS) qoriq),$(ARCH))
-WHEELS_CFLAGS += [duplicity] -D__NO_FLOAT128
-WHEELS_CFLAGS += [duplicity] -DNO_FLOAT128
-WHEELS_CFLAGS += [duplicity] -D__NO_FLOAT64X
-WHEELS_CFLAGS += [duplicity] -DNO_FLOAT64X
-WHEELS_CFLAGS += [duplicity] -U_Float128
-WHEELS_CFLAGS += [duplicity] -U_Float64x
-ifeq ($(findstring $(ARCH),qoriq),$(ARCH))
-WHEELS_CFLAGS += [duplicity] -mcpu=e500v2
-WHEELS_CFLAGS += [duplicity] -mfloat-gprs=double
-else
-WHEELS_CFLAGS += [duplicity] -march=armv8-a+simd
-WHEELS_CFLAGS += [duplicity] -mabi=lp64
-endif
-endif
-
 # [lxml]
 DEPENDS += cross/libxml2
 DEPENDS += cross/libxslt
