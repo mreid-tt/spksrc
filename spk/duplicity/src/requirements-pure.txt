@@ -1,4 +1,4 @@
-# Generated using the requirements script on February 11, 2025
+# Generated using the requirements script on February 15, 2025
 
 annotated_types==0.7.0
 argparse==1.4.0
@@ -8,8 +8,8 @@ azure_core==1.32.0
 azure_storage_blob==12.24.1
 b2sdk==2.8.0
 babel==2.17.0
-boto3==1.36.18
-botocore==1.36.18
+boto3==1.36.21
+botocore==1.36.21
 boxsdk==3.13.0
 cachetools==5.5.1
 #certifi                            ==> python312
@@ -21,13 +21,13 @@ ecdsa==0.19.0
 fasteners==0.19
 gdata_python3==3.0.1
 google_api_core==2.24.1
-google_api_python_client==2.160.0
-googleapis_common_protos==1.66.0
+google_api_python_client==2.161.0
+googleapis_common_protos==1.67.0
 google_auth==2.38.0
 google_auth_httplib2==0.2.0
 google_auth_oauthlib==1.2.1
 httplib2==0.22.0
-humanize==4.11.0
+humanize==4.12.0
 idna==3.10
 ip_associations_python_novaclient_ext==0.2
 iso8601==2.1.0

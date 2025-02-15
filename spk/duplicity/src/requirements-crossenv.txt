@@ -1,17 +1,17 @@
-# Generated using the requirements script on February 11, 2025
+# Generated using the requirements script on February 15, 2025
 
 atom==0.10.5
 bcrypt==4.2.1
 cffi==1.17.1
 charset_normalizer==3.4.1
 #cryptography                       ==> cross/cryptography
-duplicity==3.0.3.2
+duplicity==3.0.4.0
 lxml==5.3.1
 msgpack_python==0.5.6
 netifaces==0.11.0
 protobuf==5.29.3
-psutil==6.1.1
+psutil==7.0.0
 PyNaCl==1.5.0
 PyYAML==6.0.2
-simplejson==3.19.3
+simplejson==3.20.1
 wrapt==1.17.2
