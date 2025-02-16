@@ -118,8 +118,12 @@ cross-compile-wheel-%:
 	   exit 2 ; \
 	fi ; \
 	if [ "$(PIP_GLOBAL_OPTION)" ]; then \
-	   pip_global_option=$$(echo $(PIP_GLOBAL_OPTION) | sed 's/=\([^ ]*\)/="\1"/g; s/[^ ]*/--global-option=&/g') ; \
-	   pip_global_option=$${pip_global_option}" --no-use-pep517" ; \
+	   if echo "$(PIP_GLOBAL_OPTION)" | grep -q -- "--config-settings"; then \
+	      pip_global_option=$$(echo $(PIP_GLOBAL_OPTION) | sed 's/--config-settings=\([^ ]*\)/\1/g; s/=\([^ ]*\)/="\1"/g; s/[^ ]*/--config-settings=&/g') ; \
+	   else \
+	      pip_global_option=$$(echo $(PIP_GLOBAL_OPTION) | sed 's/=\([^ ]*\)/="\1"/g; s/[^ ]*/--global-option=&/g') ; \
+	      pip_global_option=$${pip_global_option}" --no-use-pep517" ; \
+	   fi ; \
 	fi ; \
 	$(MSG) \
 	   _PYTHON_HOST_PLATFORM=\"$(TC_TARGET)\" \

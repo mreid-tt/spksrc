@@ -34,6 +34,12 @@ SPK_USR_LOCAL_LINKS += bin:bin/duply
 
 include ../../mk/spksrc.python.mk
 
+# [duplicity]
+ifeq ($(findstring $(ARCH),$(ARMv7_ARCHS) $(ARMv8_ARCHS) qoriq),$(ARCH))
+WHEELS_BUILD_ARGS = [duplicity]
+WHEELS_BUILD_ARGS += --config-settings=setup-args="-Dimplicit_include_directories=false"
+endif
+
 # [cryptography]
 DEPENDS += cross/cryptography
 
