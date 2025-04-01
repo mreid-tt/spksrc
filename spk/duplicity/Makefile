@@ -53,5 +53,5 @@ include ../../mk/spksrc.python.mk
 
 # [duplicity]
 ifeq ($(call version_ge, $(TC_GCC), 4.9)$(call version_lt, $(TC_GCC), 5.0),11)
-WHEELS_CFLAGS += [duplicity] -DNO_FLOAT128 -D__NO_FLOAT128__ -D__HAVE_FLOAT128=0
+WHEELS_CFLAGS += [duplicity] -DNO_FLOAT128 -D__NO_FLOAT128__ -march=armv8-a
 endif
