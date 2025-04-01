@@ -53,5 +53,5 @@ include ../../mk/spksrc.python.mk
 
 # [duplicity]
 ifeq ($(call version_ge, $(TC_GCC), 4.9)$(call version_lt, $(TC_GCC), 5.0),11)
-WHEELS_CFLAGS += [duplicity] -DNO_FLOAT128 -D__NO_FLOAT128__ -D__HAVE_FLOAT128=0 -nostdinc -isystem /github/workspace/toolchain/syno-aarch64-6.2.4/work/aarch64-unknown-linux-gnueabi/aarch64-unknown-linux-gnueabi/sysroot/usr/include
+WHEELS_CFLAGS += [duplicity] -DNO_FLOAT128 -D__NO_FLOAT128__ -D__HAVE_FLOAT128=0 -nostdinc -isystem /github/workspace/toolchain/syno-aarch64-6.2.4/work/aarch64-unknown-linux-gnueabi/aarch64-unknown-linux-gnueabi/sysroot/usr/include -isystem /github/workspace/toolchain/syno-aarch64-6.2.4/work/aarch64-unknown-linux-gnueabi/lib/gcc/aarch64-unknown-linux-gnueabi/10.3.0/include -isystem /github/workspace/toolchain/syno-aarch64-6.2.4/work/aarch64-unknown-linux-gnueabi/lib/gcc/aarch64-unknown-linux-gnueabi/10.3.0/include-fixed
 endif
