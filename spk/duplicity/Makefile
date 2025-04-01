@@ -53,5 +53,5 @@ include ../../mk/spksrc.python.mk
 
 # [duplicity]
 ifeq ($(call version_ge, $(TC_GCC), 4.9)$(call version_lt, $(TC_GCC), 5.0),11)
-WHEELS_CFLAGS += [duplicity] -std=gnu11
+WHEELS_CFLAGS += [duplicity] -DNO_FLOAT128
 endif
