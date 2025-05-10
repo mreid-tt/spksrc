@@ -36,6 +36,14 @@ POST_STRIP_TARGET = python312_extra_install
 
 SPK_USR_LOCAL_LINKS = bin:bin/python3.12
 
+# ─── ensure cryptography’s Rust backend is available ───
+ifeq ($(WHEEL_NAME),cryptography)
+CROSSENV_BUILD_SETUPTOOLS  += setuptools-rust>=1.10.2
+CROSSENV_BUILD_WHEEL       += maturin<2,>=1
+CROSSENV_CROSS_SETUPTOOLS  += setuptools-rust>=1.10.2
+CROSSENV_CROSS_WHEEL       += maturin<2,>=1
+endif
+
 include ../../mk/spksrc.spk.mk
 
 .PHONY: python312_extra_install
