@@ -1,7 +1,7 @@
 # Ensure the new RustBin(env=…) API is supported…
-build:setuptools-rust>=1.10.2
-build:maturin<2,>=1
+build:setuptools-rust==1.10.2
+build:maturin==1.8.1
 
 # …and make sure they end up in the cross-env too
-cross:setuptools-rust>=1.10.2
-cross:maturin<2,>=1
+cross:setuptools-rust==1.10.2
+cross:maturin==1.8.1
