@@ -7,6 +7,8 @@ PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 
 DEPENDS =
 
+# Test trigger
+
 HOMEPAGE = https://sabnzbd.org
 COMMENT  = Usenet binary downloader
 LICENSE  = GPL
