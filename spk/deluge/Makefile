@@ -3,6 +3,8 @@ SPK_VERS = 2.1.1.136
 SPK_REV = 24
 SPK_ICON = src/deluge.png
 
+# Test trigger
+
 PYTHON_PACKAGE = python312
 SPK_DEPENDS = "python312"
 
