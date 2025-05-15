@@ -5,6 +5,8 @@ PKG_DIST_NAME = $(PKG_NAME)-$(PKG_VERS).$(PKG_EXT)
 PKG_DIST_SITE = https://download.gnome.org/sources/libxml2/$(word 1,$(subst ., ,$(PKG_VERS))).$(word 2,$(subst ., ,$(PKG_VERS)))
 PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 
+# test change
+
 DEPENDS = cross/zlib
 
 HOMEPAGE = https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home
