@@ -29,7 +29,8 @@ SPK_COMMANDS = env/bin/beet
 # aura, beatport, chroma, discogs, embedart, embyupdate, fetchart, kodiupdate, lastgenre, lastimport, lyrics, mpdstats, plexupdate, scrub, sonosupdate, thumbnails, web.
 
 # [lap]
-DEPENDS += python/lap
+## Disable until build error "pip-2.2.4: No such file or directory" is resolved
+## DEPENDS += python/lap
 
 # [lxml]
 DEPENDS += cross/libxml2
