@@ -28,9 +28,6 @@ SPK_COMMANDS = env/bin/beet
 # NOTE: Built with support for the following plugins:
 # aura, beatport, chroma, discogs, embedart, embyupdate, fetchart, kodiupdate, lastgenre, lastimport, lyrics, mpdstats, plexupdate, scrub, sonosupdate, thumbnails, web.
 
-# [lap]
-DEPENDS += python/lap
-
 # [lxml]
 DEPENDS += cross/libxml2
 DEPENDS += cross/libxslt
@@ -48,6 +45,9 @@ DEPENDS += python/numpy
 
 # [scipy] - depends on numpy
 DEPENDS += python/scipy
+
+# [lap] - depends on numpy
+DEPENDS += python/lap
 
 include ../../mk/spksrc.python.mk
 
