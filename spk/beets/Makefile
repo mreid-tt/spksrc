@@ -35,6 +35,9 @@ DEPENDS += cross/libxslt
 # [Pillow]
 DEPENDS += python/pillow
 
+# [pycairo]
+DEPENDS += python/pycairo
+
 # [PyYAML]
 DEPENDS += cross/libyaml
 
