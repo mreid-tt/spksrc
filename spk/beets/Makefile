@@ -12,7 +12,7 @@ UNSUPPORTED_ARCHS = comcerto2k $(OLD_PPC_ARCHS) $(ARMv5_ARCHS)
 WHEELS = src/requirements-crossenv.txt src/requirements-pure.txt
 
 MAINTAINER = ymartin59
-DESCRIPTION = "Beets is the media library management system for obsessive music geeks. The purpose of beets is to get your music collection right once and for all. It catalogs your collection, automatically improving its metadata as it goes. It then provides a bouquet of tools for manipulating and accessing your music. Plugins not available due to lacking dependencies: AutoBPM, BPD, MetaSync, ReplayGain."
+DESCRIPTION = "Beets is the media library management system for obsessive music geeks. The purpose of beets is to get your music collection right once and for all. It catalogs your collection, automatically improving its metadata as it goes. It then provides a bouquet of tools for manipulating and accessing your music. Plugins not available due to lacking dependencies: AutoBPM."
 
 DISPLAY_NAME = beets
 STARTABLE = no
@@ -46,22 +46,13 @@ DEPENDS += cross/libyaml
 # gcc-8.5 happens to be the default version for DSM-7.1
 DEPENDS += python/numpy
 
-# [scipy] - depends on numpy
-DEPENDS += python/scipy
-
 # [lap] - depends on numpy
 DEPENDS += python/lap
 
 include ../../mk/spksrc.python.mk
 
 # TODO: The following plugins are currently unsupported due to dependency issues:
-# autobpm, bpd, metasync, and replaygain.
+# bpd, metasync, and replaygain.
 
 # [dbus_python]
 #DEPENDS += cross/dbus					# expat not found!
-
-# [llvmlite]
-#DEPENDS += cross/llvm
-
-# [pycairo]
-#DEPENDS += cross/cairo					# Could not invoke sanity test executable
