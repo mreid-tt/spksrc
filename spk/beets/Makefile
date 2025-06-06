@@ -28,6 +28,9 @@ SPK_COMMANDS = env/bin/beet
 # NOTE: Built with support for the following plugins:
 # aura, beatport, chroma, discogs, embedart, embyupdate, fetchart, kodiupdate, lastgenre, lastimport, lyrics, mpdstats, plexupdate, scrub, sonosupdate, thumbnails, web.
 
+# [dbus-python]
+DEPENDS += python/dbus-python
+
 # [lxml]
 DEPENDS += cross/libxml2
 DEPENDS += cross/libxslt
@@ -50,9 +53,3 @@ DEPENDS += python/numpy
 DEPENDS += python/lap
 
 include ../../mk/spksrc.python.mk
-
-# TODO: The following plugins are currently unsupported due to dependency issues:
-# bpd, metasync, and replaygain.
-
-# [dbus_python]
-#DEPENDS += cross/dbus					# expat not found!
