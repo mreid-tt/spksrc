@@ -1,8 +1,8 @@
 PKG_NAME = Radarr
-PKG_VERS = 6.0.0.9944
+PKG_VERS = 6.0.0.10217
 PKG_EXT = tar.gz
-PKG_DIST_NAME = $(PKG_NAME).v6-develop.$(PKG_VERS).linux-core-$(PKG_DIST_ARCH).$(PKG_EXT)
-PKG_DIST_SITE = https://github.com/mreid-tt/spksrc/releases/download/radarr-dotnet-8
+PKG_DIST_NAME = $(PKG_NAME).develop.$(PKG_VERS).linux-core-$(PKG_DIST_ARCH).$(PKG_EXT)
+PKG_DIST_SITE = https://github.com/Radarr/Radarr/releases/download/v$(PKG_VERS)
 PKG_DIR = Radarr
 
 DEPENDS =
