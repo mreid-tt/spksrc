@@ -8,7 +8,7 @@ PKG_DIST_NAME = $(DIST_NAME).$(PKG_EXT)
 PKG_DIST_SITE = https://cdn.mysql.com/archives/$(PKG_REAL_NAME)-$(PKG_MAJOR_MINOR)
 PKG_DIR = $(DIST_NAME)
 
-BUILD_DEPENDS = 
+BUILD_DEPENDS = cross/boost
 
 HOMEPAGE = https://downloads.mysql.com/archives/community/
 COMMENT  = MySQL C API (libmysqlclient)
@@ -33,6 +33,8 @@ CMAKE_ARGS += -DINSTALL_INCLUDEDIR=include/mysql
 
 # MySQL client specific:
 CMAKE_ARGS += -DWITHOUT_SERVER=ON
+CMAKE_ARGS += -DHAVE_C_FLOATING_POINT_FUSED_MADD=0
+CMAKE_ARGS += -DHAVE_CXX_FLOATING_POINT_FUSED_MADD=0
 
 DEPENDS += cross/openssl
 CMAKE_ARGS += -DWITH_SSL=system
