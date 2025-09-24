@@ -21,7 +21,11 @@ LICENSE  = GNU GPLv2
 
 GNU_CONFIGURE = 1
 
-include ../../mk/spksrc.cross-cmake.mk
+ADDITIONAL_CXXFLAGS += -Os
+
+include ../../mk/spksrc.cross-cc.mk
+
+#include ../../mk/spksrc.cross-cmake.mk
 
 # Mandatory for build
 CMAKE_ARGS += -DHAVE_LLVM_LIBCPP_EXITCODE=1 
