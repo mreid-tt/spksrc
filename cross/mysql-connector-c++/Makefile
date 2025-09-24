@@ -14,19 +14,6 @@ LICENSE  = GNU GPLv2
 
 include ../../mk/spksrc.cross-cmake.mk
 
-# custom mysql socket addr (default is /tmp/mysql.sock)
-# on DSM 7 (only MariaDB 10 available)
-# /run/mysqld/mysqld10.sock  (links to /run/mysqld/mysqld.sock)
-# /run/mysqld/mysqld.sock
-# on DSM 6 with mariadb 5 and 10
-# /run/mysqld/mysqld.sock (MariaDB 5)
-# /run/mysqld/mysqld10.sock (MariaDB 10)
-ifeq ($(MYSQL_DB_SOCKET),)
-# default mysql socket for DSM
-MYSQL_DB_SOCKET = /run/mysqld/mysqld.sock
-endif
-CMAKE_ARGS += -DMYSQL_UNIX_ADDR=$(MYSQL_DB_SOCKET)
-
 # MySQL specific:
 CMAKE_ARGS += -DCMAKE_INSTALL_LIBDIR=lib
 # Fix for mariadb connector
