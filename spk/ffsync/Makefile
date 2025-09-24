@@ -3,7 +3,7 @@ SPK_VERS = 0.21.1
 SPK_REV = 9
 SPK_ICON = src/ffsync.png
 
-DEPENDS = cross/boost cross/syncstorage-rs cross/diesel
+DEPENDS = cross/boost_1.77 cross/syncstorage-rs cross/diesel
 
 PYTHON_PACKAGE = python312
 WHEELS = src/requirements-crossenv.txt src/requirements-pure.txt
