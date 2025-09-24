@@ -1,6 +1,6 @@
 PKG_NAME = libmysqlclient
 PKG_REAL_NAME = mysql
-PKG_VERS = 9.3.0
+PKG_VERS = 8.0.42
 PKG_EXT = tar.gz
 PKG_MAJOR_MINOR = $(word 1,$(subst ., ,$(PKG_VERS))).$(word 2,$(subst ., ,$(PKG_VERS)))
 DIST_NAME = $(PKG_REAL_NAME)-$(PKG_VERS)
