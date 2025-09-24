@@ -8,7 +8,12 @@ PKG_DIST_NAME = $(DIST_NAME).$(PKG_EXT)
 PKG_DIST_SITE = https://cdn.mysql.com/archives/$(PKG_REAL_NAME)-$(PKG_MAJOR_MINOR)
 PKG_DIR = $(DIST_NAME)
 
-DEPENDS = cross/boost
+REQUIRED_MIN_DSM = 7.1
+# comcerto2k has older toolchain than other DSM 7.1 archs
+UNSUPPORTED_ARCHS = comcerto2k
+
+# build cross/libicu before cross/boost to build libboost_regex with unicode support
+DEPENDS = cross/libicu cross/boost
 
 HOMEPAGE = https://downloads.mysql.com/archives/community/
 COMMENT  = MySQL C API (libmysqlclient)
