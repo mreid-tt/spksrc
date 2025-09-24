@@ -23,9 +23,9 @@ GNU_CONFIGURE = 1
 
 ADDITIONAL_CXXFLAGS += -Os
 
-include ../../mk/spksrc.cross-cc.mk
+#include ../../mk/spksrc.cross-cc.mk
 
-#include ../../mk/spksrc.cross-cmake.mk
+include ../../mk/spksrc.cross-cmake.mk
 
 # Mandatory for build
 CMAKE_ARGS += -DHAVE_LLVM_LIBCPP_EXITCODE=1 
