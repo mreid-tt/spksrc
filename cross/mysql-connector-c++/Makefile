@@ -9,7 +9,7 @@ PKG_DIR = $(DIST_NAME)
 BUILD_DEPENDS = 
 
 HOMEPAGE = https://downloads.mysql.com/archives/c-cpp/
-COMMENT  = MySQL C++ API (libmysqlclient) 
+COMMENT  = MySQL C++ API (libmysqlcppconnx) 
 LICENSE  = GNU GPLv2
 
 CMAKE_USE_NINJA = 1
@@ -48,6 +48,9 @@ DEPENDS += cross/openssl
 CMAKE_ARGS += -DWITH_SSL=system
 DEPENDS += cross/zlib
 CMAKE_ARGS += -DWITH_ZLIB=system
+
+# force install in /lib rather than /lib64 for x86_64
+CMAKE_ARGS += -DCMAKE_INSTALL_LIBDIR=lib
 
 # Use gcc builtin atomic functions for ppc architectures
 ifneq ($(findstring $(ARCH),$(PPC_ARCHS)),)

@@ -1,6 +1,3 @@
-bin:bin/my_print_defaults
-rsc:bin/mysql_config
-bin:bin/perror
-lnk:lib/libmysqlclient.so
-lnk:lib/libmysqlclient.so.18
-lib:lib/libmysqlclient.so.18.4.0
+lnk:lib/libmysqlcppconnx.so
+lnk:lib/libmysqlcppconnx.so.2
+lib:lib/libmysqlcppconnx.so.2.9.3.0
