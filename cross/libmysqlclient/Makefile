@@ -19,6 +19,8 @@ HOMEPAGE = https://downloads.mysql.com/archives/community/
 COMMENT  = MySQL C API (libmysqlclient)
 LICENSE  = GNU GPLv2
 
+GNU_CONFIGURE = 1
+
 include ../../mk/spksrc.cross-cmake.mk
 
 # Mandatory for build
