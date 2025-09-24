@@ -12,7 +12,6 @@ HOMEPAGE = https://downloads.mysql.com/archives/c-cpp/
 COMMENT  = MySQL C++ API (libmysqlclient) 
 LICENSE  = GNU GPLv2
 
-USE_NATIVE_CMAKE_LEGACY = 1
 CMAKE_USE_NINJA = 1
 
 include ../../mk/spksrc.cross-cmake.mk
