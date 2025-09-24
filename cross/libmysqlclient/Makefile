@@ -12,18 +12,9 @@ REQUIRED_MIN_DSM = 7.1
 # comcerto2k has older toolchain than other DSM 7.1 archs
 UNSUPPORTED_ARCHS = comcerto2k
 
-# build cross/libicu before cross/boost to build libboost_regex with unicode support
-DEPENDS = cross/libicu cross/boost
-
 HOMEPAGE = https://downloads.mysql.com/archives/community/
 COMMENT  = MySQL C API (libmysqlclient)
 LICENSE  = GNU GPLv2
-
-GNU_CONFIGURE = 1
-
-ADDITIONAL_CXXFLAGS += -Os
-
-#include ../../mk/spksrc.cross-cc.mk
 
 include ../../mk/spksrc.cross-cmake.mk
 

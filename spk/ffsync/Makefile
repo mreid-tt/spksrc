@@ -3,14 +3,15 @@ SPK_VERS = 0.21.1
 SPK_REV = 9
 SPK_ICON = src/ffsync.png
 
-DEPENDS = cross/syncstorage-rs cross/diesel
+DEPENDS = cross/boost cross/syncstorage-rs cross/diesel
 
 PYTHON_PACKAGE = python312
 WHEELS = src/requirements-crossenv.txt src/requirements-pure.txt
 
-UNSUPPORTED_ARCHS = $(ARMv5_ARCHS) $(PPC_ARCHS) $(ARMv7L_ARCHS)
+REQUIRED_MIN_DSM = 7.1
+# comcerto2k has older toolchain than other DSM 7.1 archs
+UNSUPPORTED_ARCHS = comcerto2k
 
-REQUIRED_MIN_DSM = 6.0
 SPK_DEPENDS = MariaDB10:$(PYTHON_PACKAGE)
 
 MAINTAINER = SynoCommunity
