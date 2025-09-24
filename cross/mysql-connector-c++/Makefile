@@ -9,10 +9,8 @@ PKG_DIR = $(DIST_NAME)
 BUILD_DEPENDS = 
 
 HOMEPAGE = https://downloads.mysql.com/archives/c-cpp/
-COMMENT  = MySQL C++ API (libmysqlcppconnx) 
+COMMENT  = MySQL C++ API (libmysqlcppconnx)
 LICENSE  = GNU GPLv2
-
-CMAKE_USE_NINJA = 1
 
 include ../../mk/spksrc.cross-cmake.mk
 
