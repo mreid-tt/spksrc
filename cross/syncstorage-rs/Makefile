@@ -1,5 +1,5 @@
 PKG_NAME = syncstorage-rs
-PKG_VERS = 0.20.1
+PKG_VERS = 0.21.1
 PKG_EXT = tar.gz
 PKG_DIST_NAME = $(PKG_NAME)-$(PKG_VERS).$(PKG_EXT)
 PKG_DIST_SITE = https://github.com/mozilla-services/$(PKG_NAME)/archive/${PKG_VERS}
@@ -8,7 +8,7 @@ PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 # for openssl-sys
 DEPENDS = cross/openssl3
 # for mysqlclient-sys
-DEPENDS += cross/mysql-connector-c
+DEPENDS += cross/mysql-connector-c++
 
 # powerpc archs are not supported
 UNSUPPORTED_ARCHS += $(PPC_ARCHS)
