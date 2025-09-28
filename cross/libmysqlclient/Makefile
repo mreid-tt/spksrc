@@ -62,7 +62,9 @@ CMAKE_ARGS += -DHAVE_CLOCK_REALTIME=0
 DEPENDS += cross/ncursesw
 CMAKE_ARGS += -DCURSES_LIBRARY=$(WORK_DIR)/ncurses-6.5/lib/libncursesw.so
 
-DEPENDS += cross/libevent
+# DEPENDS += cross/libevent
+CMAKE_ARGS += -DLIBEVENT_VERSION=2.1.11
+CMAKE_ARGS += -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY
 
 DEPENDS += cross/openssl
 CMAKE_ARGS += -DWITH_SSL=system
