@@ -4,7 +4,7 @@ SPK_REV = 10
 SPK_ICON = src/prowlarr.png
 
 OPTIONAL_DEPENDS = cross/libstdc++
-DEPENDS = cross/prowlarr
+DEPENDS = cross/prowlarr cross/libe_sqlite3
 
 # Arch exclusions for dotnet
 DOTNET_CORE_ARCHS = 1
@@ -30,7 +30,8 @@ ADMIN_PORT = $(SERVICE_PORT)
 
 WIZARDS_DIR = src/wizard/
 
-POST_STRIP_TARGET = prowlarr_extra_install
+POST_STRIP_TARGET = prowlarr_custom_libe_sqlite3
+POST_STRIP_TARGET += prowlarr_extra_install
 
 # use alternate TMPDIR as /tmp might be too small and not accessible on DSM >= 7.1.
 # TMPDIR is used for prowlarr built in backup and update
@@ -46,6 +47,11 @@ include ../../mk/spksrc.spk.mk
 
 PACKAGE_VERSION = $(SPK_NAME_ARCH)-$(SPK_TCVERS)_$(SPK_VERS)-$(SPK_REV)
 PACKAGE_AUTHOR = [Team Prowlarr](https://prowlarr.com)
+
+.PHONY: prowlarr_custom_libe_sqlite3
+prowlarr_custom_libe_sqlite3:
+	@$(MSG) "Replace libe_sqlite3 with version built for DSM"
+	mv -f $(STAGING_DIR)/lib/libe_sqlite3.so $(STAGING_DIR)/share/Prowlarr/bin/libe_sqlite3.so
 
 .PHONY: prowlarr_extra_install
 prowlarr_extra_install:
