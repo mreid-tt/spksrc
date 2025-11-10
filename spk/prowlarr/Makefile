@@ -1,6 +1,6 @@
 SPK_NAME = prowlarr
 SPK_VERS = $(shell date +%Y%m%d)
-SPK_REV = 10
+SPK_REV = 11
 SPK_ICON = src/prowlarr.png
 
 OPTIONAL_DEPENDS = cross/libstdc++ cross/libe_sqlite3
@@ -47,6 +47,8 @@ DEPENDS += cross/libe_sqlite3
 POST_STRIP_TARGET += prowlarr_custom_libe_sqlite3
 # Disable auto-update for DSM < 7.2
 PROWLARR_UPDATE = disabled
+else
+OS_MIN_VER = 7.2-63134
 endif
 
 POST_STRIP_TARGET += prowlarr_extra_install
