@@ -5,6 +5,11 @@ SVC_WRITE_PID=y
 WEB_DIR="/var/services/web_packages"
 WEB_ROOT="${WEB_DIR}/${SYNOPKG_PKGNAME}"
 
+NEXTCLOUD_VERSION="${SYNOPKG_PKGVER}"
+NEXTCLOUD_ARCHIVE="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2"
+NEXTCLOUD_URL="https://download.nextcloud.com/server/releases/${NEXTCLOUD_ARCHIVE}"
+NEXTCLOUD_SHA256="15ede19ad88ec724834dfad7fae306a72f932fd042f36b333fe2418155a937c5"
+
 if [ -z "${SYNOPKG_PKGTMP}" ]; then
     SYNOPKG_PKGTMP="${SYNOPKG_PKGDEST_VOL}/@tmp"
 fi
@@ -15,6 +20,35 @@ MYSQL="/usr/local/mariadb10/bin/mysql"
 MYSQLDUMP="/usr/local/mariadb10/bin/mysqldump"
 MYSQL_DATABASE="${SYNOPKG_PKGNAME}"
 MYSQL_USER="nc_${wizard_nextcloud_admin_username}"
+
+log() { echo "[nextcloud] $*"; }
+fatal() { log "ERROR: $*" >&2; exit 1; }
+
+download_nextcloud() {
+    TMP_ARCHIVE_DIR="${SYNOPKG_PKGTMP}/${SYNOPKG_PKGNAME}-archive"
+    ${MKDIR} "${TMP_ARCHIVE_DIR}"
+    ARCHIVE_PATH="${TMP_ARCHIVE_DIR}/${NEXTCLOUD_ARCHIVE}"
+
+    if [ ! -f "${ARCHIVE_PATH}" ]; then
+        log "Fetching ${NEXTCLOUD_URL}"
+        if ! curl -fL --connect-timeout 30 --retry 2 --retry-delay 5 -o "${ARCHIVE_PATH}.tmp" "${NEXTCLOUD_URL}"; then
+            ${RM} "${ARCHIVE_PATH}.tmp"
+            fatal "Download failed"
+        fi
+        if [ -n "${NEXTCLOUD_SHA256}" ]; then
+            echo "${NEXTCLOUD_SHA256}  ${ARCHIVE_PATH}.tmp" | sha256sum -c - >/dev/null 2>&1 || {
+                ${RM} "${ARCHIVE_PATH}.tmp"
+                fatal "Checksum verification failed"
+            }
+        fi
+        mv "${ARCHIVE_PATH}.tmp" "${ARCHIVE_PATH}"
+        chmod 600 "${ARCHIVE_PATH}"
+    fi
+
+    rm -rf "${WEB_ROOT}"
+    ${MKDIR} "${WEB_ROOT}"
+    tar -xjf "${ARCHIVE_PATH}" -C "${WEB_ROOT}" --strip-components 1 || fatal "Failed to extract Nextcloud"
+}
 
 exec_occ() {
     # Call Nextcloud's occ tool with consistent PHP options
@@ -158,6 +192,8 @@ validate_preinst() {
 
 service_postinst() {
     # Handle fresh install and optional restore once files are unpacked
+    download_nextcloud
+
     if [ "${SYNOPKG_PKG_STATUS}" = "INSTALL" ]; then
         DATA_DIR="${SHARE_PATH}/data"
         ${MKDIR} "${DATA_DIR}"
@@ -249,6 +285,7 @@ validate_preupgrade() {
 service_save ()
 {
     # Stash existing installation for the upgrade transaction
+    download_nextcloud
     exec_occ maintenance:mode --on
     ${RM} "${SYNOPKG_TEMP_UPGRADE_FOLDER}/${SYNOPKG_PKGNAME}"
     ${MKDIR} "${SYNOPKG_TEMP_UPGRADE_FOLDER}/${SYNOPKG_PKGNAME}"
@@ -258,6 +295,7 @@ service_save ()
 service_restore ()
 {
     # Restore config/themes and finish upgrade with maintenance routines
+    download_nextcloud
     rsync -aX -I "${SYNOPKG_TEMP_UPGRADE_FOLDER}/${SYNOPKG_PKGNAME}/config/" "${WEB_ROOT}/config/" 2>&1
     if [ -d "${SYNOPKG_TEMP_UPGRADE_FOLDER}/${SYNOPKG_PKGNAME}/themes" ]; then
         rsync -aX -I "${SYNOPKG_TEMP_UPGRADE_FOLDER}/${SYNOPKG_PKGNAME}/themes/" "${WEB_ROOT}/themes/" 2>&1
