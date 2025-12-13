@@ -1,0 +1,32 @@
+PKG_NAME = qt6-base
+PKG_VERS = 6.8.1
+PKG_EXT = tar.xz
+PKG_DIST_NAME = qtbase-everywhere-src-$(PKG_VERS).$(PKG_EXT)
+PKG_DIST_SITE = https://download.qt.io/official_releases/qt/6.8/$(PKG_VERS)/submodules
+PKG_DIR = qtbase-everywhere-src-$(PKG_VERS)
+
+HOMEPAGE = https://www.qt.io/
+COMMENT  = Qt 6 base host libraries and tools
+LICENSE  = GPL-3.0-or-later
+
+DEPENDS =
+
+CMAKE_SOURCE_DIR = $(WORK_DIR)/$(PKG_DIR)
+
+CMAKE_ARGS += -DQT_BUILD_TESTS=OFF
+CMAKE_ARGS += -DQT_BUILD_EXAMPLES=OFF
+CMAKE_ARGS += -DQT_BUILD_BENCHMARKS=OFF
+CMAKE_ARGS += -DQT_BUILD_TOOLS_BY_DEFAULT=ON
+CMAKE_ARGS += -DQT_FORCE_BUILD_TOOLS=ON
+CMAKE_ARGS += -DBUILD_WITH_PCH=OFF
+CMAKE_ARGS += -DBUILD_SHARED_LIBS=OFF
+CMAKE_ARGS += -DQT_FEATURE_gui=OFF
+CMAKE_ARGS += -DQT_FEATURE_widgets=OFF
+CMAKE_ARGS += -DQT_FEATURE_opengl=OFF
+CMAKE_ARGS += -DQT_FEATURE_sql_sqlite=ON
+CMAKE_ARGS += -DQT_FEATURE_dbus=ON
+CMAKE_ARGS += -DQT_FEATURE_icu=ON
+CMAKE_ARGS += -DQT_FEATURE_zstd=OFF
+CMAKE_ARGS += -DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)/qt6-host
+
+include ../../mk/spksrc.native-cmake.mk

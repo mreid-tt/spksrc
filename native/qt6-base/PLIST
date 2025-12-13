@@ -1,0 +1,12 @@
+@pkgdir qt6-host/bin
+@pkgdir qt6-host/lib
+@pkgdir qt6-host/lib/cmake
+@pkgdir qt6-host/libexec
+@pkgdir qt6-host/libexec/qt6
+@pkgdir qt6-host/libexec/qt6/Qt6HostInfo
+@pkgdir qt6-host/mkspecs
+@pkgdir qt6-host/mkspecs/common
+@pkgdir qt6-host/mkspecs/features
+@pkgdir qt6-host/mkspecs/features/data
+@pkgdir qt6-host/mkspecs/modules
+@pkgdir qt6-host/mkspecs/qdevice.pri
