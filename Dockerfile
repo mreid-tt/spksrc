@@ -97,6 +97,20 @@ RUN apt install --no-install-recommends -y \
 	python3-virtualenv \
 	python3-yaml
 
+# Qt6 host toolchain for cross-builds
+RUN apt install --no-install-recommends -y \
+	qt6-base-dev \
+	qt6-base-dev-tools \
+	qt6-tools-dev \
+	qt6-tools-dev-tools \
+	qt6-l10n-tools \
+	libdbus-1-dev \
+	libfontconfig1-dev \
+	libgl1-mesa-dev \
+	libicu-dev \
+	libxcb1-dev \
+	libxkbcommon-dev
+
 ###
 ### Keeping backport channel management for later use
 ###

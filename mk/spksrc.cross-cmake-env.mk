@@ -17,6 +17,16 @@ CMAKE_ARGS += -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
 # Set the default install prefix
 CMAKE_ARGS += -DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX)
 
+# Detect a host Qt6 installation (e.g. provided by Docker image) and expose it.
+ifneq ($(strip $(QT_HOST_PATH)),)
+  CMAKE_ARGS += -DQT_HOST_PATH=$(QT_HOST_PATH)
+else
+  QT_HOST_PATH_DETECTED := $(shell command -v qtpaths6 >/dev/null 2>&1 && qtpaths6 --install-prefix || echo)
+  ifneq ($(strip $(QT_HOST_PATH_DETECTED)),)
+    CMAKE_ARGS += -DQT_HOST_PATH=$(QT_HOST_PATH_DETECTED)
+  endif
+endif
+
 # DSM7 appdir
 ifeq ($(call version_ge, ${TCVERSION}, 7.0),1)
 CMAKE_ARGS += -DCMAKE_INSTALL_LOCALSTATEDIR=$(INSTALL_PREFIX_VAR)
