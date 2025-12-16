@@ -1,0 +1,6 @@
+{
+    "environment-variables": {
+        "type": "file",
+        "path": "/var/packages/seerr/var/.env"
+    }
+}

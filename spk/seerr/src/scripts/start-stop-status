@@ -1,0 +1,26 @@
+#!/bin/sh
+
+. /var/packages/seerr/scripts/service-setup
+
+case "$1" in
+    start)
+        start_daemon
+        ;;
+    stop)
+        stop_daemon
+        ;;
+    status)
+        if status_daemon; then
+            exit 0
+        else
+            exit 1
+        fi
+        ;;
+    reload)
+        exit 0
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|status|reload}"
+        exit 1
+        ;;
+esac
