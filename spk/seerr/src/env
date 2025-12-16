@@ -1,0 +1,8 @@
+# Seerr environment configuration
+NODE_ENV=production
+PORT=5055
+TZ=Etc/UTC
+LOG_LEVEL=info
+DATABASE_TYPE=sqlite
+DATABASE_URL=file:/var/packages/seerr/var/config/db/seerr.db
+BACKUP_PATH=/var/packages/seerr/var/backup
