@@ -1,6 +1,6 @@
 SPK_NAME = beets
-SPK_VERS = 2.3.1
-SPK_REV = 11
+SPK_VERS = 2.5.1
+SPK_REV = 12
 SPK_ICON = src/beets.png
 
 PYTHON_PACKAGE = python312
@@ -18,7 +18,7 @@ DESCRIPTION = Beets is the media library management system for obsessive music g
 
 DISPLAY_NAME = beets
 STARTABLE = no
-CHANGELOG = "1. Update beets to 2.3.1.<br/>2. Migrate to Python 3.12."
+CHANGELOG = "1. Update beets to 2.5.1."
 
 HOMEPAGE = http://beets.io/
 LICENSE  = GPL
