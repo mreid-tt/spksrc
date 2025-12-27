@@ -1,6 +1,6 @@
 SPK_NAME = gotify
-SPK_VERS = 2.1.4
-SPK_REV = 1
+SPK_VERS = 2.7.3
+SPK_REV = 2
 SPK_ICON = src/gotify.png
 
 DEPENDS = cross/gotify-server cross/gotify-cli
@@ -13,7 +13,7 @@ DESCRIPTION = A simple server for sending and receiving messages. Includes gotif
 HOMEPAGE = https://gotify.net/
 HELPURL = https://github.com/gotify/server/issues
 LICENSE = MIT
-CHANGELOG = "Initial release"
+CHANGELOG = "Update Gotify server to 2.7.3 and CLI to 2.3.2"
 
 STARTABLE = yes
 SERVICE_USER = auto
