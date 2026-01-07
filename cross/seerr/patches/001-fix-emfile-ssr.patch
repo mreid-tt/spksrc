@@ -1,6 +1,40 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -254,11 +254,36 @@
+@@ -193,6 +193,31 @@
+   };
+ };
+ 
++// Provide default settings for DSM environment where SSR fails
++const getDefaultSettings = (): PublicSettingsResponse => ({
++  initialized: true,
++  applicationTitle: 'Seerr',
++  applicationUrl: '',
++  hideAvailable: false,
++  localLogin: true,
++  movie4kEnabled: false,
++  series4kEnabled: false,
++  locale: 'en',
++  emailEnabled: false,
++  newPlexLogin: true,
++  region: null,
++  originalLanguage: null,
++  partialRequestsEnabled: true,
++  cacheImages: false,
++  vapidPublic: '',
++  enablePushRegistration: false,
++  defaultPermissions: 0,
++  defaultQuotas: {
++    movie: { quotaLimit: 0, quotaDays: 7 },
++    tv: { quotaLimit: 0, quotaDays: 7 },
++  },
++  mediaServerLogin: true,
++  jellyfinLogin: false,
++});
++
+ const CoreApp: Omit<NextAppProps, 'pageProps'> & {
+   pageProps: CoreAppProps;
+ } = ({ Component, pageProps, router, messages }) => {
+@@ -254,11 +279,23 @@
  
    if (ctx.res) {
      // Check if app is initialized and redirect if necessary
@@ -14,30 +48,17 @@
 +      response = await axios.get<PublicSettingsResponse>(
 +        `http://${process.env.HOST || 'localhost'}:${
 +          process.env.PORT || 5055
-+        }/api/v1/settings/public`
++        }/api/v1/settings/public`,
++        { timeout: 2000 }  // Add timeout to fail faster
 +      );
 +    } catch (error) {
-+      // If SSR fails (common in DSM environment), provide defaults and skip SSR
-+      console.log('SSR API call failed, falling back to client-side rendering');
-+      const appInitialProps = await App.getInitialProps(initialProps);
-+      
-+      // Provide minimum required settings to prevent client errors
-+      const fallbackSettings = {
-+        ...currentSettings,
-+        initialized: true,
-+        applicationTitle: 'Seerr',
-+        applicationUrl: '',
-+        hideAvailable: false,
-+        movie4kEnabled: false,
-+        series4kEnabled: false,
-+        localLogin: true,
-+        mediaServerLogin: true
-+      };
-+      
-+      return {
-+        ...appInitialProps,
-+        pageProps: { ...appInitialProps.pageProps, currentSettings: fallbackSettings }
-+      };
++      // If SSR fails (common in DSM environment), use default settings
++      console.log('SSR API call failed, using default settings');
++      response = { data: getDefaultSettings() };
++    }
++
++    if (!response || !response.data) {
++      response = { data: getDefaultSettings() };
 +    }
  
      currentSettings = response.data;
