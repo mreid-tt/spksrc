@@ -1,5 +1,6 @@
 # Seerr environment configuration
 NODE_ENV=production
+HOST=127.0.0.1
 PORT=5055
 TZ=Etc/UTC
 LOG_LEVEL=info

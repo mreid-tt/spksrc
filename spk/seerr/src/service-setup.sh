@@ -17,9 +17,8 @@ NODE_BIN="/usr/local/bin/node"
 SERVICE_COMMAND="${NODE_BIN} --env-file=${SEERR_HOME}/.env ${STANDALONE_DIR}/server.js"
 
 service_postinst() {
-    # Create directories
+    # Create directories for database and backup
     mkdir -p "${SEERR_VAR}/config/db"
-    mkdir -p "${SEERR_VAR}/logs"
     mkdir -p "${SEERR_VAR}/backup"
 
     # Create database file if it doesn't exist
@@ -28,19 +27,6 @@ service_postinst() {
     # Fix permissions for sc-seerr user
     chown -R sc-seerr:synocommunity "${SEERR_VAR}"
     chown sc-seerr:synocommunity "${SEERR_HOME}/.env"
-    chmod 755 "${SEERR_VAR}/logs"
-    
-    # Ensure log file is writable
-    touch "${SEERR_VAR}/logs/seerr.log"
-    chmod 666 "${SEERR_VAR}/logs/seerr.log"
-    
-    # Add a simple hosts file workaround for EMFILE issues
-    # Seerr sometimes calls itself at 0.0.0.0 which can cause too many connections
-    # This helps ensure it resolves to localhost properly
-    if ! grep -q "127.0.0.1.*localhost" /etc/hosts 2>/dev/null; then
-        echo "# Added by seerr package" >> /etc/hosts
-        echo "127.0.0.1 localhost" >> /etc/hosts
-    fi
 }
 
 service_preuninst() {
