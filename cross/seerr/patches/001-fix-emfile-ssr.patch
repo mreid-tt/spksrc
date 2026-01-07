@@ -1,70 +1,15 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -16,6 +16,8 @@
- import { polyfillIntl } from '@app/utils/polyfillIntl';
- import { MediaServerType } from '@server/constants/server';
- import type { PublicSettingsResponse } from '@server/interfaces/api/settingsInterfaces';
-+import http from 'http';
-+import https from 'https';
- import axios from 'axios';
- import type { AppInitialProps, AppProps } from 'next/app';
- import App from 'next/app';
-@@ -193,6 +195,28 @@
- 
+@@ -226,6 +226,13 @@
  CoreApp.getInitialProps = async (initialProps) => {
    const { ctx, router } = initialProps;
-+
-+  // Configure axios for server-side requests with connection pooling
-+  // to prevent EMFILE errors
-+  let axiosConfig = {};
-+  if (typeof window === 'undefined') {
-+    const httpAgent = new http.Agent({
-+      keepAlive: true,
-+      keepAliveMsecs: 30000,
-+      maxSockets: 5,
-+      maxFreeSockets: 2,
-+      timeout: 60000,
-+    });
-+    const httpsAgent = new https.Agent({
-+      keepAlive: true,
-+      keepAliveMsecs: 30000,
-+      maxSockets: 5,
-+      maxFreeSockets: 2,
-+      timeout: 60000,
-+    });
-+    axiosConfig = { httpAgent, httpsAgent };
++  
++  // Skip SSR in DSM production environment to avoid connection issues
++  // The app will use client-side rendering instead
++  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
++    return await App.getInitialProps(initialProps);
 +  }
-+
++  
    let user: User | undefined = undefined;
    let currentSettings: PublicSettingsResponse = {
      initialized: false,
-@@ -220,9 +244,10 @@
-   if (ctx.res) {
-     // Check if app is initialized and redirect if necessary
-     const response = await axios.get<PublicSettingsResponse>(
--      `http://${process.env.HOST || 'localhost'}:${
-+      // Use 0.0.0.0 for DSM environment (server listens on 0.0.0.0)
-+      `http://0.0.0.0:${
-         process.env.PORT || 5055
--      }/api/v1/settings/public`
-+      }/api/v1/settings/public`, axiosConfig
-     );
- 
-     currentSettings = response.data;
-@@ -239,13 +264,15 @@
-     } else {
-       try {
-         // Attempt to get the user by running a request to the local api
-+        // Use 0.0.0.0 for DSM environment (server listens on 0.0.0.0)
-         const response = await axios.get<User>(
--          `http://${process.env.HOST || 'localhost'}:${
-+          `http://0.0.0.0:${
-             process.env.PORT || 5055
-           }/api/v1/auth/me`,
-           {
-+            ...axiosConfig,
-             headers:
-               ctx.req && ctx.req.headers.cookie
-                 ? { cookie: ctx.req.headers.cookie }
-                 : undefined,
-           }
