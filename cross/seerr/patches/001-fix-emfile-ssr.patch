@@ -1,15 +1,44 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -226,6 +226,13 @@
- CoreApp.getInitialProps = async (initialProps) => {
-   const { ctx, router } = initialProps;
-+  
-+  // Skip SSR in DSM production environment to avoid connection issues
-+  // The app will use client-side rendering instead
-+  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
-+    return await App.getInitialProps(initialProps);
-+  }
-+  
-   let user: User | undefined = undefined;
-   let currentSettings: PublicSettingsResponse = {
-     initialized: false,
+@@ -254,11 +254,36 @@
+ 
+   if (ctx.res) {
+     // Check if app is initialized and redirect if necessary
+-    const response = await axios.get<PublicSettingsResponse>(
+-      `http://${process.env.HOST || 'localhost'}:${
+-        process.env.PORT || 5055
+-      }/api/v1/settings/public`
+-    );
++    let response;
++    try {
++      response = await axios.get<PublicSettingsResponse>(
++        `http://${process.env.HOST || 'localhost'}:${
++          process.env.PORT || 5055
++        }/api/v1/settings/public`
++      );
++    } catch (error) {
++      // If SSR fails (common in DSM environment), provide defaults and skip SSR
++      console.log('SSR API call failed, falling back to client-side rendering');
++      const appInitialProps = await App.getInitialProps(initialProps);
++      
++      // Provide minimum required settings to prevent client errors
++      const fallbackSettings = {
++        ...currentSettings,
++        initialized: true,
++        applicationTitle: 'Seerr',
++        applicationUrl: '',
++        hideAvailable: false,
++        movie4kEnabled: false,
++        series4kEnabled: false,
++        localLogin: true,
++        mediaServerLogin: true
++      };
++      
++      return {
++        ...appInitialProps,
++        pageProps: { ...appInitialProps.pageProps, currentSettings: fallbackSettings }
++      };
++    }
+ 
+     currentSettings = response.data;
+ 
