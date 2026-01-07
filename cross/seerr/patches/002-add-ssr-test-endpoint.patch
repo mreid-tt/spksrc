@@ -1,0 +1,18 @@
+--- src/pages/api/test-ssr.ts.orig
++++ src/pages/api/test-ssr.ts
+@@ -0,0 +1,15 @@
++import type { NextApiRequest, NextApiResponse } from 'next';
++
++export default function handler(req: NextApiRequest, res: NextApiResponse) {
++  // Simple test endpoint to verify SSR functionality
++  res.status(200).json({
++    message: 'SSR Test Endpoint',
++    timestamp: new Date().toISOString(),
++    env: {
++      host: process.env.HOST || 'not set',
++      port: process.env.PORT || 'not set',
++      nodeEnv: process.env.NODE_ENV || 'not set'
++    },
++    headers: req.headers
++  });
++}
