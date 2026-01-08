@@ -6,3 +6,5 @@ DATABASE_TYPE=sqlite
 DATABASE_URL=file:/var/packages/seerr/var/config/db/seerr.db
 BACKUP_PATH=/var/packages/seerr/var/backup
 # Force server to listen on all interfaces (removed HOST to use default)
+# DSM package identifier for SSR bypass
+SYNOPKG_PKGNAME=seerr
