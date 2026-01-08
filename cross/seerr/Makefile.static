@@ -1,0 +1,43 @@
+PKG_NAME = seerr
+PKG_VERS = 2.7.3
+PKG_EXT = tar.gz
+PKG_PATCHES_LEVEL = 0
+PKG_DIST_NAME = v$(PKG_VERS).$(PKG_EXT)
+PKG_DIST_SITE = https://github.com/seerr-team/seerr/archive/refs/tags
+PKG_DIST_FILE = seerr-$(PKG_VERS).$(PKG_EXT)
+PKG_DIR = seerr-$(PKG_VERS)
+
+BUILD_DEPENDS = native/nodejs_22
+
+HOMEPAGE = https://github.com/seerr-team/seerr
+COMMENT  = Media request management with Jellyfin, Plex, and Emby integration.
+LICENSE  = MIT
+
+ENV += NPM_CONFIG_PREFIX=$(WORK_DIR)/npm-global
+ENV += PATH=$(WORK_DIR)/npm-global/bin:$(WORK_DIR)/../../../native/nodejs_22/work-native/node/bin:$(PATH)
+ENV += COREPACK_ENABLE_DOWNLOAD=1
+ENV += HUSKY=0
+ENV += HUSKY_SKIP_INSTALL=1
+ENV += SKIP_GIT_INSTALL_HOOKS=1
+
+INSTALL_TARGET = seerr_install
+
+include ../../mk/spksrc.install-resources.mk
+
+.PHONY: seerr_install
+seerr_install:
+	install -m 755 -d $(WORK_DIR)/npm-global/bin
+	$(RUN) npm install -g pnpm@9.0.0
+	$(RUN) node -e "const fs=require('fs');const path='package.json';const pkg=JSON.parse(fs.readFileSync(path));if(pkg.scripts&&pkg.scripts.prepare){delete pkg.scripts.prepare;fs.writeFileSync(path,JSON.stringify(pkg,null,2));}"
+	# Try static export instead of standalone SSR
+	$(RUN) node -e "const fs=require('fs');const path='next.config.js';let content=fs.readFileSync(path,'utf8');content=content.replace('module.exports = {','module.exports = {\\n  output: \"export\",\\n  trailingSlash: true,');fs.writeFileSync(path,content);" 
+	$(RUN) pnpm install --frozen-lockfile --filter '.' --config.ignore-workspace-root-check=true
+	$(RUN) COMMIT_TAG=$(PKG_VERS) pnpm build
+	$(RUN) touch config/DOCKER
+	$(RUN) node -e "require('fs').writeFileSync('committag.json', JSON.stringify({commitTag: '$(PKG_VERS)'}))"
+	install -m 755 -d $(STAGING_INSTALL_PREFIX)/share/seerr
+	cp -a $(WORK_DIR)/$(PKG_DIR)/out/* $(STAGING_INSTALL_PREFIX)/share/seerr/
+	cp -a $(WORK_DIR)/$(PKG_DIR)/config $(STAGING_INSTALL_PREFIX)/share/seerr/
+	cp $(WORK_DIR)/$(PKG_DIR)/committag.json $(STAGING_INSTALL_PREFIX)/share/seerr/
+	( cd $(STAGING_INSTALL_PREFIX) && find share/seerr -type f -o -type l | sort ) > $(WORK_DIR)/$(PKG_NAME).plist
+	printf 'rsc:share/seerr\n' > $(WORK_DIR)/PLIST

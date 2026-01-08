@@ -1,16 +1,26 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -253,6 +253,13 @@
+@@ -253,6 +253,23 @@
    };
  
    if (ctx.res) {
-+    // DSM packages: skip SSR due to network restrictions
++    // For DSM packages, skip SSR and provide fallback data
 +    if (process.env.SYNOPKG_PKGNAME === 'seerr') {
-+      currentSettings.applicationTitle = 'Seerr';
-+      currentSettings.initialized = false;
++      // Provide complete fallback settings to prevent undefined errors
++      currentSettings = {
++        ...currentSettings,
++        initialized: false,
++        applicationTitle: 'Seerr',
++        applicationUrl: '',
++        hideAvailable: false,
++        localLogin: true,
++        movie4kEnabled: false,
++        series4kEnabled: false,
++      };
 +      const appInitialProps = await App.getInitialProps(initialProps);
 +      return { ...appInitialProps, currentSettings, user };
 +    }
++
      // Check if app is initialized and redirect if necessary
      const response = await axios.get<PublicSettingsResponse>(
        `http://${process.env.HOST || 'localhost'}:${
