@@ -1,27 +1,30 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -253,6 +253,23 @@
+@@ -253,5 +253,27 @@
    };
  
    if (ctx.res) {
 +    // DSM Compatibility Mode - Skip all SSR API calls
 +    if (process.env.DISABLE_SSR === 'true') {
 +      // Provide minimal but valid settings to avoid undefined errors
-+      const appInitialProps: AppInitialProps = await App.getInitialProps(
-+        initialProps
-+      );
-+      const messages = await loadLocaleData('en' as AvailableLocale);
++      const appInitialProps = await App.getInitialProps(initialProps);
++      const messages = await loadLocaleData('en');
 +      await polyfillIntl('en');
 +      
-+      // Return with minimal valid settings - app will fetch real settings client-side
++      // Return with complete valid settings 
 +      return { 
 +        ...appInitialProps, 
 +        messages, 
 +        locale: 'en',
-+        currentSettings: { initialized: false, applicationTitle: 'Seerr', applicationUrl: '', hideAvailable: false, locale: 'en' }
++        currentSettings: { 
++          initialized: true,
++          applicationTitle: 'Seerr',
++          applicationUrl: '',
++          hideAvailable: false,
++          locale: 'en'
++        }
 +      };
 +    }
 +    
      // Check if app is initialized and redirect if necessary
      const response = await axios.get<PublicSettingsResponse>(
-       `http://${process.env.HOST || 'localhost'}:${
