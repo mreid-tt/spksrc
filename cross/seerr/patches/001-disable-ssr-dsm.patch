@@ -1,0 +1,18 @@
+--- src/pages/_app.tsx.orig
++++ src/pages/_app.tsx
+@@ -247,6 +247,15 @@
+ 
+ CoreApp.getInitialProps = async (initialProps) => {
+   const { ctx, router } = initialProps;
++  
++  // Disable SSR for DSM builds - SSR is incompatible with DSM's network sandboxing
++  // DSM packages cannot make HTTP requests to themselves during SSR
++  if (process.env.DISABLE_SSR === 'true') {
++    const pageProps = await App.getInitialProps(initialProps);
++    // Return minimal props to allow CSR to take over
++    return { ...pageProps, messages: {}, locale: 'en', currentSettings: null, user: null };
++  }
++  
+   let user: User | undefined = undefined;
+   let currentSettings: PublicSettingsResponse = {
+     initialized: false,

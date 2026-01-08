@@ -5,3 +5,6 @@ LOG_LEVEL=info
 DATABASE_TYPE=sqlite
 DATABASE_URL=file:/var/packages/seerr/var/config/db/seerr.db
 BACKUP_PATH=/var/packages/seerr/var/backup
+
+# Disable SSR - incompatible with DSM network sandboxing
+DISABLE_SSR=true
