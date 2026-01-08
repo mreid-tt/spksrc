@@ -1,18 +1,16 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -226,6 +226,15 @@
- CoreApp.getInitialProps = async (initialProps) => {
-   const { ctx, router } = initialProps;
-   let user: User | undefined = undefined;
-+
-+  // Skip SSR entirely for DSM packages to prevent network sandbox issues
-+  if (ctx.res && process.env.SYNOPKG_PKGNAME === 'seerr') {
-+    const appInitialProps: AppInitialProps = await App.getInitialProps(initialProps);
-+    return {
-+      ...appInitialProps,
-+    };
-+  }
-+
-   let currentSettings: PublicSettingsResponse = {
-     initialized: false,
-     applicationTitle: '',
+@@ -253,6 +253,13 @@
+   };
+ 
+   if (ctx.res) {
++    // DSM packages: skip SSR due to network restrictions
++    if (process.env.SYNOPKG_PKGNAME === 'seerr') {
++      currentSettings.applicationTitle = 'Seerr';
++      currentSettings.initialized = false;
++      const appInitialProps = await App.getInitialProps(initialProps);
++      return { ...appInitialProps, currentSettings, user };
++    }
+     // Check if app is initialized and redirect if necessary
+     const response = await axios.get<PublicSettingsResponse>(
+       `http://${process.env.HOST || 'localhost'}:${
