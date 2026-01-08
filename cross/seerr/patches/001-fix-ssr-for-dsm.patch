@@ -1,0 +1,29 @@
+--- src/pages/_app.tsx.orig
++++ src/pages/_app.tsx
+@@ -254,6 +254,18 @@
+ 
+   if (ctx.res) {
+     // Check if app is initialized and redirect if necessary
++    if (process.env.DISABLE_SSR === 'true') {
++      // Skip SSR for DSM - return minimal settings
++      currentSettings = {
++        initialized: true,
++        applicationTitle: 'Seerr',
++        applicationUrl: '',
++        hideAvailable: false,
++        locale: 'en'
++      } as PublicSettingsResponse;
++      user = undefined;
++    } else {
++    // Normal SSR flow
+     const response = await axios.get<PublicSettingsResponse>(
+       `http://${process.env.HOST || 'localhost'}:${
+         process.env.PORT || 5055
+@@ -304,6 +316,7 @@
+       }
+     }
+   }
++  }
+ 
+   // Run the default getInitialProps for the main nextjs initialProps
+   const appInitialProps: AppInitialProps = await App.getInitialProps(
