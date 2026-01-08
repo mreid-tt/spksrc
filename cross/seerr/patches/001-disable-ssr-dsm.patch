@@ -1,6 +1,6 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -247,6 +247,15 @@
+@@ -247,6 +247,30 @@
  
  CoreApp.getInitialProps = async (initialProps) => {
    const { ctx, router } = initialProps;
@@ -9,8 +9,23 @@
 +  // DSM packages cannot make HTTP requests to themselves during SSR
 +  if (process.env.DISABLE_SSR === 'true') {
 +    const pageProps = await App.getInitialProps(initialProps);
-+    // Return minimal props to allow CSR to take over
-+    return { ...pageProps, messages: {}, locale: 'en', currentSettings: null, user: null };
++    // Return minimal props with default settings to allow CSR to take over
++    return { 
++      ...pageProps, 
++      messages: {}, 
++      locale: 'en', 
++      currentSettings: {
++        initialized: false,
++        applicationTitle: 'Seerr',
++        applicationUrl: '',
++        hideAvailable: false,
++        localLogin: true,
++        mediaServerLogin: true,
++        mediaServerType: 2,
++        partialRequestsEnabled: false
++      }, 
++      user: null 
++    };
 +  }
 +  
    let user: User | undefined = undefined;
