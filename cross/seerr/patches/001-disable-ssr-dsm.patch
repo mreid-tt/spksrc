@@ -1,9 +1,10 @@
---- src/pages/_app.tsx.orig	2025-08-14 20:10:51.000000000 +0000
-+++ src/pages/_app.tsx	2026-01-08 10:40:46.453325999 +0000
-@@ -246,6 +246,47 @@
-     vapidPublic: '',
-     enablePushRegistration: false,
-     locale: 'en',
+--- src/pages/_app.tsx.orig
++++ src/pages/_app.tsx
+@@ -247,6 +247,48 @@
+ 
+ CoreApp.getInitialProps = async (initialProps) => {
+   const { ctx, router } = initialProps;
++  
 +  // Disable SSR for DSM builds - SSR is incompatible with DSM's network sandboxing
 +  // DSM packages cannot make HTTP requests to themselves during SSR
 +  if (process.env.DISABLE_SSR === 'true') {
@@ -44,7 +45,7 @@
 +      user: undefined
 +    };
 +  }
-+
-     emailEnabled: false,
-     newPlexLogin: true,
-     youtubeUrl: '',
++  
+   let user: User | undefined = undefined;
+   let currentSettings: PublicSettingsResponse = {
+     initialized: false,
