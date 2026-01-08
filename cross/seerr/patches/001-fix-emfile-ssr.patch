@@ -1,6 +1,6 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -254,11 +254,20 @@
+@@ -254,11 +254,25 @@
      publicRuntimeConfig = getConfig().publicRuntimeConfig;
  
      // Check if app is initialized and redirect if necessary
@@ -20,13 +20,17 @@
 +    } catch (error) {
 +      console.log('SSR API call failed for settings, using defaults');
 +      response = { 
-+        data: { initialized: true, applicationTitle: 'Seerr', applicationUrl: '', defaultPermissions: 2 } 
++        data: { 
++          ...currentSettings,
++          initialized: true, 
++          applicationTitle: 'Seerr'
++        } 
 +      };
 +    }
  
      currentSettings = response.data;
  
-@@ -275,10 +284,11 @@
+@@ -275,10 +289,11 @@
        try {
          // Attempt to get the user by running a request to the local api
          const response = await axios.get<User>(
