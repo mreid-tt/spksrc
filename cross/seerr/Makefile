@@ -34,7 +34,7 @@ seerr_install:
 	$(RUN) COMMIT_TAG=$(PKG_VERS) pnpm build
 	$(RUN) pnpm prune --prod --ignore-scripts
 	# DSM Fix: Update standalone server to respect HOST env var
-	$(RUN) sed -i "s/const hostname = process.env.HOSTNAME || '0.0.0.0'/const hostname = process.env.HOST || process.env.HOSTNAME || '127.0.0.1'/" .next/standalone/server.js
+	$(RUN) sed -i "s/const hostname = process.env.HOSTNAME || '0.0.0.0'/const hostname = process.env.HOST || process.env.HOSTNAME || '0.0.0.0'/" .next/standalone/server.js
 	# Remove pnpm store metadata to reduce PLIST noise
 	$(RUN) rm -rf node_modules/.pnpm/.store
 	# Drop platform-specific SWC binaries we cannot use at runtime (keep linux glibc)

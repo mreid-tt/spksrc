@@ -1,6 +1,6 @@
 # Seerr environment configuration
 NODE_ENV=production
-HOST=127.0.0.1
+HOST=0.0.0.0
 PORT=5055
 LOG_LEVEL=info
 DATABASE_TYPE=sqlite
