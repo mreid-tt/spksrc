@@ -1,6 +1,6 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -253,5 +253,27 @@
+@@ -253,5 +253,32 @@
    };
  
    if (ctx.res) {
@@ -11,16 +11,23 @@
 +      const messages = await loadLocaleData('en');
 +      await polyfillIntl('en');
 +      
-+      // Return with complete valid settings 
++      // Return with minimal settings - initialized:false will trigger setup flow
++      // But we provide all required fields to avoid undefined errors
 +      return { 
 +        ...appInitialProps, 
 +        messages, 
 +        locale: 'en',
 +        currentSettings: { 
-+          initialized: true,
-+          applicationTitle: 'Seerr',
++          initialized: false,  // This triggers client-side setup
++          applicationTitle: 'Seerr',  // Prevent undefined errors
 +          applicationUrl: '',
 +          hideAvailable: false,
++          localLogin: true,
++          movie4kEnabled: false,
++          series4kEnabled: false,
++          region: '',
++          originalLanguage: '',
++          defaultPermissions: 0,
 +          locale: 'en'
 +        }
 +      };
