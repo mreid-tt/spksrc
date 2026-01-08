@@ -1,6 +1,9 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -259,5 +259,14 @@
+@@ -254,11 +254,20 @@
+     publicRuntimeConfig = getConfig().publicRuntimeConfig;
+ 
+     // Check if app is initialized and redirect if necessary
 -    const response = await axios.get<PublicSettingsResponse>(
 -      `http://${process.env.HOST || 'localhost'}:${
 -        process.env.PORT || 5055
@@ -15,8 +18,24 @@
 +        { timeout: 2000 }
 +      );
 +    } catch (error) {
-+      console.log('SSR API call failed, using minimal defaults');
-+      // Return minimal viable settings to prevent render errors
-+      const minSettings = { initialized: true, applicationTitle: 'Seerr' };
-+      response = { data: { ...currentSettings, ...minSettings } };
++      console.log('SSR API call failed for settings, using defaults');
++      response = { 
++        data: { initialized: true, applicationTitle: 'Seerr', applicationUrl: '', defaultPermissions: 2 } 
++      };
 +    }
+ 
+     currentSettings = response.data;
+ 
+@@ -275,10 +284,11 @@
+       try {
+         // Attempt to get the user by running a request to the local api
+         const response = await axios.get<User>(
+-          `http://${process.env.HOST || 'localhost'}:${
++          `http://${process.env.HOST || '127.0.0.1'}:${
+             process.env.PORT || 5055
+           }/api/v1/auth/me`,
+           {
++            timeout: 2000,
+             headers:
+               ctx.req && ctx.req.headers.cookie
+                 ? { cookie: ctx.req.headers.cookie }
