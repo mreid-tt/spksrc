@@ -1,13 +1,12 @@
 --- server/index.ts.orig
 +++ server/index.ts
-@@ -20,7 +20,9 @@
- const handle = app.getRequestHandler();
+@@ -243,7 +243,9 @@
  
- checkEnv();
--const host = process.env.HOST ?? '0.0.0.0';
-+// DSM Fix: Ensure server listens on the same address SSR uses
-+// If HOST is set to 127.0.0.1, server must listen on that
-+const host = process.env.HOST ?? '127.0.0.1';
- const port = parseInt(process.env.PORT ?? '5055', 10);
- 
- if (host) {
+     const port = Number(process.env.PORT) || 5055;
+-    const host = process.env.HOST;
++    // DSM Fix: Default to 127.0.0.1 if HOST not set
++    // This ensures SSR calls match the listening address
++    const host = process.env.HOST || '127.0.0.1';
+     if (host) {
+       server.listen(port, host, () => {
+         logger.info(`Server ready on ${host}:${port}`, {
