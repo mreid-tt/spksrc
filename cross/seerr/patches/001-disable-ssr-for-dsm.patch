@@ -1,18 +1,18 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -233,6 +233,15 @@
- 
- MyApp.getInitialProps = async (appContext: AppContext) => {
-   const { ctx } = appContext;
-+  
-+  // DSM package detection: Skip SSR when running in DSM package sandbox
-+  // DSM packages cannot make HTTP requests to localhost/127.0.0.1 during SSR
-+  const isDSMPackage = process.env.SYNOPKG_PKGNAME === 'seerr';
-+  if (isDSMPackage && ctx.res) {
-+    // Return minimal props to allow client-side initialization
-+    const appInitialProps = await App.getInitialProps(appContext);
-+    return { ...appInitialProps, pageProps: {} };
-+  }
- 
-   let initialProps: AppInitialProps = {
-     pageProps: {},
+@@ -226,6 +226,16 @@
+ CoreApp.getInitialProps = async (initialProps) => {
+   const { ctx, router } = initialProps;
++   
++   // DSM package detection: Skip SSR when running in DSM package sandbox
++   // DSM packages cannot make HTTP requests to localhost/127.0.0.1 during SSR
++   const isDSMPackage = process.env.SYNOPKG_PKGNAME === 'seerr';
++   if (isDSMPackage && ctx.res) {
++     // Return minimal props to allow client-side initialization
++     const appInitialProps = await App.getInitialProps(initialProps);
++     return { ...appInitialProps, pageProps: {} };
++   }
++   
+   let user: User | undefined = undefined;
+   let currentSettings: PublicSettingsResponse = {
+     initialized: false,
