@@ -1,0 +1,18 @@
+--- src/pages/_app.tsx.orig
++++ src/pages/_app.tsx
+@@ -226,6 +226,15 @@
+ CoreApp.getInitialProps = async (initialProps) => {
+   const { ctx, router } = initialProps;
+   let user: User | undefined = undefined;
++
++  // Skip SSR entirely for DSM packages to prevent network sandbox issues
++  if (ctx.res && process.env.SYNOPKG_PKGNAME === 'seerr') {
++    const appInitialProps: AppInitialProps = await App.getInitialProps(initialProps);
++    return {
++      ...appInitialProps,
++    };
++  }
++
+   let currentSettings: PublicSettingsResponse = {
+     initialized: false,
+     applicationTitle: '',
