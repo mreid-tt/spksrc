@@ -1,6 +1,6 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -247,6 +247,30 @@
+@@ -247,6 +247,42 @@
  
  CoreApp.getInitialProps = async (initialProps) => {
    const { ctx, router } = initialProps;
@@ -9,7 +9,7 @@
 +  // DSM packages cannot make HTTP requests to themselves during SSR
 +  if (process.env.DISABLE_SSR === 'true') {
 +    const pageProps = await App.getInitialProps(initialProps);
-+    // Return minimal props with default settings to allow CSR to take over
++    // Return complete default props to allow CSR to take over
 +    return { 
 +      ...pageProps, 
 +      messages: {}, 
@@ -19,12 +19,26 @@
 +        applicationTitle: 'Seerr',
 +        applicationUrl: '',
 +        hideAvailable: false,
++        hideBlacklisted: false,
 +        localLogin: true,
 +        mediaServerLogin: true,
++        movie4kEnabled: false,
++        series4kEnabled: false,
++        discoverRegion: 'US',
++        streamingRegion: 'US',
++        originalLanguage: 'en',
 +        mediaServerType: 2,
-+        partialRequestsEnabled: false
++        partialRequestsEnabled: false,
++        enableSpecialEpisodes: false,
++        cacheImages: false,
++        vapidPublic: '',
++        enablePushRegistration: false,
++        locale: 'en',
++        emailEnabled: false,
++        newPlexLogin: false,
++        youtubeUrl: ''
 +      }, 
-+      user: null 
++      user: undefined 
 +    };
 +  }
 +  
