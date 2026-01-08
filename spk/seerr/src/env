@@ -1,10 +1,13 @@
 # Seerr environment configuration
 NODE_ENV=production
-PORT=5055
+PORT=5056
+# Seerr will run on 5056 (localhost only)
+# Proxy will listen on 5055 (external access)
 LOG_LEVEL=info
 DATABASE_TYPE=sqlite
 DATABASE_URL=file:/var/packages/seerr/var/config/db/seerr.db
 BACKUP_PATH=/var/packages/seerr/var/backup
-# Force server to listen on all interfaces (removed HOST to use default)
+# Seerr binds to localhost only for SSR to work
+HOST=127.0.0.1
 # DSM package identifier for SSR bypass
 SYNOPKG_PKGNAME=seerr
