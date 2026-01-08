@@ -1,6 +1,6 @@
 --- src/pages/_app.tsx.orig
 +++ src/pages/_app.tsx
-@@ -247,6 +247,42 @@
+@@ -247,6 +247,43 @@
  
  CoreApp.getInitialProps = async (initialProps) => {
    const { ctx, router } = initialProps;
@@ -36,7 +36,11 @@
 +        locale: 'en',
 +        emailEnabled: false,
 +        newPlexLogin: false,
-+        youtubeUrl: ''
++        youtubeUrl: '',
++        jellyfinHost: undefined,
++        jellyfinExternalHost: undefined,
++        jellyfinServerName: undefined,
++        jellyfinForgotPasswordUrl: undefined
 +      }, 
 +      user: undefined 
 +    };
