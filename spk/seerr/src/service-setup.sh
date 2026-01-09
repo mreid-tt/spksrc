@@ -4,6 +4,7 @@ SEERR_HOME="${SYNOPKG_PKGDEST}/share/seerr"
 SEERR_VAR="${SYNOPKG_PKGVAR}"
 STANDALONE_DIR="${SEERR_HOME}/.next/standalone"
 PROXY_SERVER="${SEERR_HOME}/proxy-server.js"
+LOG_FILE="${SYNOPKG_PKGVAR}/seerr.log"
 
 # Service configuration
 SEERR_PID_FILE="${SYNOPKG_PKGVAR}/seerr.pid"
@@ -17,9 +18,16 @@ NODE_BIN="/usr/local/bin/node"
 
 # Override start/stop functions to manage both Seerr and proxy
 start_daemon() {
+    # Ensure log file exists
+    touch ${LOG_FILE}
+    
     # Start Seerr on port 5056 (localhost only)
     cd ${STANDALONE_DIR}
-    PORT=5056 HOST=127.0.0.1 ${NODE_BIN} --env-file=${SEERR_HOME}/.env ${STANDALONE_DIR}/server.js >> ${LOG_FILE} 2>&1 &
+    # Export environment variables from .env file
+    set -a
+    . ${SEERR_HOME}/.env
+    set +a
+    PORT=5056 HOST=127.0.0.1 ${NODE_BIN} ${STANDALONE_DIR}/server.js >> ${LOG_FILE} 2>&1 &
     echo $! > ${SEERR_PID_FILE}
     
     # Give Seerr time to start
