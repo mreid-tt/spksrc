@@ -44,8 +44,6 @@ seerr_install:
 	cp -a $(STAGING_INSTALL_PREFIX)/share/seerr $(STAGING_DIR)/share/
 	install -m 644 src/env $(STAGING_DIR)/share/seerr/.env
 	install -m 755 src/proxy-server.js $(STAGING_DIR)/share/seerr/proxy-server.js
-	$(MSG) "Install http-proxy module for reverse proxy."
-	cd $(STAGING_DIR)/share/seerr && npm install --no-save http-proxy
 	install -m 755 -d $(STAGING_DIR)/var/config
 	install -m 755 -d $(STAGING_DIR)/var/logs
 	install -m 755 -d $(STAGING_DIR)/var/backup
