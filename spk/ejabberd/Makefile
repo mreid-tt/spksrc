@@ -1,5 +1,5 @@
 SPK_NAME = ejabberd
-SPK_VERS = 23.04
+SPK_VERS = 25.10
 SPK_REV = 3
 SPK_ICON = src/ejabberd.png
 DSM_UI_DIR = app
@@ -13,7 +13,7 @@ DESCRIPTION = Robust, Scalable and Extensible Realtime Platform XMPP Server + MQ
 ADMIN_URL = /admin/
 ADMIN_PORT = 5280
 DISPLAY_NAME = ejabberd
-CHANGELOG = "Update ejabberd to v23.04"
+CHANGELOG = "Update ejabberd to v25.10"
 
 HOMEPAGE = https://www.ejabberd.im
 LICENSE  = GPLv2
