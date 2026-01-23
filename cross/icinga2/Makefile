@@ -79,6 +79,9 @@ CMAKE_ARGS += -DICINGA2_USER=icinga
 CMAKE_ARGS += -DICINGA2_GROUP=icinga
 CMAKE_ARGS += -DICINGA2_COMMAND_GROUP=icingacmd
 
+# Skip user/group impersonation - handled by DSM service manager
+ADDITIONAL_CXXFLAGS = -DICINGA2_SKIP_IMPERSONATION
+
 # Build native tools (mkclass, mkembedconfig, mkunity) before cross-compiling
 # These tools run on the host during compilation to generate code
 NATIVE_BUILD_DIR = $(WORK_DIR)/$(PKG_DIR)/native-build

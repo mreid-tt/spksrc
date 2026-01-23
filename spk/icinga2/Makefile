@@ -4,6 +4,7 @@ SPK_REV = 1
 SPK_ICON = src/icinga2.png
 
 DEPENDS = cross/icinga2
+DEPENDS += cross/monitoring-plugins
 
 REQUIRED_MIN_DSM = 7.1
 UNSUPPORTED_ARCHS = comcerto2k
@@ -32,3 +33,6 @@ include ../../mk/spksrc.spk.mk
 icinga2_extra_install:
 	install -m 755 -d $(STAGING_DIR)/var
 	install -m 755 -d $(STAGING_DIR)/etc
+	install -m 755 -d $(STAGING_DIR)/share
+	install -m 644 $(CURDIR)/src/constants.conf $(STAGING_DIR)/share/constants.conf
+	install -m 644 $(CURDIR)/src/hosts.conf $(STAGING_DIR)/share/hosts.conf
