@@ -39,3 +39,5 @@ include ../../mk/spksrc.spk.mk
 .PHONY: icingaweb2_extra_install
 icingaweb2_extra_install:
 	install -m 755 -d $(STAGING_DIR)/web
+	install -m 755 -d $(WORK_DIR)/conf/modules/monitoring
+	install -m 644 src/conf/modules/monitoring/*.ini $(WORK_DIR)/conf/modules/monitoring/
