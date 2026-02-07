@@ -34,11 +34,11 @@ include ../../mk/spksrc.common.mk
 
 # DSM 7.2+: Use PHP 8.2
 ifeq ($(call version_ge, ${TCVERSION}, 7.2),1)
-SPK_DEPENDS = "WebStation:PHP8.2:Apache2.4"
+SPK_DEPENDS = "WebStation:PHP8.2:Apache2.4:MariaDB10"
 CONF_DIR = src/conf_72/
 else ifeq ($(call version_ge, ${TCVERSION}, 7.0),1)
 # DSM 7.0/7.1: Use PHP 8.0
-SPK_DEPENDS = "WebStation:PHP8.0:Apache2.4"
+SPK_DEPENDS = "WebStation:PHP8.0:Apache2.4:MariaDB10"
 OS_MAX_VER = 7.1-59999
 CONF_DIR = src/conf_7/
 endif
