@@ -5,6 +5,7 @@
 WEB_ROOT="/var/services/web_packages/icingaweb2"
 ICINGAWEB2_CONF_DIR="${SYNOPKG_PKGVAR}/etc/icingaweb2"
 ICINGA2_API_USER_FILE="/var/packages/icinga2/var/api-credentials.txt"
+ICINGA2_IDO_CRED_FILE="/var/packages/icinga2/var/ido-credentials.txt"
 CONF_TEMPLATES="${SYNOPKG_PKGDEST}/share/templates"
 
 service_postinst ()
@@ -22,12 +23,25 @@ service_postinst ()
     DB_USER="${wizard_db_user:-icingaweb2}"
     DB_PASS="${wizard_db_pass:-}"
 
+    # Get IDO database credentials from icinga2 package
+    IDO_DB_NAME="icinga_ido"
+    IDO_DB_USER="icinga2"
+    IDO_DB_PASS=""
+    if [ -f "${ICINGA2_IDO_CRED_FILE}" ]; then
+        IDO_DB_NAME=$(grep "^Database:" "${ICINGA2_IDO_CRED_FILE}" | cut -d: -f2 | tr -d ' ')
+        IDO_DB_USER=$(grep "^Username:" "${ICINGA2_IDO_CRED_FILE}" | cut -d: -f2 | tr -d ' ')
+        IDO_DB_PASS=$(grep "^Password:" "${ICINGA2_IDO_CRED_FILE}" | cut -d: -f2 | tr -d ' ')
+    fi
+
     # Copy and configure resources.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/resources.ini" ]; then
         cp "${CONF_TEMPLATES}/resources.ini" "${ICINGAWEB2_CONF_DIR}/resources.ini"
         sed -i -e "s|@db_name@|${DB_NAME}|g" \
                -e "s|@db_user@|${DB_USER}|g" \
                -e "s|@db_pass@|${DB_PASS}|g" \
+               -e "s|@ido_db_name@|${IDO_DB_NAME}|g" \
+               -e "s|@ido_db_user@|${IDO_DB_USER}|g" \
+               -e "s|@ido_db_pass@|${IDO_DB_PASS}|g" \
             "${ICINGAWEB2_CONF_DIR}/resources.ini"
     fi
 

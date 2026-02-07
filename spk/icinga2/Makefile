@@ -5,6 +5,7 @@ SPK_ICON = src/icinga2.png
 
 DEPENDS = cross/icinga2
 DEPENDS += cross/monitoring-plugins
+SPK_DEPENDS = MariaDB10
 
 REQUIRED_MIN_DSM = 7.1
 UNSUPPORTED_ARCHS = comcerto2k
@@ -22,6 +23,7 @@ STARTABLE = yes
 SERVICE_USER = auto
 SERVICE_SETUP = src/service-setup.sh
 NO_SERVICE_SHORTCUT = yes
+WIZARDS_DIR = src/wizard
 
 FWPORTS = src/icinga2.sc
 
