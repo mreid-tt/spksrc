@@ -5,97 +5,50 @@
 WEB_ROOT="/var/services/web_packages/icingaweb2"
 ICINGAWEB2_CONF_DIR="${SYNOPKG_PKGVAR}/etc/icingaweb2"
 ICINGA2_API_USER_FILE="/var/packages/icinga2/var/api-credentials.txt"
+CONF_TEMPLATES="${SYNOPKG_PKGDEST}/conf"
 
 service_postinst ()
 {
-    # Create configuration directory
+    # Create configuration directory structure
     mkdir -p "${ICINGAWEB2_CONF_DIR}"
-    mkdir -p "${ICINGAWEB2_CONF_DIR}/modules"
+    mkdir -p "${ICINGAWEB2_CONF_DIR}/modules/monitoring"
     mkdir -p "${ICINGAWEB2_CONF_DIR}/enabledModules"
 
     # Create log directory
     mkdir -p "${SYNOPKG_PKGVAR}/log"
-
-    # Set permissions
-    chmod -R 2770 "${ICINGAWEB2_CONF_DIR}"
-    chown -R sc-icingaweb2:http "${ICINGAWEB2_CONF_DIR}"
 
     # Get database credentials from wizard (with defaults)
     DB_NAME="${wizard_db_name:-icingaweb2}"
     DB_USER="${wizard_db_user:-icingaweb2}"
     DB_PASS="${wizard_db_pass:-}"
 
-    # Create initial resources.ini for database connection
+    # Copy and configure resources.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/resources.ini" ]; then
-        cat > "${ICINGAWEB2_CONF_DIR}/resources.ini" <<EOF
-[icingaweb_db]
-type = "db"
-db = "mysql"
-host = "localhost"
-port = "3306"
-dbname = "${DB_NAME}"
-username = "${DB_USER}"
-password = "${DB_PASS}"
-charset = "utf8mb4"
-use_ssl = "0"
-
-[icinga_ido]
-type = "db"
-db = "mysql"
-host = "localhost"
-port = "3306"
-dbname = "icinga2"
-username = "icinga2"
-password = ""
-charset = "utf8mb4"
-use_ssl = "0"
-EOF
+        cp "${CONF_TEMPLATES}/resources.ini" "${ICINGAWEB2_CONF_DIR}/resources.ini"
+        sed -i -e "s|@db_name@|${DB_NAME}|g" \
+               -e "s|@db_user@|${DB_USER}|g" \
+               -e "s|@db_pass@|${DB_PASS}|g" \
+            "${ICINGAWEB2_CONF_DIR}/resources.ini"
     fi
 
-    # Create initial config.ini
+    # Copy config.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/config.ini" ]; then
-        cat > "${ICINGAWEB2_CONF_DIR}/config.ini" <<EOF
-[global]
-show_stacktraces = "0"
-show_application_state_messages = "1"
-module_path = "/var/packages/icingaweb2/target/share/icingaweb2/modules"
-config_backend = "db"
-config_resource = "icingaweb_db"
-
-[logging]
-log = "syslog"
-level = "ERROR"
-application = "icingaweb2"
-facility = "user"
-EOF
+        cp "${CONF_TEMPLATES}/config.ini" "${ICINGAWEB2_CONF_DIR}/config.ini"
     fi
 
-    # Create authentication.ini
+    # Copy authentication.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/authentication.ini" ]; then
-        cat > "${ICINGAWEB2_CONF_DIR}/authentication.ini" <<EOF
-[icingaweb2]
-backend = "db"
-resource = "icingaweb_db"
-EOF
+        cp "${CONF_TEMPLATES}/authentication.ini" "${ICINGAWEB2_CONF_DIR}/authentication.ini"
     fi
 
-    # Create groups.ini
+    # Copy groups.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/groups.ini" ]; then
-        cat > "${ICINGAWEB2_CONF_DIR}/groups.ini" <<EOF
-[icingaweb2]
-backend = "db"
-resource = "icingaweb_db"
-EOF
+        cp "${CONF_TEMPLATES}/groups.ini" "${ICINGAWEB2_CONF_DIR}/groups.ini"
     fi
 
-    # Create roles.ini with default admin role
+    # Copy roles.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/roles.ini" ]; then
-        cat > "${ICINGAWEB2_CONF_DIR}/roles.ini" <<EOF
-[Administrators]
-users = "admin"
-permissions = "*"
-groups = "Administrators"
-EOF
+        cp "${CONF_TEMPLATES}/roles.ini" "${ICINGAWEB2_CONF_DIR}/roles.ini"
     fi
 
     # Enable monitoring module by default
@@ -104,40 +57,33 @@ EOF
             "${ICINGAWEB2_CONF_DIR}/enabledModules/monitoring"
     fi
 
-    # Create monitoring module configuration
-    mkdir -p "${ICINGAWEB2_CONF_DIR}/modules/monitoring"
+    # Copy monitoring module config.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/modules/monitoring/config.ini" ]; then
-        cat > "${ICINGAWEB2_CONF_DIR}/modules/monitoring/config.ini" <<EOF
-[security]
-protected_customvars = "*pw*,*pass*,community"
-EOF
+        cp "${CONF_TEMPLATES}/modules/monitoring/config.ini" "${ICINGAWEB2_CONF_DIR}/modules/monitoring/config.ini"
     fi
 
+    # Copy monitoring module backends.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/modules/monitoring/backends.ini" ]; then
-        cat > "${ICINGAWEB2_CONF_DIR}/modules/monitoring/backends.ini" <<EOF
-[icinga]
-type = "ido"
-resource = "icinga_ido"
-EOF
+        cp "${CONF_TEMPLATES}/modules/monitoring/backends.ini" "${ICINGAWEB2_CONF_DIR}/modules/monitoring/backends.ini"
     fi
 
+    # Copy and configure monitoring module commandtransports.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/modules/monitoring/commandtransports.ini" ]; then
-        # Try to read Icinga 2 API credentials if available
         API_USER="root"
         API_PASS=""
         if [ -f "${ICINGA2_API_USER_FILE}" ]; then
             API_USER=$(grep "^user=" "${ICINGA2_API_USER_FILE}" | cut -d= -f2)
             API_PASS=$(grep "^password=" "${ICINGA2_API_USER_FILE}" | cut -d= -f2)
         fi
-        cat > "${ICINGAWEB2_CONF_DIR}/modules/monitoring/commandtransports.ini" <<EOF
-[icinga2]
-transport = "api"
-host = "127.0.0.1"
-port = "5665"
-username = "${API_USER}"
-password = "${API_PASS}"
-EOF
+        cp "${CONF_TEMPLATES}/modules/monitoring/commandtransports.ini" "${ICINGAWEB2_CONF_DIR}/modules/monitoring/commandtransports.ini"
+        sed -i -e "s|@api_user@|${API_USER}|g" \
+               -e "s|@api_pass@|${API_PASS}|g" \
+            "${ICINGAWEB2_CONF_DIR}/modules/monitoring/commandtransports.ini"
     fi
+
+    # Set permissions
+    chmod -R 2770 "${ICINGAWEB2_CONF_DIR}"
+    chown -R sc-icingaweb2:http "${ICINGAWEB2_CONF_DIR}"
 }
 
 service_prestart ()
