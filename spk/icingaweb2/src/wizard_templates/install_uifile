@@ -1,0 +1,80 @@
+[
+  {
+    "step_title": "{{{wizard_step_title}}}",
+    "items": [
+      {
+        "desc": "{{{wizard_step_desc}}}"
+      },
+      {
+        "type": "textfield",
+        "subitems": [
+          {
+            "key": "wizard_icinga_share",
+            "desc": "{{{wizard_share_desc}}}",
+            "defaultValue": "icinga",
+            "validator": {
+              "allowBlank": false,
+              "regex": {
+                "expr": "/^[\\w]{1,32}$/",
+                "errorText": "{{{wizard_share_validator_error}}}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "desc": "{{{wizard_share_note}}}"
+      }
+    ]
+  },
+  {
+    "step_title": "{{{wizard_db_step_title}}}",
+    "items": [
+      {
+        "desc": "{{{wizard_db_step_desc}}}"
+      },
+      {
+        "type": "textfield",
+        "subitems": [
+          {
+            "key": "wizard_db_name",
+            "desc": "{{{wizard_db_name_desc}}}",
+            "defaultValue": "icingaweb2",
+            "validator": {
+              "allowBlank": false
+            }
+          }
+        ]
+      },
+      {
+        "type": "textfield",
+        "subitems": [
+          {
+            "key": "wizard_db_user",
+            "desc": "{{{wizard_db_user_desc}}}",
+            "defaultValue": "icingaweb2",
+            "validator": {
+              "allowBlank": false
+            }
+          }
+        ]
+      },
+      {
+        "type": "password",
+        "subitems": [
+          {
+            "key": "wizard_db_pass",
+            "desc": "{{{wizard_db_pass_desc}}}",
+            "defaultValue": "",
+            "validator": {
+              "allowBlank": true
+            }
+          }
+        ]
+      },
+      {
+        "desc": "{{{wizard_db_note}}}"
+      }
+    ]
+  }
+]

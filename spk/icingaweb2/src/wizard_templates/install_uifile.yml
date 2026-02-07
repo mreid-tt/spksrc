@@ -1,0 +1,12 @@
+wizard_step_title: "Icinga Web 2 Configuration"
+wizard_step_desc: "<p>Icinga Web 2 requires a shared folder for data storage.</p><p>If you need to use a specific volume, please create the shared folder before installing this package.</p>"
+wizard_share_desc: "Shared folder name"
+wizard_share_validator_error: "Alphanumerics and underscores only, max 32 characters"
+wizard_share_note: "<p>Icinga Web 2 runs as internal service user <b>'sc-icingaweb2'</b> in DSM. The shared folder above is configured at installation time to be accessible by this user.</p>"
+
+wizard_db_step_title: "Database Configuration"
+wizard_db_step_desc: "<p>Icinga Web 2 requires a MariaDB database for storing configuration and user data.</p><p>Please create the database and user in MariaDB before proceeding.</p>"
+wizard_db_name_desc: "Database name"
+wizard_db_user_desc: "Database username"
+wizard_db_pass_desc: "Database password"
+wizard_db_note: "<p>Run these commands in MariaDB to create the database:</p><p><code>CREATE DATABASE icingaweb2 CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin';<br>CREATE USER 'icingaweb2'@'localhost' IDENTIFIED BY 'your_password';<br>GRANT ALL ON icingaweb2.* TO 'icingaweb2'@'localhost';</code></p>"
