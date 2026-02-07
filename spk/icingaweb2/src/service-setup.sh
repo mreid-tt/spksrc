@@ -5,7 +5,7 @@
 WEB_ROOT="/var/services/web_packages/icingaweb2"
 ICINGAWEB2_CONF_DIR="${SYNOPKG_PKGVAR}/etc/icingaweb2"
 ICINGA2_API_USER_FILE="/var/packages/icinga2/var/api-credentials.txt"
-CONF_TEMPLATES="${SYNOPKG_PKGDEST}/conf"
+CONF_TEMPLATES="${SYNOPKG_PKGDEST}/share/templates"
 
 service_postinst ()
 {
@@ -69,11 +69,11 @@ service_postinst ()
 
     # Copy and configure monitoring module commandtransports.ini
     if [ ! -f "${ICINGAWEB2_CONF_DIR}/modules/monitoring/commandtransports.ini" ]; then
-        API_USER="root"
+        API_USER="admin"
         API_PASS=""
         if [ -f "${ICINGA2_API_USER_FILE}" ]; then
-            API_USER=$(grep "^user=" "${ICINGA2_API_USER_FILE}" | cut -d= -f2)
-            API_PASS=$(grep "^password=" "${ICINGA2_API_USER_FILE}" | cut -d= -f2)
+            API_USER=$(grep "^Username:" "${ICINGA2_API_USER_FILE}" | cut -d: -f2 | tr -d ' ')
+            API_PASS=$(grep "^Password:" "${ICINGA2_API_USER_FILE}" | cut -d: -f2 | tr -d ' ')
         fi
         cp "${CONF_TEMPLATES}/modules/monitoring/commandtransports.ini" "${ICINGAWEB2_CONF_DIR}/modules/monitoring/commandtransports.ini"
         sed -i -e "s|@api_user@|${API_USER}|g" \
