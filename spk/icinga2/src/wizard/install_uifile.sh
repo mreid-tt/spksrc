@@ -36,11 +36,15 @@ PAGE_DATABASE_SETUP=$(/bin/cat<<EOF
         "type": "password",
         "desc": "Set a password for the icinga2 database user.",
         "subitems": [{
-            "key": "wizard_ido_db_password",
-            "desc": "IDO database password",
+           "key": "wizard_ido_db_password",
+           "desc": "IDO database password",
             "validator": {
                 "allowBlank": false,
-                "minLength": 8
+                "minLength": 8,
+                "regex": {
+                    "expr": "/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}<>?=])/",
+                    "errorText": "Password must include uppercase, lowercase, number, and special character (!@#$%^&*()_+{}<>?=)"
+                }
             }
         }]
     }]

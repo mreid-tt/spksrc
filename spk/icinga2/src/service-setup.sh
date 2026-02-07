@@ -19,10 +19,19 @@ SERVICE_COMMAND="${SYNOPKG_PKGDEST}/sbin/icinga2 daemon -c ${SYNOPKG_PKGVAR}/etc
 SVC_BACKGROUND=y
 SVC_WRITE_PID=y
 
-generate_password()
+generate_password ()
 {
-    # Generate a random password
-    head -c 32 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 24
+    # Generate a random password that satisfies MariaDB policy:
+    # - Include uppercase, lowercase, numbers, and special characters
+    # - At least 8 characters
+    local password
+    password=$(tr -dc 'a-zA-Z0-9!@#$%^&*()_+{}<>?=' </dev/urandom | fold -w 16 | grep -E '[a-z]' | grep -E '[A-Z]' | grep -E '[0-9]' | grep -E '[!@#$%^&*()_+{}<>?=]' | head -n 1)
+    # Fallback if filtering is too strict
+    if [ -z "${password}" ]; then
+        password=$(head -c 32 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 16)
+        password="${password}!A1"
+    fi
+    echo "${password}"
 }
 
 validate_preinst ()
@@ -164,16 +173,17 @@ EOF
 
     # Generate certificates for API if not present
     if [ ! -d "${SYNOPKG_PKGVAR}/lib/icinga2/certs" ]; then
-        mkdir -p "${SYNOPKG_PKGVAR}/lib/icinga2/certs"
-        HOSTNAME=$(hostname -f 2>/dev/null || hostname)
-        # Generate CA and node certificates
-        "${SYNOPKG_PKGDEST}/sbin/icinga2" pki new-ca 2>/dev/null || true
+       mkdir -p "${SYNOPKG_PKGVAR}/lib/icinga2/certs"
+       HOSTNAME=$(hostname -f 2>/dev/null || hostname)
+       # Generate CA and node certificates
+       "${SYNOPKG_PKGDEST}/sbin/icinga2" pki new-ca 2>/dev/null || true
+        # Generate key and CSR
         "${SYNOPKG_PKGDEST}/sbin/icinga2" pki new-cert --cn "${HOSTNAME}" \
             --key "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${HOSTNAME}.key" \
-            --cert "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${HOSTNAME}.crt" 2>/dev/null || true
-        # Sign the certificate
+            --csr "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${HOSTNAME}.csr" 2>/dev/null || true
+        # Sign the CSR to create the certificate
         "${SYNOPKG_PKGDEST}/sbin/icinga2" pki sign-csr \
-            --csr "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${HOSTNAME}.crt" \
+            --csr "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${HOSTNAME}.csr" \
             --cert "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${HOSTNAME}.crt" 2>/dev/null || true
         # Copy CA cert
         cp "${SYNOPKG_PKGVAR}/lib/icinga2/ca/ca.crt" "${SYNOPKG_PKGVAR}/lib/icinga2/certs/ca.crt" 2>/dev/null || true
