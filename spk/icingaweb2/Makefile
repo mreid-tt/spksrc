@@ -7,8 +7,7 @@ DEPENDS  = cross/icingaweb2
 # Pure PHP package, make sure ARCH is noarch
 override ARCH=noarch
 
-REQUIRED_MIN_DSM = 7.2
-SPK_DEPENDS = WebStation:PHP8.2:Apache2.4
+REQUIRED_MIN_DSM = 7.1
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Icinga Web 2 is a powerful PHP framework for web applications that provides the frontend for Icinga 2 monitoring.
@@ -27,10 +26,22 @@ ADMIN_URL = /icingaweb2/
 
 DSM_UI_DIR = app
 DSM_UI_CONFIG = src/app/config
-CONF_DIR = src/conf
 
 SERVICE_SETUP = src/service-setup.sh
 STARTABLE = no
+
+include ../../mk/spksrc.common.mk
+
+# DSM 7.2+: Use PHP 8.2
+ifeq ($(call version_ge, ${TCVERSION}, 7.2),1)
+SPK_DEPENDS = "WebStation:PHP8.2:Apache2.4"
+CONF_DIR = src/conf_72/
+else ifeq ($(call version_ge, ${TCVERSION}, 7.0),1)
+# DSM 7.0/7.1: Use PHP 8.0
+SPK_DEPENDS = "WebStation:PHP8.0:Apache2.4"
+OS_MAX_VER = 7.1-59999
+CONF_DIR = src/conf_7/
+endif
 
 POST_STRIP_TARGET = icingaweb2_extra_install
 
