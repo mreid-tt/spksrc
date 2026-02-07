@@ -15,23 +15,17 @@ export ICINGA2_CACHE_DIR="${SYNOPKG_PKGVAR}/cache/icinga2"
 export ICINGA2_SPOOL_DIR="${SYNOPKG_PKGVAR}/spool/icinga2"
 export ICINGA2_INIT_RUN_DIR="${SYNOPKG_PKGVAR}/run/icinga2"
 
+# Template directory
+TEMPLATES_DIR="${SYNOPKG_PKGDEST}/share/templates"
+
 SERVICE_COMMAND="${SYNOPKG_PKGDEST}/sbin/icinga2 daemon -c ${SYNOPKG_PKGVAR}/etc/icinga2/icinga2.conf"
 SVC_BACKGROUND=y
 SVC_WRITE_PID=y
 
 generate_password ()
 {
-    # Generate a random password that satisfies MariaDB policy:
-    # - Include uppercase, lowercase, numbers, and special characters
-    # - At least 8 characters
-    local password
-    password=$(tr -dc 'a-zA-Z0-9!@#$%^&*()_+{}<>?=' </dev/urandom | fold -w 16 | grep -E '[a-z]' | grep -E '[A-Z]' | grep -E '[0-9]' | grep -E '[!@#$%^&*()_+{}<>?=]' | head -n 1)
-    # Fallback if filtering is too strict
-    if [ -z "${password}" ]; then
-        password=$(head -c 32 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 16)
-        password="${password}!A1"
-    fi
-    echo "${password}"
+    # Generate a random alphanumeric password for API access
+    head -c 32 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 24
 }
 
 validate_preinst ()
@@ -73,17 +67,13 @@ EOF
     ${MYSQL} -u "${IDO_DB_USER}" -p"${IDO_DB_PASS}" "${IDO_DB_NAME}" \
         < "${SYNOPKG_PKGDEST}/share/icinga2-ido-mysql/schema/mysql.sql"
 
-    # Save IDO credentials for Icinga Web 2
-    cat > "${SYNOPKG_PKGVAR}/ido-credentials.txt" <<EOF
-Icinga 2 IDO Database Credentials
-=================================
-Database: ${IDO_DB_NAME}
-Username: ${IDO_DB_USER}
-Password: ${IDO_DB_PASS}
-Host: localhost
-Port: 3306
-EOF
-    chmod 600 "${SYNOPKG_PKGVAR}/ido-credentials.txt"
+    # Save IDO credentials from template for Icinga Web 2
+    sed -e "s|@ido_db_name@|${IDO_DB_NAME}|g" \
+        -e "s|@ido_db_user@|${IDO_DB_USER}|g" \
+        -e "s|@ido_db_pass@|${IDO_DB_PASS}|g" \
+        "${TEMPLATES_DIR}/ido-credentials.txt" > "${SYNOPKG_PKGVAR}/ido-credentials.txt"
+    # Make readable by http group for Icinga Web 2
+    chmod 644 "${SYNOPKG_PKGVAR}/ido-credentials.txt"
 }
 
 configure_ido_mysql ()
@@ -93,21 +83,11 @@ configure_ido_mysql ()
     # Enable ido-mysql feature
     ln -sf ../features-available/ido-mysql.conf "${SYNOPKG_PKGVAR}/etc/icinga2/features-enabled/ido-mysql.conf"
 
-    # Configure ido-mysql with database credentials
-    cat > "${SYNOPKG_PKGVAR}/etc/icinga2/features-available/ido-mysql.conf" <<EOF
-/**
- * The IDO MySQL feature for Icinga 2.
- */
-
-library "db_ido_mysql"
-
-object IdoMysqlConnection "ido-mysql" {
-  user = "${IDO_DB_USER}"
-  password = "${IDO_DB_PASS}"
-  host = "localhost"
-  database = "${IDO_DB_NAME}"
-}
-EOF
+    # Configure ido-mysql from template with database credentials
+    sed -e "s|@ido_db_name@|${IDO_DB_NAME}|g" \
+        -e "s|@ido_db_user@|${IDO_DB_USER}|g" \
+        -e "s|@ido_db_pass@|${IDO_DB_PASS}|g" \
+        "${TEMPLATES_DIR}/ido-mysql.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/features-available/ido-mysql.conf"
 }
 
 service_postinst()
@@ -144,31 +124,16 @@ service_postinst()
         # Enable IDO-MySQL feature
         configure_ido_mysql
 
-        # Create API user configuration
+        # Create API user configuration from template
         API_PASSWORD=$(generate_password)
-        cat > "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/api-users.conf" << EOF
-/**
- * API Users for Icinga 2
- * Default user: admin
- * The password is auto-generated during installation.
- */
+        sed -e "s|@api_password@|${API_PASSWORD}|g" \
+            "${TEMPLATES_DIR}/api-users.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/api-users.conf"
 
-object ApiUser "admin" {
-  password = "${API_PASSWORD}"
-  permissions = [ "*" ]
-}
-EOF
-        # Save credentials to a file for user reference
-        cat > "${SYNOPKG_PKGVAR}/api-credentials.txt" << EOF
-Icinga 2 API Credentials
-========================
-URL: https://<your-nas-ip>:5665
-Username: admin
-Password: ${API_PASSWORD}
-
-API Documentation: https://icinga.com/docs/icinga-2/latest/doc/12-icinga2-api/
-EOF
-        chmod 600 "${SYNOPKG_PKGVAR}/api-credentials.txt"
+        # Save API credentials from template for user reference
+        sed -e "s|@api_password@|${API_PASSWORD}|g" \
+            "${TEMPLATES_DIR}/api-credentials.txt" > "${SYNOPKG_PKGVAR}/api-credentials.txt"
+        # Make readable by http group for Icinga Web 2
+        chmod 644 "${SYNOPKG_PKGVAR}/api-credentials.txt"
     fi
 
     # Generate certificates for API if not present
