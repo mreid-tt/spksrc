@@ -37,7 +37,5 @@ icinga2_extra_install:
 	install -m 755 -d $(STAGING_DIR)/etc
 	install -m 755 -d $(STAGING_DIR)/share
 	install -m 755 -d $(STAGING_DIR)/share/templates
-	install -m 644 $(CURDIR)/src/constants.conf $(STAGING_DIR)/share/constants.conf
-	install -m 644 $(CURDIR)/src/hosts.conf $(STAGING_DIR)/share/hosts.conf
 	install -m 644 $(CURDIR)/src/templates/*.conf $(STAGING_DIR)/share/templates/
 	install -m 644 $(CURDIR)/src/templates/*.txt $(STAGING_DIR)/share/templates/

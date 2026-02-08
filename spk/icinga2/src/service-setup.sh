@@ -130,9 +130,9 @@ service_postinst()
     if [ ! -f "${SYNOPKG_PKGVAR}/etc/icinga2/icinga2.conf" ]; then
         cp -r "${SYNOPKG_PKGDEST}/etc/icinga2/"* "${SYNOPKG_PKGVAR}/etc/icinga2/"
         # Use custom constants.conf with correct plugin paths
-        cp "${SYNOPKG_PKGDEST}/share/constants.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/constants.conf"
+        cp "${TEMPLATES_DIR}/constants.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/constants.conf"
         # Use custom hosts.conf with mail notifications disabled
-        cp "${SYNOPKG_PKGDEST}/share/hosts.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/hosts.conf"
+        cp "${TEMPLATES_DIR}/hosts.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/hosts.conf"
 
         # Enable API feature by creating symlink
         ln -sf ../features-available/api.conf "${SYNOPKG_PKGVAR}/etc/icinga2/features-enabled/api.conf"
