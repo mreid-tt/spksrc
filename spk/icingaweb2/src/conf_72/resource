@@ -18,7 +18,7 @@
 		"pkg_dir_prepare": [{
 			"group": "http",
 			"mode": "0755",
-			"source": "/var/packages/icingaweb2/target/share/icingaweb2/public",
+			"source": "/var/packages/icingaweb2/target/share/icingaweb2",
 			"target": "icingaweb2",
 			"user": "sc-icingaweb2"
 		}],
@@ -50,7 +50,7 @@
 				"profile_name": "icingaweb2",
 				"user": "sc-icingaweb2"
 			},
-			"root": "icingaweb2",
+			"root": "icingaweb2/public",
 			"service": "icingaweb2",
 			"type": "apache_php"
 		}]

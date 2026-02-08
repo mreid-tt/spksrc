@@ -28,6 +28,22 @@ generate_password ()
     head -c 32 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 24
 }
 
+service_preuninst ()
+{
+    # Remove database and user on uninstall
+    if [ "${SYNOPKG_PKG_STATUS}" = "UNINSTALL" ]; then
+        # Read root password from wizard if available, otherwise skip
+        if [ -n "${wizard_mysql_password_root}" ]; then
+            echo "Removing IDO database and user"
+            ${MYSQL} -u root -p"${wizard_mysql_password_root}" <<EOF 2>/dev/null || true
+DROP DATABASE IF EXISTS ${IDO_DB_NAME};
+DROP USER IF EXISTS '${IDO_DB_USER}'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+        fi
+    fi
+}
+
 validate_preinst ()
 {
     if [ "${SYNOPKG_PKG_STATUS}" = "INSTALL" ]; then
