@@ -53,3 +53,5 @@ icingaweb2_extra_install:
 	install -m 755 -d $(STAGING_DIR)/share/templates/modules/monitoring
 	install -m 644 src/templates/*.ini $(STAGING_DIR)/share/templates/
 	install -m 644 src/templates/modules/monitoring/*.ini $(STAGING_DIR)/share/templates/modules/monitoring/
+	# Install .htaccess for environment variables
+	install -m 644 src/htaccess $(STAGING_DIR)/share/icingaweb2/public/.htaccess
