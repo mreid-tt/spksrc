@@ -1,8 +1,5 @@
 # Icinga Web 2 Apache Configuration
-# Set environment variables for library paths and configuration
-
-SetEnv ICINGAWEB_CONFIGDIR /var/packages/icingaweb2/var/etc/icingaweb2
-SetEnv ICINGAWEB_LIBDIR /var/packages/icingaweb2/target/share/icinga-php
+# URL rewriting configuration
 
 RewriteEngine On
 RewriteBase /icingaweb2/
