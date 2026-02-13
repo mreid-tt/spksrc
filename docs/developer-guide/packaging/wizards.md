@@ -10,6 +10,25 @@ spksrc uses Mustache templates for wizard definitions:
 - **upgrade_uifile** - Shown during upgrade (optional)
 - **uninstall_uifile** - Shown during uninstall (optional)
 
+## Naming Conventions
+
+There are two types of variables in wizard templates:
+
+1. **Mustache substitutions** - Use `UPPERCASE_WITH_UNDERSCORES` for text that gets replaced during build. These are defined in the `.yml` files and substituted into the template.
+
+2. **Input keys** - Use lowercase `wizard_` prefix for values that get passed to `service-setup.sh`. These are the actual form field keys that DSM collects from the user.
+
+Example:
+```json
+{
+    "step_title": "{{{CONFIGURATION_STEP_TITLE}}}",   // Mustache - replaced at build
+    "subitems": [{
+        "key": "wizard_data_share",                   // Input key - passed to scripts
+        "desc": "{{{SHARE_NAME_LABEL}}}"             // Mustache - replaced at build
+    }]
+}
+```
+
 ## File Structure
 
 ```
@@ -27,19 +46,19 @@ spk/<package>/src/wizard_templates/
 
 ```json
 [{
-    "step_title": "{{wizard_title}}",
+    "step_title": "{{{CONFIGURATION_TITLE}}}",
     "items": [{
         "type": "textfield",
-        "desc": "{{wizard_share_name_desc}}",
+        "desc": "{{{SHARE_NAME_DESC}}}",
         "subitems": [{
             "key": "wizard_data_share",
-            "desc": "{{wizard_share_name_label}}",
+            "desc": "{{{SHARE_NAME_LABEL}}}",
             "defaultValue": "mypackage",
             "validator": {
                 "allowBlank": false,
                 "regex": {
                     "expr": "/^[a-zA-Z][a-zA-Z0-9_-]*$/",
-                    "errorText": "{{wizard_share_name_invalid}}"
+                    "errorText": "{{{SHARE_NAME_INVALID}}}"
                 }
             }
         }]
@@ -50,10 +69,10 @@ spk/<package>/src/wizard_templates/
 ### install_uifile.yml
 
 ```yaml
-wizard_title: "Configuration"
-wizard_share_name_desc: "Enter the name of the shared folder to use."
-wizard_share_name_label: "Shared folder name"
-wizard_share_name_invalid: "Invalid folder name. Use only letters, numbers, hyphens, and underscores."
+CONFIGURATION_TITLE: "Configuration"
+SHARE_NAME_DESC: "Enter the name of the shared folder to use."
+SHARE_NAME_LABEL: "Shared folder name"
+SHARE_NAME_INVALID: "Invalid folder name. Use only letters, numbers, hyphens, and underscores."
 ```
 
 ## Input Types
@@ -224,10 +243,10 @@ Create `<name>_<lang>.yml` for each language:
 **install_uifile_fre.yml:**
 
 ```yaml
-wizard_title: "Configuration"
-wizard_share_name_desc: "Entrez le nom du dossier partagé à utiliser."
-wizard_share_name_label: "Nom du dossier partagé"
-wizard_share_name_invalid: "Nom de dossier invalide."
+CONFIGURATION_TITLE: "Configuration"
+SHARE_NAME_DESC: "Entrez le nom du dossier partagé à utiliser."
+SHARE_NAME_LABEL: "Nom du dossier partagé"
+SHARE_NAME_INVALID: "Nom de dossier invalide."
 ```
 
 ## Best Practices
@@ -247,21 +266,21 @@ A common pattern for packages needing a shared folder:
 
 ```json
 [{
-    "step_title": "{{wizard_title}}",
+    "step_title": "{{{DATA_STORAGE_TITLE}}}",
     "items": [{
-        "desc": "{{wizard_share_note}}"
+        "desc": "{{{SHARE_NOTE}}}"
     }, {
         "type": "textfield",
-        "desc": "{{wizard_share_desc}}",
+        "desc": "{{{SHARE_DESC}}}",
         "subitems": [{
             "key": "wizard_data_share",
-            "desc": "{{wizard_share_label}}",
+            "desc": "{{{SHARE_LABEL}}}",
             "defaultValue": "mypackage",
             "validator": {
                 "allowBlank": false,
                 "regex": {
                     "expr": "/^[a-zA-Z][a-zA-Z0-9_-]*$/",
-                    "errorText": "{{wizard_share_invalid}}"
+                    "errorText": "{{{SHARE_INVALID}}}"
                 }
             }
         }]
@@ -272,9 +291,9 @@ A common pattern for packages needing a shared folder:
 **install_uifile.yml:**
 
 ```yaml
-wizard_title: "Data Storage"
-wizard_share_note: "Note: If you want to use a specific volume, create the shared folder before installing this package."
-wizard_share_desc: "Enter the name of the shared folder where data will be stored."
-wizard_share_label: "Shared folder"
-wizard_share_invalid: "Invalid folder name. Use letters, numbers, hyphens, and underscores only."
+DATA_STORAGE_TITLE: "Data Storage"
+SHARE_NOTE: "Note: If you want to use a specific volume, create the shared folder before installing this package."
+SHARE_DESC: "Enter the name of the shared folder where data will be stored."
+SHARE_LABEL: "Shared folder"
+SHARE_INVALID: "Invalid folder name. Use letters, numbers, hyphens, and underscores only."
 ```
