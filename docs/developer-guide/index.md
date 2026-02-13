@@ -53,7 +53,7 @@ Share your work:
 | Add a service/daemon | [Service Scripts](packaging/service-scripts.md) |
 | Package a Python app | [Python Packages](package-types/python.md) |
 | Debug build issues | [Debugging](advanced/debugging.md) |
-| Look up a Makefile variable | [Makefile Reference](../reference/makefile-reference.md) |
+| Look up a Makefile variable | [Makefile Variables](packaging/makefile-variables.md) |
 
 ## Community Resources
 

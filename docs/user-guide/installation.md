@@ -27,7 +27,8 @@ Click the **Settings** button in the top-right corner of Package Center.
    - **Location**: `https://packages.synocommunity.com`
 4. Click **OK**
 
-![Adding SynoCommunity repository](../assets/add-repository.png)
+<!-- TODO: Add screenshot -->
+<!-- ![Adding SynoCommunity repository](../assets/add-repository.png) -->
 
 ### Step 4: Trust the Repository
 

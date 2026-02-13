@@ -6,7 +6,6 @@ This section provides reference documentation for spksrc development.
 
 - **[Architectures](architectures.md)** - CPU architectures and model mappings
 - **[Ports](ports.md)** - Port allocations for Synology and SynoCommunity packages
-- **[Makefile Reference](makefile-reference.md)** - Complete variable and target reference
 
 ## Quick Links
 
