@@ -20,7 +20,7 @@ spksrc supports several package categories:
 Software compiled for the target NAS architecture:
 
 - Libraries (openssl, zlib, curl)
-- Command-line tools (git, tmux)
+- Command-line tools (git, screen)
 - Server applications (nginx, ffmpeg)
 
 ### SPK Packages (`spk/`)

@@ -25,6 +25,7 @@ SynoCommunity provides a wide variety of open-source packages for Synology NAS d
 | NZBGet | Efficient Usenet downloader | Active |
 | Deluge | Feature-rich BitTorrent client | Active |
 | qBittorrent | Qt-based BitTorrent client | Active |
+| Aria2 | Download utility with multi-protocol support | Active |
 
 ### Media Management
 
@@ -36,6 +37,7 @@ SynoCommunity provides a wide variety of open-source packages for Synology NAS d
 | Bazarr | Subtitle management | Active |
 | Prowlarr | Indexer management | Active |
 | Jackett | Torrent/Usenet indexer proxy | Active |
+| Readarr | Book collection management | Active |
 
 ### Media Servers
 
@@ -43,20 +45,23 @@ SynoCommunity provides a wide variety of open-source packages for Synology NAS d
 |---------|-------------|--------|
 | Navidrome | Music streaming server | Active |
 | Jellyfin | Media streaming server | Active |
-| Emby | Media server | Active |
 | Minio | S3-compatible object storage | Active |
+| TVHeadend | TV streaming server | Active |
+| MPD | Music Player Daemon | Active |
 
 ### Development & Utilities
 
 | Package | Description | Status |
 |---------|-------------|--------|
 | Git | Version control system | Active |
-| Python 3.12 | Python runtime | Active |
-| Node.js | JavaScript runtime | Active |
-| Go | Go programming language | Active |
-| Rust | Rust programming language | Active |
-| tmux | Terminal multiplexer | Active |
-| Midnight Commander | File manager | Active |
+| Python 3.12 | Python runtime (also 3.10, 3.11, 3.13, 3.14) | Active |
+| Vim | Text editor | Active |
+| Fish | Friendly interactive shell | Active |
+| Zsh | Z shell | Active |
+| Mercurial | Version control system | Active |
+| SynoCli Network Tools | tmux, screen, ssh, rsync, nmap, and more | Active |
+| SynoCli File Tools | mc, tree, ncdu, fdupes, and more | Active |
+| SynoCli Disk Tools | smartctl, hdparm, and more | Active |
 
 ### Backup & Sync
 
@@ -66,15 +71,18 @@ SynoCommunity provides a wide variety of open-source packages for Synology NAS d
 | BorgBackup | Deduplicating backup | Active |
 | Restic | Fast, secure backup | Active |
 | rclone | Cloud storage sync | Active |
+| Duplicity | Encrypted bandwidth-efficient backup | Active |
+| rdiff-backup | Reverse differential backup | Active |
 
 ### Network & Security
 
 | Package | Description | Status |
 |---------|-------------|--------|
 | HAProxy | Load balancer and proxy | Active |
-| WireGuard | Modern VPN | Active |
-| OpenVPN | VPN solution | Active |
-| Pi-hole | Network-wide ad blocking | Active |
+| Cloudflared | Cloudflare Tunnel client | Active |
+| DNSCrypt-Proxy | DNS encryption proxy | Active |
+| Stunnel | SSL tunneling proxy | Active |
+| SSLH | Protocol multiplexer | Active |
 
 ### Home Automation
 
@@ -82,7 +90,6 @@ SynoCommunity provides a wide variety of open-source packages for Synology NAS d
 |---------|-------------|--------|
 | Home Assistant | Home automation platform | Active |
 | Mosquitto | MQTT broker | Active |
-| Node-RED | Flow-based programming | Active |
 
 ### Web Applications
 
@@ -90,9 +97,10 @@ SynoCommunity provides a wide variety of open-source packages for Synology NAS d
 |---------|-------------|--------|
 | Nextcloud | Self-hosted cloud platform | Active |
 | Roundcube | Webmail client | Active |
-| WordPress | Content management system | Active |
-| MediaWiki | Wiki software | Active |
 | COPS | Calibre OPDS server | Active |
+| Gitea | Self-hosted Git service | Active |
+| Wallabag | Read-it-later application | Active |
+| tt-rss | Tiny Tiny RSS feed reader | Active |
 
 ---
 

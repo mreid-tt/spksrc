@@ -76,7 +76,7 @@ This creates `local.mk` with default toolchain configuration.
 ### 5. Test Your Setup
 
 ```bash
-make -C spk/tmux
+make -C spk/transmission
 ```
 
 If the build completes, your environment is ready!

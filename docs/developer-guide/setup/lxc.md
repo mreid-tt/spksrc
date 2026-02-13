@@ -79,7 +79,7 @@ make setup
 ### 8. Test Your Setup
 
 ```bash
-make -C spk/tmux
+make -C spk/transmission
 ```
 
 ## Advanced Configuration

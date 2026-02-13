@@ -9,7 +9,7 @@ This guide walks you through building an existing package to verify your develop
 
 ## Building a Simple Package
 
-Let's build `tmux`, a terminal multiplexer. It's a good first package because:
+Let's build `transmission`, a lightweight BitTorrent client. It's a good first package because:
 
 - It's relatively quick to build
 - Has minimal dependencies
@@ -19,7 +19,7 @@ Let's build `tmux`, a terminal multiplexer. It's a good first package because:
 
 ```bash
 cd /path/to/spksrc
-cd spk/tmux
+cd spk/transmission
 ```
 
 ### Step 2: Build the Package
@@ -31,8 +31,8 @@ make
 This starts the build process. The first build will:
 
 1. Download the appropriate toolchain (if not cached)
-2. Download tmux source code
-3. Cross-compile tmux and its dependencies
+2. Download transmission source code
+3. Cross-compile transmission and its dependencies
 4. Create the SPK package
 
 !!! tip "Build Time"
@@ -49,7 +49,7 @@ ls ../../packages/
 You'll see something like:
 
 ```
-tmux_x64-7.2_3.5a-1.spk
+transmission_x64-7.2_4.0.6-8.spk
 ```
 
 The filename format is: `<package>_<arch>-<dsm>_<version>-<rev>.spk`
@@ -75,13 +75,13 @@ During the build, you'll see output like:
 
 ```
 ===> Downloading toolchain for x64-7.2
-===> Extracting for libevent-x64-7.2
-===> Configuring for libevent-x64-7.2
-===> Compiling for libevent-x64-7.2
-===> Installing for libevent-x64-7.2
-===> Extracting for ncursesw-x64-7.2
+===> Extracting for openssl3-x64-7.2
+===> Configuring for openssl3-x64-7.2
+===> Compiling for openssl3-x64-7.2
+===> Installing for openssl3-x64-7.2
+===> Extracting for curl-x64-7.2
 ...
-===> Creating package for tmux-x64-7.2
+===> Creating package for transmission-x64-7.2
 ```
 
 Each `===>` line indicates a build stage:
