@@ -31,6 +31,16 @@ This section provides reference documentation for spksrc development.
 
 ### External Resources
 
-- [Synology DSM Developer Guide](https://help.synology.com/developer-guide/)
-- [Package Center Specifications](https://help.synology.com/developer-guide/synology_package/)
-- [Synology Knowledge Base](https://kb.synology.com/)
+**Synology Official Documentation:**
+
+- [Package Developer Guide](https://help.synology.com/developer-guide/) - Official guide for DSM package development
+- [Getting Started](https://help.synology.com/developer-guide/getting_started/gettingstarted.html) - Prerequisites and first steps
+- [Package Structure](https://help.synology.com/developer-guide/synology_package/package_structure.html) - SPK file format and contents
+- [Resource Files](https://help.synology.com/developer-guide/integrate_dsm/resource.html) - DSM 7 resource worker configuration
+- [Privilege Configuration](https://help.synology.com/developer-guide/synology_package/privilege.html) - Service user and permissions
+- [Synology Knowledge Base](https://kb.synology.com/) - General DSM documentation
+
+**Source and Tools:**
+
+- [Synology Toolkit (pkgscripts-ng)](https://github.com/SynologyOpenSource/pkgscripts-ng) - Official build toolkit
+- [Synology GPL Source](https://sourceforge.net/projects/dsgpl/files/) - Toolchains and kernel sources

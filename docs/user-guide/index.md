@@ -11,6 +11,7 @@ SynoCommunity provides community-maintained packages for Synology NAS devices. T
 - **[Installation](installation.md)** - Add the SynoCommunity repository and install packages
 - **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
 - **[Compatibility](compatibility.md)** - DSM versions, architectures, and model support
+- **[Permissions](permissions.md)** - Configure folder access for packages
 
 ## Quick Start
 

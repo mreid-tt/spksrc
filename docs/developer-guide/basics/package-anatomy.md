@@ -19,11 +19,17 @@ spksrc/
 │   ├── transmission/
 │   ├── git/
 │   └── ...
+├── diyspk/          # Standalone packages extracted from bundles
+│   ├── python313/
+│   └── ...
 ├── mk/              # Build system makefiles
 ├── toolchain/       # Synology toolchains (downloaded)
 ├── distrib/         # Downloaded source files (cache)
 └── packages/        # Built SPK files (output)
 ```
+
+!!! note "About diyspk"
+    The `diyspk/` folder contains standalone packages that are normally part of bundle packages (like `synocli-*`). These allow users to build individual tools without the full bundle overhead.
 
 ## Cross Package Structure
 

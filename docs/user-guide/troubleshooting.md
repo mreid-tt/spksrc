@@ -1,15 +1,12 @@
 # Troubleshooting
 
-This guide covers common issues when using SynoCommunity packages.
+This guide covers common issues and frequently asked questions for SynoCommunity packages.
 
 ## Repository Issues
 
 ### Cannot Add Repository
 
-**Symptoms:**
-
-- "Invalid location" error when adding repository
-- Repository cannot be contacted
+**Symptoms:** "Invalid location" error when adding repository, or repository cannot be contacted.
 
 **Solutions:**
 
@@ -17,13 +14,37 @@ This guide covers common issues when using SynoCommunity packages.
 2. Check your NAS has internet access
 3. Try accessing `https://packages.synocommunity.com` in a browser to verify the server is online
 4. Check if your firewall blocks outbound HTTPS connections
+5. Are you connected via a VPN? Try a direct/local connection instead
+6. Check DNS resolution: SSH into your NAS and run `nslookup packages.synocommunity.com`
+
+**DSM Certificate Issue:**
+
+If running DSM older than 6.2.4-25556 Update 2:
+
+- Update DSM to get the latest certificate trust store, or
+- Manually update certificates:
+  ```bash
+  sudo mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt.bak
+  sudo curl -Lko /etc/ssl/certs/ca-certificates.crt https://curl.se/ca/cacert.pem
+  ```
+
+**DNS Workaround:**
+
+Configure manual DNS servers in **Control Panel** > **Network** > **General**:
+
+- Google: `8.8.8.8` / `8.8.4.4`
+- OpenDNS: `208.67.222.222` / `208.67.220.220`
+
+### 400 Bad Request Error
+
+If you see `400 Bad Request, The browser (or proxy) sent a request...`:
+
+- `packages.synocommunity.com` is for your NAS Package Center only, not for browser access
+- Visit [synocommunity.com](https://synocommunity.com) for the website
 
 ### No Packages Visible
 
-**Symptoms:**
-
-- Repository added but "Community" section is empty
-- Only some packages appear
+**Symptoms:** Repository added but "Community" section is empty, or only some packages appear.
 
 **Solutions:**
 
@@ -31,6 +52,15 @@ This guide covers common issues when using SynoCommunity packages.
 2. Ensure your DSM version is supported
 3. Wait a few minutes and refresh - package lists may be loading
 4. Clear Package Center cache: **Settings** > **General** > click **Clear**
+5. For beta packages: Enable **Settings** > **General** > "Yes, I want to see beta versions"
+6. When searching: Select the dropdown next to the magnifying glass and set to "Community"
+
+### How to Check Package Availability
+
+1. Find your NAS architecture: [Architecture per Model](../reference/architectures.md)
+2. Check if your architecture is listed at [synocommunity.com/packages](https://synocommunity.com/packages)
+
+If your architecture is not listed, it may be intentional - some packages cannot compile for certain architectures (especially PPC-based).
 
 ## Installation Issues
 
@@ -66,6 +96,20 @@ This guide covers common issues when using SynoCommunity packages.
 1. Check Package Center for the required dependency
 2. Install the dependency first, then retry
 3. If the dependency is not available for your architecture, the package cannot be installed
+
+### Port Conflict Error
+
+If you see `Port configured for this package is either used by another service or reserved`:
+
+1. Identify the conflicting service
+2. Either modify the conflicting service or contact the package developer
+3. Firewall rules are at `/usr/local/etc/services.d/[Package_Name].sc`
+
+**To remove orphaned firewall rules:**
+
+```bash
+sudo servicetool --remove-configure-file --package [Package_Name].sc
+```
 
 ## Runtime Issues
 
@@ -124,7 +168,7 @@ Some packages may not auto-start after DSM 7 updates due to systemd changes.
 
 DSM 7 has stricter permission controls.
 
-**Solution:** Ensure the package user (usually `sc-<packagename>`) has appropriate permissions on required folders.
+**Solution:** Ensure the package user (usually `sc-<packagename>`) has appropriate permissions. See [Permission Management](permissions.md) for details.
 
 ### DSM 6.x Issues
 
@@ -133,6 +177,48 @@ DSM 7 has stricter permission controls.
 **Cause:** Some packages require DSM 6.1+ or DSM 6.2+.
 
 **Solution:** Update DSM to the latest version for your NAS model, or check if older package versions are available.
+
+## Advanced Troubleshooting
+
+### Downgrading a Package (Without Uninstall)
+
+Instead of uninstalling, modify the version number to allow installing an older version:
+
+1. SSH into the NAS
+2. Edit the INFO file:
+   ```bash
+   sudo vi /var/packages/[Package_Name]/INFO
+   ```
+3. Change the version (e.g., `"5.20.1.34"` to `"1.0"`)
+4. Save and exit
+5. Package Center will now show version "1.0" and allow "upgrading" to an older release
+
+!!! warning
+    This may not work if the package update irreversibly migrates data.
+
+### Downloading Pre-release Packages from GitHub
+
+Development and pre-release packages are available from GitHub Actions artifacts.
+
+**Requirements:**
+
+- GitHub account (required to download artifacts)
+- Note: Artifacts expire 90 days after workflow completion
+
+**Steps:**
+
+1. Go to the Pull Request and click **Checks** tab
+2. Select **Build** workflow
+3. Download the artifact for your architecture (e.g., `x64-7.1`)
+4. Extract the `.spk` file from the ZIP
+5. Install via **Package Center** > **Manual Installation**
+
+**Finding Your Architecture:**
+
+- See [Architecture Reference](../reference/architectures.md)
+- Use generic arch where available: `x64` (for x86_64), `armv7`, `aarch64`
+- DSM 6: packages for version >= 6.2.4
+- DSM 7: packages for version >= 7.1 (or >= 7.2 when 7.1 not supported)
 
 ## Getting Help
 

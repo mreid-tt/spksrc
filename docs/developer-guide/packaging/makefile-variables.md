@@ -2,6 +2,9 @@
 
 This page documents the Makefile variables used in spksrc packages.
 
+!!! warning "Include Order Matters"
+    Any `ifeq` conditionals using architecture variables (like `ARMv7_ARCHS`, `x64_ARCHS`, etc.) must appear **after** `include ../../mk/spksrc.common.mk` or the relevant `spksrc.cross-*.mk` file. These variables are defined by the included makefiles and will be empty if referenced before the include.
+
 ## Package Identification
 
 ### Cross Packages

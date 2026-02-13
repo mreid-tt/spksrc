@@ -60,3 +60,9 @@ Share your work:
 - **Discord**: [Join our server](https://discord.gg/nnN9fgE7EF) for real-time help
 - **GitHub**: [SynoCommunity/spksrc](https://github.com/SynoCommunity/spksrc)
 - **Wiki**: [Legacy documentation](https://github.com/SynoCommunity/spksrc/wiki) (being migrated here)
+
+## External Resources
+
+- **[Synology Package Developer Guide](https://help.synology.com/developer-guide/)** - Official documentation from Synology
+- **[Synology Toolkit](https://github.com/SynologyOpenSource/pkgscripts-ng)** - Official build scripts
+- **[Synology GPL Source](https://sourceforge.net/projects/dsgpl/files/)** - Toolchains and kernel source

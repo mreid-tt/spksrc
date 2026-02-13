@@ -96,6 +96,7 @@ nav:
     - Installation: user-guide/installation.md
     - Troubleshooting: user-guide/troubleshooting.md
     - Compatibility: user-guide/compatibility.md
+    - Permissions: user-guide/permissions.md
   - Developer Guide:
     - developer-guide/index.md
     - Setup:
@@ -127,6 +128,7 @@ nav:
       - Cross-Compilation: developer-guide/advanced/cross-compilation.md
       - Debugging: developer-guide/advanced/debugging.md
       - Testing: developer-guide/advanced/testing.md
+      - Ash Shell PID Issue: developer-guide/advanced/ash-pid-issue.md
     - Migration:
       - developer-guide/migration/index.md
       - DSM 7 Migration: developer-guide/migration/dsm7.md
@@ -135,6 +137,7 @@ nav:
       - developer-guide/publishing/index.md
       - GitHub Actions: developer-guide/publishing/github-actions.md
       - Package Server: developer-guide/publishing/package-server.md
+      - Update Policy: developer-guide/publishing/update-policy.md
   - Reference:
     - reference/index.md
     - Architectures: reference/architectures.md
