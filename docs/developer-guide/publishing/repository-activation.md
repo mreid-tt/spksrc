@@ -34,8 +34,8 @@ If testing is successful:
 ## Package Signing
 
 !!! note "DSM Version Differences"
-    - **DSM 6.x**: Package signing verification is performed by DSM
-    - **DSM 7+**: Only accepts packages signed by Synology. Uploaded packages are automatically signed by the repository, so no additional action is required.
+    - **DSM 6.x**: Package signing ensures that packages are recognized as coming from a trusted publisher. Users must configure their trust level settings to allow installation of packages signed by Synology Inc. and trusted publishers.
+    - **DSM 7+**: Only Synology-signed packages are trusted. All community packages will always show a third-party warning during installation, regardless of signing.
 
 ## See Also
 

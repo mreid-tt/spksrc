@@ -11,6 +11,9 @@ tags:
 
 You can host your own package repository using [spkrepo](https://github.com/SynoCommunity/spkrepo), the same software that powers the SynoCommunity package server.
 
+!!! tip "Reference Documentation"
+    For the most up-to-date setup instructions, see the [spkrepo README](https://github.com/SynoCommunity/spkrepo#readme).
+
 ## Overview
 
 A package server provides:
@@ -24,49 +27,65 @@ A package server provides:
 
 ### Prerequisites
 
-- Python 3.8+
-- PostgreSQL or SQLite
-- Web server (nginx recommended)
-- SSL certificate (required for DSM 7+)
+- Docker and docker-compose
+- [uv](https://github.com/astral-sh/uv) (Python package manager)
+- SSL certificate (required for DSM 7+ clients)
 
 ### Quick Start
+
+Using Docker (recommended):
 
 ```bash
 # Clone spkrepo
 git clone https://github.com/SynoCommunity/spkrepo.git
 cd spkrepo
 
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
+# Run with docker-compose
+docker compose up
+```
 
-# Install dependencies
-pip install -r requirements.txt
+The server will be available at:
+- Website: http://localhost:5000
+- Admin: http://localhost:5000/admin
+- NAS API: http://localhost:5000/nas
 
-# Configure database
-cp config.example.py config.py
-# Edit config.py with your settings
+### Development Setup
+
+```bash
+# Clone spkrepo
+git clone https://github.com/SynoCommunity/spkrepo.git
+cd spkrepo
+
+# Start postgres database
+docker compose up db
+
+# Install dependencies with uv
+uv sync
 
 # Initialize database
-flask db upgrade
+uv run flask db upgrade
+
+# Create admin user
+uv run flask spkrepo create_admin -u admin -e admin@example.com -p yourpassword
 
 # Run development server
-flask run
+uv run flask run
 ```
 
 ### Production Deployment
 
-For production, use gunicorn with nginx:
+For production, use the Docker image with nginx:
 
 ```bash
-# Install gunicorn
-pip install gunicorn
-
-# Run with gunicorn
-gunicorn -w 4 -b 127.0.0.1:5000 spkrepo:app
+docker run -it --rm --name spkrepo \
+  -v $(pwd)/data:/data \
+  -v $(pwd)/config.py:/config.py \
+  -e SPKREPO_CONFIG=/config.py \
+  -p 8000:8000 \
+  ghcr.io/synocommunity/spkrepo
 ```
 
-nginx configuration:
+Example nginx reverse proxy:
 
 ```nginx
 server {
@@ -93,12 +112,7 @@ server {
 
 ### Manual Upload
 
-```bash
-# Using the CLI
-flask spkrepo add /path/to/package.spk
-
-# Or via web interface if enabled
-```
+Use the admin web interface at `/admin` to upload and manage packages.
 
 ### Automated Publishing
 
@@ -126,21 +140,22 @@ curl -X POST \
 
 ### Trust Settings
 
-For unsigned packages (DSM 6.x only):
+Trust settings only apply to DSM 6.x:
 
 1. Go to **Settings** > **General**
 2. Set **Trust Level** to "Synology Inc. and trusted publishers"
 
-!!! warning "Security Note"
-    Trust settings do not apply to DSM 7+, which shows a third-party warning for all community packages.
+!!! note "DSM 7+ Behavior"
+    DSM 7+ always shows a third-party warning for community packages regardless of trust settings.
 
 ## Package Signing
 
-### Why Sign Packages? (DSM 6.x)
+### DSM Version Differences
 
-Package signing is primarily useful for DSM 6.x. DSM 7+ only accepts Synology-signed packages from official sources.
+- **DSM 6.x**: Package signing ensures that packages are recognized as coming from a trusted publisher. Users must configure their trust level settings to allow installation of packages signed by Synology Inc. and trusted publishers.
+- **DSM 7+**: Only Synology-signed packages are trusted. All community packages will always show a third-party warning during installation, regardless of signing. Package signing has no effect on DSM 7+.
 
-### Signing Process
+### Signing for DSM 6.x
 
 Synology provides CodeSign service for verified developers:
 
@@ -148,16 +163,6 @@ Synology provides CodeSign service for verified developers:
 2. Receive signing certificate
 3. Configure spksrc with certificate path
 4. Packages are signed during build
-
-### spksrc Signing Configuration
-
-In `local.mk`:
-
-```makefile
-SIGN_PACKAGE = 1
-SIGN_CERTIFICATE = /path/to/certificate.pem
-SIGN_PRIVATE_KEY = /path/to/private_key.pem
-```
 
 ## Repository Structure
 

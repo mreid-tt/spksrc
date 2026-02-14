@@ -117,10 +117,9 @@ python312_aarch64-7.2_3.12.4-6.spk
 When PRs are merged to master:
 
 1. Packages build against release configurations
-2. SPK files are signed (if configured)
-3. Packages upload to the package repository
-4. Repository index regenerates
-5. Users see updates in Package Center
+2. SPK files are uploaded to the package repository
+3. Repository index regenerates
+4. Users see updates in Package Center
 
 After automatic publishing, packages need to be activated. See [Repository Activation](repository-activation.md) for details.
 
