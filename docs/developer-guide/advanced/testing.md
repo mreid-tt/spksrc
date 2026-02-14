@@ -19,7 +19,7 @@ make -C spk/<package> all-archs
 
 1. Copy SPK to NAS via SCP or File Station
 2. Install via Package Center > Manual Install
-3. Check `/var/log/packages/<pkg>.log`
+3. Check `/var/packages/<pkg>/var/*.log`
 4. Verify service starts correctly
 
 ## Upgrade Testing

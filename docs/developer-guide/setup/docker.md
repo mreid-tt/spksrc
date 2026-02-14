@@ -60,7 +60,7 @@ This creates `local.mk` with default toolchain configuration.
 ### 5. Test Your Setup
 
 ```bash
-make -C spk/transmission
+make -C spk/transmission ARCH=x64 TCVERSION=7.2
 ```
 
 If the build completes, your environment is ready!

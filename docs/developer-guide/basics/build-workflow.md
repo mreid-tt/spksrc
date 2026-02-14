@@ -32,38 +32,35 @@ flowchart LR
 ### Build a Package
 
 ```bash
-# Build with default settings (from local.mk)
-make -C spk/transmission
-
-# Build for specific architecture
+# Build for specific architecture (required)
 make -C spk/transmission ARCH=x64 TCVERSION=7.2
 
-# Build for all supported architectures
-make -C spk/transmission ARCH=all
+# Build for ARM 64-bit
+make -C spk/transmission ARCH=aarch64 TCVERSION=7.2
+
+# Build for all supported architectures (uses DEFAULT_TC from local.mk)
+make -C spk/transmission all-supported
 ```
 
 ### Clean Builds
 
 ```bash
-# Clean build artifacts (keep downloads)
+# Clean build artifacts (keeps downloads)
 make -C spk/transmission clean
-
-# Clean everything including dependencies
-make -C spk/transmission realclean
 ```
 
 ### Debug Builds
 
 ```bash
 # Show what would be built
-make -C spk/transmission -n
+make -C spk/transmission -n ARCH=x64 TCVERSION=7.2
 
 # Verbose output
-make -C spk/transmission V=1
+make -C spk/transmission V=1 ARCH=x64 TCVERSION=7.2
 
 # Build single stage
-make -C spk/transmission configure
-make -C spk/transmission compile
+make -C spk/transmission configure ARCH=x64 TCVERSION=7.2
+make -C spk/transmission compile ARCH=x64 TCVERSION=7.2
 ```
 
 ## Specifying Targets
@@ -77,11 +74,9 @@ make ARCH=x64 TCVERSION=7.2
 # ARM 64-bit, DSM 7.2
 make ARCH=aarch64 TCVERSION=7.2
 
-# Build for multiple architectures
-make ARCH="x64 aarch64" TCVERSION=7.2
-
-# Build for all architectures
-make ARCH=all TCVERSION=7.2
+# Using arch-* targets
+make arch-x64-7.2
+make arch-aarch64-7.2
 ```
 
 ### Common Architectures
@@ -114,10 +109,10 @@ When you build `spk/transmission`:
 ```bash
 # Rebuild a specific dependency
 make -C cross/curl clean
-make -C cross/curl
+make -C cross/curl ARCH=x64 TCVERSION=7.2
 
 # Then rebuild the SPK
-make -C spk/transmission
+make -C spk/transmission ARCH=x64 TCVERSION=7.2
 ```
 
 ## Local Configuration
@@ -127,11 +122,11 @@ make -C spk/transmission
 Create `local.mk` in the repository root (run `make setup` or copy from `local.mk.sample`):
 
 ```makefile
-# Build for these architectures by default
-SUPPORTED_ARCHS = x64-7.2 aarch64-7.2
+# Default toolchain versions to build for (used by all-supported target)
+DEFAULT_TC = 6.2.4 7.1
 
-# Parallel builds (adjust to your CPU cores)
-MAKEFLAGS += -j8
+# Parallel builds
+PARALLEL_MAKE = max
 
 # Custom download cache location
 DISTRIB_DIR = /path/to/cache
@@ -140,9 +135,6 @@ DISTRIB_DIR = /path/to/cache
 ### Environment Variables
 
 ```bash
-# Parallel jobs
-export MAKEFLAGS="-j$(nproc)"
-
 # Verbose output
 export V=1
 
@@ -194,17 +186,17 @@ Build output is visible during the build. For detailed logs:
 
 ```bash
 # Enable verbose mode
-make V=1 2>&1 | tee build.log
+make V=1 ARCH=x64 TCVERSION=7.2 2>&1 | tee build.log
 ```
 
 ### Build Individual Stages
 
 ```bash
 # Build up to a specific stage
-make -C cross/curl extract
-make -C cross/curl patch
-make -C cross/curl configure
-make -C cross/curl compile
+make -C cross/curl extract ARCH=x64 TCVERSION=7.2
+make -C cross/curl patch ARCH=x64 TCVERSION=7.2
+make -C cross/curl configure ARCH=x64 TCVERSION=7.2
+make -C cross/curl compile ARCH=x64 TCVERSION=7.2
 
 # Check the work directory
 ls cross/curl/work-x64-7.2/
@@ -224,19 +216,16 @@ cat config.log  # If configure failed
 ```bash
 # Remove the stage marker and retry
 rm cross/curl/work-x64-7.2/.configure_done
-make -C cross/curl configure
+make -C cross/curl configure ARCH=x64 TCVERSION=7.2
 ```
 
 ## Parallel Builds
 
-### Enable Parallel Jobs
+### Enable Parallel Builds
 
-```bash
+```makefile
 # In local.mk
-MAKEFLAGS += -j8
-
-# Or on command line
-make -C spk/transmission -j8
+PARALLEL_MAKE = max
 ```
 
 ### Notes on Parallelism
@@ -244,7 +233,7 @@ make -C spk/transmission -j8
 - Build stages for a single package run in sequence
 - Different architectures can build in parallel
 - Dependency packages must complete before dependents start
-- Some packages have race conditions; use `-j1` if issues occur
+- Some packages have race conditions; disable parallel builds if issues occur
 
 ## CI/CD Integration
 

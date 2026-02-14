@@ -76,7 +76,7 @@ This creates `local.mk` with default toolchain configuration.
 ### 5. Test Your Setup
 
 ```bash
-make -C spk/transmission
+make -C spk/transmission ARCH=x64 TCVERSION=7.2
 ```
 
 If the build completes, your environment is ready!
@@ -89,7 +89,7 @@ After running `make setup`, edit `local.mk` to customize your environment:
 
 ```makefile
 # Build for specific architectures only
-SUPPORTED_ARCHS = x64-7.2 aarch64-7.2
+DEFAULT_TC = 7.2
 
 # Use parallel jobs (adjust based on CPU cores)
 MAKEFLAGS += -j8

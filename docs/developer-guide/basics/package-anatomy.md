@@ -89,9 +89,8 @@ spk/transmission/
 ├── PLIST            # Files to include
 └── src/             # Package-specific files
     ├── service-setup.sh    # Service configuration
-    ├── dsm-control.sh      # Start/stop script (DSM 6)
     ├── conf/               # Configuration files
-    │   └── resource         # DSM 7 resource file
+    │   └── resource        # DSM 7 resource file
     └── wizard_templates/   # Install wizard (optional)
         ├── install_uifile
         └── install_uifile.yml
@@ -102,11 +101,10 @@ spk/transmission/
 ```makefile
 SPK_NAME = transmission
 SPK_VERS = 4.1.0
-SPK_REV = 1
+SPK_REV = 28
 SPK_ICON = src/transmission.png
 
 DEPENDS = cross/transmission
-SPK_DEPENDS = "WebStation>=3.0"
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Fast, easy, and free BitTorrent client
@@ -129,9 +127,9 @@ Key variables:
 |----------|--------|
 | `SPK_NAME` | Package name shown in Package Center |
 | `SPK_VERS` | Version shown to users |
-| `SPK_REV` | Package revision (increment for same version) |
+| `SPK_REV` | Package revision (increment for each release) |
 | `DEPENDS` | Cross packages to include |
-| `SPK_DEPENDS` | Other SPK packages required |
+| `SPK_DEPENDS` | Other SPK packages required (e.g., `"python312:ffmpeg7"`) |
 | `SERVICE_USER` | Create dedicated user (auto/specific name) |
 | `STARTABLE` | Whether package has a service to start |
 
@@ -160,27 +158,26 @@ See [PLIST Files](../packaging/plist.md) for detailed documentation.
 
 ## Service Scripts
 
-Packages with daemons use service scripts:
+Packages with daemons use a service setup script:
 
-**service-setup.sh** - Defines service variables:
+**service-setup.sh** - Defines service variables and lifecycle hooks:
 
 ```bash
+# Service command to run
 SERVICE_COMMAND="${SYNOPKG_PKGDEST}/bin/transmission-daemon"
+
+# Background service settings
 SVC_BACKGROUND=y
 SVC_WRITE_PID=y
-```
 
-**dsm-control.sh** (DSM 6) - Start/stop/status commands:
+# Optional lifecycle hooks
+service_postinst() {
+    # Run after installation
+}
 
-```bash
-case $1 in
-    start)
-        ${SYNOPKG_PKGDEST}/bin/transmission-daemon
-        ;;
-    stop)
-        killall transmission-daemon
-        ;;
-esac
+service_prestart() {
+    # Run before service starts
+}
 ```
 
 See [Service Scripts](../packaging/service-scripts.md) for detailed documentation.
@@ -199,8 +196,10 @@ cross/curl/
 spk/transmission/
 └── work-x64-7.2/
     ├── staging/             # All files for SPK
-    ├── image/               # Package layout
-    └── transmission-x64-7.2.spk
+    └── image/               # Package layout
+
+packages/
+└── transmission_x64-7.2_4.1.0-28.spk  # Output SPK file
 ```
 
 ## Next Steps

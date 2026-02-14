@@ -59,7 +59,7 @@ Once your environment is ready:
 
 3. **Test your setup** by building a simple package:
    ```bash
-   make -C spk/transmission
+   make -C spk/transmission ARCH=x64 TCVERSION=7.2
    ```
 
 4. Continue to [Your First Package](../basics/first-package.md)

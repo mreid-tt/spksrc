@@ -20,8 +20,6 @@ Run from `cross/<package>/` directory:
 | `install` | Install to staging |
 | `plist` | Generate PLIST file |
 | `clean` | Remove build artifacts |
-| `realclean` | Clean including dependencies |
-| `distclean` | Clean including downloads |
 
 ### SPK Package Targets
 
@@ -30,10 +28,11 @@ Run from `spk/<package>/` directory:
 | Target | Description |
 |--------|-------------|
 | `all` | Build SPK (default) |
+| `arch-<arch>-<version>` | Build for specific architecture (e.g., `arch-x64-7.2`) |
+| `all-supported` | Build for all architectures in `DEFAULT_TC` |
 | `package` | Create SPK file |
 | `publish` | Publish to package server |
 | `clean` | Remove build artifacts |
-| `realclean` | Clean including cross dependencies |
 
 ## Build System Includes
 
@@ -229,11 +228,11 @@ From command line:
 
 ```bash
 # Verbose output
-make V=1
+make V=1 ARCH=x64 TCVERSION=7.2
 
 # Dry run (show commands)
-make -n
+make -n ARCH=x64 TCVERSION=7.2
 
 # Debug makefile parsing
-make -d
+make -d ARCH=x64 TCVERSION=7.2
 ```

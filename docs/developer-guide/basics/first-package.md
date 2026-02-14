@@ -17,15 +17,16 @@ Let's build `transmission`, a lightweight BitTorrent client. It's a good first p
 
 ### Step 1: Navigate to the Package
 
+From the spksrc root directory:
+
 ```bash
-cd /path/to/spksrc
 cd spk/transmission
 ```
 
 ### Step 2: Build the Package
 
 ```bash
-make
+make ARCH=x64 TCVERSION=7.2
 ```
 
 This starts the build process. The first build will:
@@ -56,7 +57,7 @@ The filename format is: `<package>_<arch>-<dsm>_<version>-<rev>.spk`
 
 ## Specifying Architecture
 
-By default, spksrc builds for architectures listed in `local.mk`. To build for a specific architecture:
+You must specify both `ARCH` and `TCVERSION` when building:
 
 ```bash
 # Build for Intel 64-bit, DSM 7.2
@@ -64,9 +65,17 @@ make ARCH=x64 TCVERSION=7.2
 
 # Build for ARM 64-bit, DSM 7.2
 make ARCH=aarch64 TCVERSION=7.2
+```
 
-# Build for multiple architectures
-make ARCH="x64 aarch64" TCVERSION=7.2
+To build for multiple architectures at once, use the `arch-` target:
+
+```bash
+# Build specific architectures
+make arch-x64-7.2
+make arch-aarch64-7.2
+
+# Build all supported architectures (from local.mk DEFAULT_TC)
+make all-supported
 ```
 
 ## Understanding the Output
@@ -99,26 +108,28 @@ Each `===>` line indicates a build stage:
 
 ### Clean Package Build
 
-Remove build artifacts for this package only:
+Remove build artifacts for this package:
 
 ```bash
 make clean
 ```
 
-### Clean All Builds
+This removes the `work-*` directories and build logs.
 
-Remove all build artifacts (keeps downloads):
+### Clean Specific Architecture
+
+To clean and rebuild a specific architecture:
 
 ```bash
-make realclean
+make clean
+make ARCH=x64 TCVERSION=7.2
 ```
 
-### Clean Everything
-
-Remove all build artifacts and downloads:
+### Free Disk Space
 
 ```bash
-make distclean
+make clean          # Clean this package's work directories
+rm -rf distrib/*    # Remove downloads (will re-download when needed)
 ```
 
 ## Troubleshooting
@@ -132,7 +143,7 @@ Error: missing dependency: cross/something
 **Solution:** Dependencies should be built automatically. If not:
 
 ```bash
-make -C ../../cross/something
+make -C ../../cross/something ARCH=x64 TCVERSION=7.2
 ```
 
 Then retry the SPK build.
@@ -154,15 +165,7 @@ Error: Failed to download ...
 Enable parallel builds in `local.mk`:
 
 ```makefile
-MAKEFLAGS += -j$(shell nproc)
-```
-
-### Out of Disk Space
-
-```bash
-make clean          # Clean this package
-make realclean      # Clean all packages
-rm -rf distrib/*    # Remove downloads (will re-download)
+PARALLEL_MAKE = max
 ```
 
 ## Next Steps

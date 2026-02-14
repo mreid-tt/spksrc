@@ -6,9 +6,8 @@ This page covers how to configure services and daemons in spksrc packages.
 
 Packages that run background services need:
 
-1. **service-setup.sh** - Defines service variables and configuration
-2. **Resource file** (DSM 7) - Defines shared folder requirements, ports, etc.
-3. **dsm-control.sh** (DSM 6) - Start/stop control script
+1. **service-setup.sh** - Defines service variables and lifecycle hooks
+2. **Resource file** (DSM 7+) - Defines shared folder requirements, ports, etc.
 
 ## Service Setup Script
 
@@ -125,7 +124,7 @@ service_postuninst() {
 3. Package removed
 4. `service_postuninst()` called
 
-## Resource Files (DSM 7)
+## Resource Files (DSM 7+)
 
 DSM 7 uses resource files for enhanced integration. Create `spk/<package>/src/conf/resource`:
 
@@ -159,40 +158,6 @@ DSM 7 uses resource files for enhanced integration. Create `spk/<package>/src/co
 | `usr-local-linker` | Create symlinks in `/usr/local/bin` |
 | `webservice` | Web application configuration |
 
-## DSM 6 Control Script
-
-For DSM 6 compatibility, create `spk/<package>/src/dsm-control.sh`:
-
-```bash
-#!/bin/bash
-
-PIDFILE="${SYNOPKG_PKGVAR}/daemon.pid"
-DAEMON="${SYNOPKG_PKGDEST}/bin/mydaemon"
-
-case $1 in
-    start)
-        $DAEMON --config "${SYNOPKG_PKGVAR}/config.ini" &
-        echo $! > "$PIDFILE"
-        ;;
-    stop)
-        if [ -f "$PIDFILE" ]; then
-            kill $(cat "$PIDFILE")
-            rm -f "$PIDFILE"
-        fi
-        ;;
-    status)
-        if [ -f "$PIDFILE" ] && kill -0 $(cat "$PIDFILE") 2>/dev/null; then
-            exit 0
-        else
-            exit 1
-        fi
-        ;;
-    log)
-        echo "${SYNOPKG_PKGVAR}/logs/daemon.log"
-        ;;
-esac
-```
-
 ## Makefile Configuration
 
 ```makefile
@@ -222,5 +187,5 @@ SERVICE_WIZARD_SHARENAME = wizard_data_share
 2. **Handle configuration** - Check for and create default configs
 3. **Log appropriately** - Write logs to `${SYNOPKG_PKGVAR}/logs/`
 4. **Clean shutdown** - Handle SIGTERM gracefully
-5. **Support both DSM versions** - Include both resource file and dsm-control.sh
-6. **Validate in prestart** - Check requirements before starting
+5. **Validate in prestart** - Check requirements before starting
+6. **Use service_prestart for web deps** - For WebStation packages, configure files in `service_prestart` since web directories are created after `service_postinst`
