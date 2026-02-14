@@ -231,3 +231,10 @@ make -n ARCH=x64 TCVERSION=7.2
 # Debug makefile parsing
 make -d ARCH=x64 TCVERSION=7.2
 ```
+
+## Further Reading
+
+For details on how the build system works internally:
+
+- [Framework: Makefile System](../../framework/makefile-system.md) - Deep dive into mk/*.mk files
+- [Framework: Architecture](../../framework/architecture.md) - Build pipeline internals

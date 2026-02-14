@@ -139,6 +139,11 @@ nav:
       - Repository Activation: developer-guide/publishing/repository-activation.md
       - Package Server: developer-guide/publishing/package-server.md
       - Update Policy: developer-guide/publishing/update-policy.md
+  - Framework:
+    - framework/index.md
+    - Architecture: framework/architecture.md
+    - Makefile System: framework/makefile-system.md
+    - Toolchains: framework/toolchains.md
   - Reference:
     - reference/index.md
     - Architectures: reference/architectures.md

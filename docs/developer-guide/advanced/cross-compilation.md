@@ -52,3 +52,10 @@ cat spk/<pkg>/work-x64-7.2/<pkg>-<vers>/config.log
 # Verify binary architecture
 file spk/<pkg>/work-x64-7.2/install/var/packages/<pkg>/target/bin/<binary>
 ```
+
+## Further Reading
+
+For details on how the cross-compilation framework works internally, see:
+
+- [Framework Architecture](../../framework/architecture.md) - Build pipeline and stages
+- [Framework Toolchains](../../framework/toolchains.md) - Toolchain management internals
