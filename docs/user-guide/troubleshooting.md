@@ -69,31 +69,6 @@ If your architecture is not listed, it may be intentional - some packages cannot
 
 **Solution:** Find your NAS model in **Control Panel** > **Info Center** > **General**, then look up its architecture in the [Architecture Reference](../reference/architectures.md) or [Synology's CPU guide](https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have). Download the package version matching your architecture.
 
-### "Insufficient Privilege" or Permission Denied
-
-**Solutions:**
-
-1. Ensure you are logged in as an administrator
-2. When prompted about third-party packages on DSM 7.x, accept the warning to proceed with installation
-
-### Installation Wizard Fails
-
-**Solutions:**
-
-Shared folder errors are typically handled and reported by DSM during the wizard. If the installation process starts but fails afterward, check the installation logs:
-
-```bash
-ls /var/log/packages/
-```
-
-Note: Logs are only created if the installation process begins after the wizard completes.
-
-### Package Dependencies Not Met
-
-**Cause:** The package requires another package that is not installed or available.
-
-**Solution:** DSM typically alerts you when dependencies are missing. When installing from Package Center (not manual install), dependencies are usually installed automatically. For manual installs, check if the required dependency is available for your architecture and install it first.
-
 ### Port Conflict Error
 
 If you see `Port configured for this package is either used by another service or reserved`:
