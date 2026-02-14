@@ -171,11 +171,11 @@ SUPPORTED_ARCHS = x64-7.2 aarch64-7.2
 # Show kernel architecture
 uname -m
 
-# Show Synology model info
-cat /proc/synoinfo/model
+# Show Synology platform (maps to architecture)
+cat /proc/syno_platform
 
-# Show CPU info
-cat /proc/cpuinfo | grep -E "model name|CPU"
+# Show CPU architecture details
+cat /proc/syno_cpu_arch
 ```
 
 ### From Package Download
