@@ -7,14 +7,14 @@ This document describes the internal architecture of the spksrc build system, in
 The spksrc build system uses a pipeline-based architecture where each build stage depends on the previous one. The pipeline is implemented through GNU Make with cookie files tracking completion.
 
 ```
-┌───────────┐     ┌───────────┐     ┌───────────┐     ┌───────────┐
+┌───────────┐   ┌───────────┐   ┌───────────┐   ┌───────────┐
 │  download │ → │  checksum │ → │  extract  │ → │   patch   │
-└───────────┘     └───────────┘     └───────────┘     └───────────┘
-                                                        │
-                                                        ▼
-┌───────────┐     ┌───────────┐     ┌───────────┐     ┌───────────┐
+└───────────┘   └───────────┘   └───────────┘   └───────────┘
+                                                      │
+                                                      ▼
+┌───────────┐   ┌───────────┐   ┌───────────┐   ┌───────────┐
 │   plist   │ ← │  install  │ ← │  compile  │ ← │ configure │
-└───────────┘     └───────────┘     └───────────┘     └───────────┘
+└───────────┘   └───────────┘   └───────────┘   └───────────┘
 ```
 
 ## Cross-Compilation Stages
@@ -56,14 +56,14 @@ Stage 2 builds the actual package using the cross-compilation environment:
 For `spk/` packages, additional stages create the final SPK:
 
 ```
-┌───────────┐     ┌───────────┐     ┌───────────┐     ┌───────────┐
-│   depend  │ → │   copy    │ → │   strip   │ → │ icon/info │
-└───────────┘     └───────────┘     └───────────┘     └───────────┘
-                                                        │
-                                                        ▼
-┌───────────┐     ┌───────────┐     ┌───────────┐     ┌───────────┐
-│  scripts  │ → │  wizards  │ → │ package   │ → │  spk file │
-└───────────┘     └───────────┘     └───────────┘     └───────────┘
+┌───────────┐   ┌───────────┐   ┌───────────┐   ┌───────────┐
+│  depend   │ → │   copy    │ → │   strip   │ → │ icon/info │
+└───────────┘   └───────────┘   └───────────┘   └───────────┘
+                                                      │
+                                                      ▼
+┌───────────┐   ┌───────────┐   ┌───────────┐   ┌───────────┐
+│  scripts  │ → │  wizards  │ → │  package  │ → │ spk file  │
+└───────────┘   └───────────┘   └───────────┘   └───────────┘
 ```
 
 ### SPK Assembly Steps
