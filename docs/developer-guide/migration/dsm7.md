@@ -6,7 +6,7 @@ Key changes from DSM 6 to DSM 7.
 
 - **Non-root execution** - Packages run as `sc-{packagename}`
 - **New filesystem hierarchy** - Separate directories for data types
-- **Web service resource** - JSON-based WebStation integration
+- **Web service resource** - JSON-based WebStation integration (DSM 7+)
 
 ## Filesystem Hierarchy
 
@@ -15,7 +15,7 @@ Key changes from DSM 6 to DSM 7.
 | `target/` | Package binaries | `SYNOPKG_PKGDEST` |
 | `var/` | Persistent data | `SYNOPKG_PKGVAR` |
 | `etc/` | Configuration | - |
-| `home/` | Private storage | `SYNOPKG_PKGHOME` |
+| `home/` | Private storage | - |
 
 ## Deprecated
 

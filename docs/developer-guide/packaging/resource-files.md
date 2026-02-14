@@ -1,15 +1,20 @@
 # Resource Files (DSM 7)
 
-Resource files are JSON configuration files that define package resources for DSM 7.
+Resource files are JSON configuration files that define package resources. While resource files work with DSM 6 and later, some features like web services are only available in DSM 7+.
 
 ## Overview
 
-DSM 7 introduced resource files as a declarative way to:
+Resource files provide a declarative way to:
 
 - Configure shared folder permissions
 - Define network ports
 - Create symlinks in system paths
-- Set up web services
+- Set up web services (DSM 7+)
+
+For more information, see the [Synology Developer Guide - Resource Acquisition](https://help.synology.com/developer-guide/resource_acquisition/).
+
+!!! note "Makefile Variables"
+    For port configuration, use the `FWPORTS` Makefile variable instead of manually editing resource files. For command-line symlinks, use `SPK_COMMANDS`. See [Makefile Variables](makefile-variables.md).
 
 ## File Locations
 
@@ -88,17 +93,14 @@ Define shared folder requirements and permissions:
 
 ## Port Configuration
 
-Define ports used by the service:
+Ports are typically configured using the `FWPORTS` Makefile variable rather than directly in resource files:
 
-```json
-{
-    "port-config": {
-        "protocol-file": "etc/protocol"
-    }
-}
+```makefile
+# In spk/<package>/Makefile
+FWPORTS = src/<package>.sc
 ```
 
-The protocol file (`spk/<package>/src/etc/protocol`) defines the actual ports:
+The protocol file (`spk/<package>/src/<package>.sc`) defines the ports:
 
 ```
 [mypackage]
@@ -119,33 +121,20 @@ dst.ports = "8080/tcp"
 
 ## usr-local-linker
 
-Create symlinks in `/usr/local/bin/` for command-line access:
+Command-line symlinks are typically configured using the `SPK_COMMANDS` Makefile variable:
 
-```json
-{
-    "usr-local-linker": {
-        "bin": ["mycommand", "myother"]
-    }
-}
+```makefile
+# In spk/<package>/Makefile
+SPK_COMMANDS = bin/mycommand bin/myother
 ```
 
 This creates:
 - `/usr/local/bin/mycommand` → `/var/packages/<pkg>/target/bin/mycommand`
 - `/usr/local/bin/myother` → `/var/packages/<pkg>/target/bin/myother`
 
-### Library Links
-
-```json
-{
-    "usr-local-linker": {
-        "lib": ["libfoo.so.1"]
-    }
-}
-```
-
 ## Web Service
 
-Configure web applications running under WebStation:
+Configure web applications running under WebStation (DSM 7+ only). See [Synology Web Service Documentation](https://help.synology.com/developer-guide/resource_acquisition/web_service.html).
 
 ```json
 {
@@ -218,6 +207,8 @@ The build system selects the appropriate version.
 
 ## Example: Complete Resource File
 
+This example shows the data-share configuration. Port and command-line links are typically handled via Makefile variables (`FWPORTS` and `SPK_COMMANDS`).
+
 ```json
 {
     "data-share": {
@@ -229,12 +220,23 @@ The build system selects the appropriate version.
                 }
             }
         ]
-    },
-    "port-config": {
-        "protocol-file": "etc/protocol"
-    },
-    "usr-local-linker": {
-        "bin": ["mycommand"]
+    }
+}
+```
+
+## Database Resources
+
+Packages can request database resources. See [Synology MariaDB Documentation](https://help.synology.com/developer-guide/resource_acquisition/maria_db_10.html) for details.
+
+```json
+{
+    "mariadb10-db": {
+        "admin-account-m10": "{{wizard_mysql_password_root}}",
+        "create-db": {
+            "flag": true,
+            "db-name": "{{wizard_db_name}}",
+            "db-collision": "skip"
+        }
     }
 }
 ```

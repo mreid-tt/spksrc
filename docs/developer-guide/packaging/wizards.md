@@ -1,6 +1,6 @@
 # Installation Wizards
 
-Wizards provide a user interface during package installation to collect configuration settings.
+Wizards provide an optional user interface during package installation to collect configuration settings. All wizard files are optional and only needed if input is required from the user.
 
 ## Overview
 

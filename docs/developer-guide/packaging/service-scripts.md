@@ -7,7 +7,7 @@ This page covers how to configure services and daemons in spksrc packages.
 Packages that run background services need:
 
 1. **service-setup.sh** - Defines service variables and lifecycle hooks
-2. **Resource file** (DSM 7+) - Defines shared folder requirements, ports, etc.
+2. **Resource file** - Defines shared folder requirements, ports, etc.
 
 ## Service Setup Script
 
@@ -17,8 +17,8 @@ Create `spk/<package>/src/service-setup.sh`:
 # Service command to run
 SERVICE_COMMAND="${SYNOPKG_PKGDEST}/bin/mydaemon"
 
-# Arguments passed to service command
-SERVICE_COMMAND_ARGS="--config ${SYNOPKG_PKGVAR}/config.ini"
+# Include arguments directly in SERVICE_COMMAND
+SERVICE_COMMAND="${SYNOPKG_PKGDEST}/bin/mydaemon --config ${SYNOPKG_PKGVAR}/config.ini"
 
 # Run in background (service doesn't daemonize itself)
 SVC_BACKGROUND=y
@@ -31,22 +31,20 @@ SVC_WRITE_PID=y
 
 | Variable | Description |
 |----------|-------------|
-| `SERVICE_COMMAND` | Path to the service executable |
-| `SERVICE_COMMAND_ARGS` | Arguments passed to the command |
+| `SERVICE_COMMAND` | Path to the service executable (include arguments directly) |
 | `SVC_BACKGROUND` | Set to `y` if service should be backgrounded |
 | `SVC_WRITE_PID` | Set to `y` to write PID file |
 | `SVC_CWD` | Working directory for the service |
-| `SVC_UMASK` | Umask for the service |
 
-### Environment Variables Available
+### Environment Variables
+
+These variables are provided by DSM and available in service scripts. See [Synology Script Environment Variables](https://help.synology.com/developer-guide/synology_package/script_env_var.html) for the complete list.
 
 | Variable | Description |
 |----------|-------------|
 | `SYNOPKG_PKGNAME` | Package name |
 | `SYNOPKG_PKGDEST` | Package installation directory |
 | `SYNOPKG_PKGVAR` | Package variable data directory |
-| `SYNOPKG_PKGHOME` | Package home directory |
-| `SYNOPKG_PKGPORT` | Main port (if defined) |
 | `SYNOPKG_DSM_VERSION_MAJOR` | DSM major version |
 
 ## Service Hooks
@@ -126,66 +124,15 @@ service_postuninst() {
 
 ## Resource Files (DSM 7+)
 
-DSM 7 uses resource files for enhanced integration. Create `spk/<package>/src/conf/resource`:
-
-```json
-{
-    "data-share": {
-        "shares": [
-            {
-                "name": "{{wizard_data_share}}",
-                "permission": {
-                    "rw": ["{{wizard_data_share_user}}"]
-                }
-            }
-        ]
-    },
-    "port-config": {
-        "protocol-file": "etc/protocol"
-    },
-    "usr-local-linker": {
-        "bin": ["mycommand"]
-    }
-}
-```
-
-### Resource Features
-
-| Feature | Description |
-|---------|-------------|
-| `data-share` | Shared folder permissions |
-| `port-config` | Port configuration |
-| `usr-local-linker` | Create symlinks in `/usr/local/bin` |
-| `webservice` | Web application configuration |
+See [Resource Files](resource-files.md) for detailed documentation on configuring shared folders, ports, and other DSM integrations.
 
 ## Makefile Configuration
 
-```makefile
-STARTABLE = yes
-SERVICE_USER = auto
-SERVICE_SETUP = src/service-setup.sh
-
-# Optional: Define port
-SERVICE_PORT = 8080
-SERVICE_PORT_TITLE = Web Interface
-
-# Optional: Shared folder wizard variable
-SERVICE_WIZARD_SHARENAME = wizard_data_share
-```
-
-### Service User Options
-
-| Value | Description |
-|-------|-------------|
-| `auto` | Create `sc-<packagename>` user |
-| `<username>` | Use specific existing user |
-| (not set) | Run as root |
+See [Makefile Variables](makefile-variables.md) for `SERVICE_*` variables including `SERVICE_USER`, `SERVICE_SETUP`, `SERVICE_PORT`, and `SERVICE_WIZARD_SHARENAME`.
 
 ## Best Practices
 
 1. **Use dedicated user** - Set `SERVICE_USER = auto`
 2. **Handle configuration** - Check for and create default configs
-3. **Log appropriately** - Write logs to `${SYNOPKG_PKGVAR}/logs/`
-4. **Clean shutdown** - Handle SIGTERM gracefully
-5. **Validate in prestart** - Check requirements before starting
-6. **Use service_prestart for web deps** - For WebStation packages, configure files in `service_prestart` since web directories are created after `service_postinst`
+3. **Log appropriately** - Default log file is at `${SYNOPKG_PKGVAR}/${SYNOPKG_PKGNAME}.log`
+4. **Validate in prestart** - Check requirements before starting service

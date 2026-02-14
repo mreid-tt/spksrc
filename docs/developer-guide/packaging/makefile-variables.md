@@ -86,6 +86,8 @@ SPK_CONFLICT = "transmission"
 
 ## Build Configuration
 
+These variables apply to `cross/` package Makefiles.
+
 ### Configure Options
 
 | Variable | Default | Description |
@@ -132,14 +134,18 @@ INSTALL_TARGET = install-strip
 
 ## Service Configuration
 
+These variables apply to `spk/` package Makefiles.
+
 | Variable | Description |
 |----------|-------------|
 | `STARTABLE` | `yes` if package has a service to start |
-| `SERVICE_USER` | `auto` to create user, or specific username |
+| `SERVICE_USER` | `auto` to create `sc-<packagename>` user (required for DSM 7) |
 | `SERVICE_SETUP` | Path to service-setup.sh |
 | `SERVICE_PORT` | Port used by the service |
 | `SERVICE_PORT_TITLE` | Label for the port |
 | `SERVICE_WIZARD_SHARENAME` | Wizard share variable for shared folder |
+| `FWPORTS` | Path to firewall port configuration file |
+| `SPK_COMMANDS` | List of `bin/command` paths for `/usr/local/bin` symlinks |
 
 ```makefile
 STARTABLE = yes
@@ -147,6 +153,12 @@ SERVICE_USER = auto
 SERVICE_SETUP = src/service-setup.sh
 SERVICE_PORT = 8080
 SERVICE_PORT_TITLE = Web Interface
+
+# Firewall ports (creates resource entry)
+FWPORTS = src/mypackage.sc
+
+# Commands to link to /usr/local/bin
+SPK_COMMANDS = bin/mycommand bin/myother
 ```
 
 ## Architecture Support
