@@ -93,6 +93,7 @@ nav:
   - User Guide:
     - user-guide/index.md
     - Installation: user-guide/installation.md
+    - SSH Access: user-guide/ssh.md
     - Troubleshooting: user-guide/troubleshooting.md
     - Compatibility: user-guide/compatibility.md
     - Permissions: user-guide/permissions.md

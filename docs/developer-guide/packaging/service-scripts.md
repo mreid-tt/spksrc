@@ -35,6 +35,18 @@ SVC_WRITE_PID=y
 | `SVC_BACKGROUND` | Set to `y` if service should be backgrounded |
 | `SVC_WRITE_PID` | Set to `y` to write PID file |
 | `SVC_CWD` | Working directory for the service |
+| `SVC_WAIT_TIMEOUT` | Seconds to wait for PID file (default: 20) |
+
+### Framework Variables
+
+These variables are set by the framework and available in your scripts:
+
+| Variable | Description |
+|----------|-------------|
+| `EFF_USER` | Effective service user (e.g., `sc-mypackage` on DSM 7) |
+| `PID_FILE` | Path to PID file |
+| `LOG_FILE` | Path to log file |
+| `SHARE_PATH` | Path to configured shared folder |
 
 ### Environment Variables
 

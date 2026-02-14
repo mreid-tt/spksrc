@@ -244,6 +244,35 @@ PRs trigger automatic builds:
 
 ## Best Practices
 
+## Squashing Commits
+
+Maintainers may request that you squash your commits before merging to keep the git history clean.
+
+### How to Squash
+
+1. Check how many commits to squash:
+   ```bash
+   git log --oneline
+   ```
+
+2. Soft reset to combine commits (e.g., last 5):
+   ```bash
+   git reset --soft HEAD~5
+   ```
+
+3. Create a single commit:
+   ```bash
+   git commit -m "package: description of changes"
+   ```
+
+4. Force push to update your PR branch:
+   ```bash
+   git push --force
+   ```
+
+!!! warning
+    Only force push to your own feature branches, never to shared branches like `master`.
+
 ### Do
 
 - Keep PRs focused on a single package/change
