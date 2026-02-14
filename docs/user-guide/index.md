@@ -30,8 +30,8 @@ SynoCommunity provides community-maintained packages for Synology NAS devices. T
 2. Browse or search for packages
 3. Click **Install** on the package you want
 
-!!! tip "Beta Packages"
-    To see beta packages, go to **Settings** > **General** and enable "Yes, I want to see beta versions".
+!!! note "Beta Packages (DSM 6.x only)"
+    Beta packages are only available on DSM 6.x. To see them, go to **Settings** > **General** and enable "Yes, I want to see beta versions". DSM 7.x does not recognize community beta packages.
 
 ## Need Help?
 

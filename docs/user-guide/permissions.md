@@ -22,6 +22,8 @@ With DSM 7, packages use **System internal user** accounts (e.g., `sc-jellyfin`,
 6. Grant **Read only** or **Read/Write** as needed
 7. Click **OK**
 
+![Shared Folder permissions in Control Panel](../assets/images/shared-folder-permissions.png)
+
 #### Option 2: Per-Folder Access
 
 For more granular control:
@@ -33,6 +35,12 @@ For more granular control:
 5. Select **System internal user** > find the package user
 6. Grant appropriate permissions (Read, Write, etc.)
 7. For parent folders, add **Traverse folders** and **List folders** permissions
+
+![Permission editing in File Station](../assets/images/file-station-permissions.png)
+
+For parent folders requiring traverse permissions:
+
+![Folder parent permissions in File Station](../assets/images/file-station-parent-permissions.png)
 
 !!! tip
     If you have a deep folder hierarchy, set "Apply to this folder, sub-folders and files" to apply permissions recursively.
@@ -99,7 +107,7 @@ For shared folders created before DSM 5, you may need to convert to ACL:
 The package user is typically `sc-<packagename>`. Via SSH:
 
 ```bash
-cat /var/packages/<packagename>/conf/privilege 2>/dev/null | grep run-as
+cat /var/packages/<packagename>/conf/privilege 2>/dev/null | grep username
 ```
 
 ### More Information

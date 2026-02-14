@@ -49,8 +49,11 @@ Synology NAS devices use different CPU architectures. Packages are built for eac
 
 1. Log into DSM
 2. Go to **Control Panel** > **Info Center** > **General**
-3. Note the **CPU Model** and **Model Name**
-4. Look up your model in the table below or at [synology.com](https://www.synology.com/compatibility)
+3. Note the **Model Name**
+4. Look up your model at [Synology's CPU guide](https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have) to find the architecture
+
+<!-- IMAGE: Screenshot of Control Panel > Info Center showing Model Name -->
+![Info Center showing Model Name](../assets/images/info-center-model.png)
 
 ### Method 2: SSH
 
@@ -58,15 +61,15 @@ Synology NAS devices use different CPU architectures. Packages are built for eac
 uname -m
 ```
 
-Or for more detail:
+Or to get the spksrc architecture name:
 
 ```bash
-cat /proc/syno/info | grep -i cpu
+cat /proc/syno_cpu_arch
 ```
 
 ### Method 3: Package Download Page
 
-When downloading from [packages.synocommunity.com](https://packages.synocommunity.com), the site auto-detects your NAS if you are browsing from it.
+When browsing packages in **Package Center** on your NAS, it automatically shows only packages compatible with your architecture.
 
 ## Model to Architecture Mapping
 
@@ -114,7 +117,7 @@ When downloading from [packages.synocommunity.com](https://packages.synocommunit
 | RS3618xs | x64 | 7.x |
 
 !!! info "Complete List"
-    For a complete list of all models and architectures, see the [Synology product compatibility page](https://www.synology.com/compatibility).
+    For a complete list of all models and architectures, see [Synology's CPU guide](https://kb.synology.com/en-us/DSM/tutorial/What_kind_of_CPU_does_my_NAS_have).
 
 ## Package Availability by Architecture
 
@@ -133,13 +136,13 @@ Some packages have minimum DSM version requirements:
 | Requirement | Examples | Reason |
 |-------------|----------|--------|
 | DSM 7.0+ | Most new packages | Uses DSM 7 package format |
-| DSM 7.1+ | Packages with systemd services | Service management changes |
 | DSM 7.2+ | WebStation packages | PHP 8.x, new web server |
 | DSM 6.2.4+ | Older hybrid packages | Final DSM 6 features |
 
 ## Checking Compatibility Before Install
 
-1. Go to [packages.synocommunity.com](https://packages.synocommunity.com)
-2. Find your package
-3. Check the **Architectures** and **DSM Version** listed
-4. Compare with your NAS specifications
+The easiest way to check compatibility is to browse packages directly in **Package Center** on your NAS - it only shows packages compatible with your model and DSM version.
+
+You can also browse available packages at [synocommunity.com/packages](https://synocommunity.com/packages).
+
+For more information on installing packages, see [Synology's Package Center guide](https://kb.synology.com/en-us/DSM/tutorial/How_to_install_applications_with_Package_Center).
