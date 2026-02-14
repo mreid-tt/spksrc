@@ -86,7 +86,7 @@ mypackage-1.0.0.tar.gz MD5 ghi789...
 ### 2. Create SPK Package
 
 ```bash
-mkdir -p spk/mypackage/src
+mkdir -p spk/mypackage
 ```
 
 Create `spk/mypackage/Makefile`:
@@ -157,6 +157,9 @@ post_install_target:
 ### Per-Architecture Settings
 
 ```makefile
+# Architecture variables require the common include first
+include ../../mk/spksrc.common.mk
+
 ifeq ($(findstring $(ARCH),$(ARM_ARCHS)),$(ARCH))
   CONFIGURE_ARGS += --enable-arm-optimizations
 endif

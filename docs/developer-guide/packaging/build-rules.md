@@ -140,17 +140,12 @@ This will run:
 ### CMake
 
 ```makefile
-CMAKE_USE = 1
 CMAKE_ARGS = -DBUILD_SHARED_LIBS=ON
 
 include ../../mk/spksrc.cross-cmake.mk
 ```
 
-Or use the dedicated include:
-
-```makefile
-include ../../mk/spksrc.cross-cmake.mk
-```
+The `spksrc.cross-cmake.mk` include automatically sets up the CMake build environment.
 
 ### Meson
 

@@ -118,8 +118,11 @@ After publishing:
 1. Log in at [synocommunity.com/admin/](https://synocommunity.com/admin/)
 2. Check your builds at [synocommunity.com/admin/build/](https://synocommunity.com/admin/build/)
 3. Activate your test build
-4. Install/upgrade from DSM Package Center to verify signing
+4. Install/upgrade from DSM Package Center to verify
 5. If successful, activate the Version at [synocommunity.com/admin/version/](https://synocommunity.com/admin/version/)
+
+!!! note
+    Package signing verification only applies to DSM 6.x. DSM 7+ only accepts packages signed by Synology, so uploaded packages are automatically signed by the repository.
 
 ## Dynamic Library Linking
 

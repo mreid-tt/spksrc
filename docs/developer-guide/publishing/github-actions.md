@@ -145,10 +145,10 @@ For maintainers with repository access:
 
 ```bash
 # Build release package
-make -C spk/mypackage PUBLISH=1
+make -C spk/mypackage ARCH=x64 TCVERSION=7.2 PUBLISH=1
 
-# Upload to repository (requires credentials)
-make publish
+# Upload to repository (requires credentials in local.mk)
+make -C spk/mypackage publish-arch-x64-7.2
 ```
 
 ## Debugging Build Failures
