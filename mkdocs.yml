@@ -148,6 +148,9 @@ nav:
     - reference/index.md
     - Architectures: reference/architectures.md
     - Ports: reference/ports.md
+    - Makefile Reference: reference/makefile-reference.md
+    - Permissions: reference/permissions.md
+    - DSM APIs: reference/dsm-apis.md
   - Packages:
     - packages/index.md
   - Contributing:
