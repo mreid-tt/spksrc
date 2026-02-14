@@ -34,28 +34,18 @@ The CI determines which packages to build by:
 
 ### Main Build Workflow
 
-Located at `.github/workflows/build.yml`:
-
-```yaml
-# Key environment variables
-env:
-  # DSM 7.1 and DSM 6.2 by default (7.2 opt-in)
-  # DSM 7.1 and DSM 6.2 by default (7.2 opt-in)
-  # Enable parallel builds
-
-```
+Located at `.github/workflows/build.yml`. By default, packages build for DSM 7.1 and DSM 6.2. DSM 7.2 builds are opt-in and require setting `TCVERSION=7.2` as a minimum in the package Makefile.
 
 ### Build Matrix
 
 Packages are built across multiple architectures:
 
-| Architecture | Typical Hardware | Build Time |
-|-------------|------------------|------------|
-| x64-7.1 | Modern Intel/AMD | Fast |
-| aarch64-7.1 | ARM64 (DS923+, etc.) | Fast |
-| armv7-7.1 | Older ARM (DS218, etc.) | Medium |
-| comcerto2k-7.1 | Specific ARM SoC | Slow |
-| x64-6.2 | Intel/AMD (DSM 6) | Fast |
+| Architecture | Typical Hardware |
+|-------------|------------------|
+| x64-7.1 | Modern Intel/AMD |
+| aarch64-7.1 | ARM64 (DS923+, etc.) |
+| armv7-7.1 | Older ARM (DS218, etc.) |
+| x64-6.2 | Intel/AMD (DSM 6) |
 
 ## Build Actions
 
@@ -79,14 +69,7 @@ To speed up builds, the CI caches:
 - **Distrib** - Downloaded source tarballs
 - **Wheels** - Pre-built Python wheels
 
-Cache keys include architecture and version to prevent conflicts:
-
-```yaml
-- uses: actions/cache@v4
-  with:
-    path: toolchain/syno-${ARCH}
-  # DSM 7.1 and DSM 6.2 by default (7.2 opt-in)
-```
+Cache keys include architecture and version to prevent conflicts.
 
 ## Triggering Builds
 
