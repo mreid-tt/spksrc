@@ -143,5 +143,5 @@ borg check /volume1/backup/borg-repo
 
 ## Related Packages
 
-- [Restic](restic.md) - Alternative dedup backup
+- Restic - Alternative dedup backup
 - [rclone](rclone.md) - Can sync Borg repos to cloud

@@ -124,6 +124,6 @@ rclone sync ... --bwlimit 10M
 
 ## Related Packages
 
-- [Restic](restic.md) - Backup with rclone backend support
+- Restic - Backup with rclone backend support
 - [BorgBackup](borgbackup.md) - Alternative backup solution
 - [Syncthing](syncthing.md) - Continuous sync

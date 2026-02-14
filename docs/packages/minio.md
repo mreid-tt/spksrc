@@ -82,4 +82,4 @@ MinIO requires sufficient disk space. Check your data share has available space.
 ## Related Packages
 
 - [rclone](rclone.md) - Cloud storage sync tool
-- [Garage](garage.md) - Alternative S3-compatible storage
+- Garage - Alternative S3-compatible storage

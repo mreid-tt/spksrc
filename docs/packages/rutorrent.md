@@ -74,4 +74,4 @@ Ensure the `sc-rutorrent` service account has write access to your download shar
 ## Related Packages
 
 - [Transmission](transmission.md) - Alternative torrent client
-- [qBittorrent](qbittorrent.md) - Alternative with built-in web UI
+- qBittorrent - Alternative with built-in web UI

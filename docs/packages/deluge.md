@@ -75,5 +75,5 @@ Enable plugins in Preferences → Plugins:
 ## Related Packages
 
 - [Transmission](transmission.md) - Simpler alternative
-- [qBittorrent](qbittorrent.md) - Qt-based client
+- qBittorrent - Qt-based client
 - [ruTorrent](rutorrent.md) - rtorrent with web UI

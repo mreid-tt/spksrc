@@ -82,5 +82,5 @@ git merge feature-branch
 
 ## Related Packages
 
-- [Gitea](gitea.md) - Self-hosted Git service
+- Gitea - Self-hosted Git service (package not currently available)
 - [SynoCli Development Tools](synocli-devel.md) - Build tools

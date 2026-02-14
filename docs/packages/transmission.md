@@ -85,4 +85,4 @@ Ensure `sc-transmission` service account has write access to your download share
 
 - [ruTorrent](rutorrent.md) - Alternative with more features
 - [Deluge](deluge.md) - Another popular client
-- [qBittorrent](qbittorrent.md) - Qt-based alternative
+- qBittorrent - Qt-based alternative

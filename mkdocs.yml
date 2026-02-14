@@ -153,6 +153,65 @@ nav:
     - DSM APIs: reference/dsm-apis.md
   - Packages:
     - packages/index.md
+    - DSM Utilities: packages/dsm-utilities.md
+    - Media:
+      - FFmpeg: packages/ffmpeg.md
+      - Jellyfin: packages/jellyfin.md
+      - Navidrome: packages/navidrome.md
+      - GStreamer: packages/gstreamer.md
+    - Downloads:
+      - Transmission: packages/transmission.md
+      - ruTorrent: packages/rutorrent.md
+      - Deluge: packages/deluge.md
+      - Aria2: packages/aria2.md
+    - Home Automation:
+      - Home Assistant: packages/homeassistant.md
+      - Mosquitto: packages/mosquitto.md
+    - File Management:
+      - Syncthing: packages/syncthing.md
+      - ownCloud: packages/owncloud.md
+      - Rclone: packages/rclone.md
+      - BorgBackup: packages/borgbackup.md
+      - Borgmatic: packages/borgmatic.md
+      - Duplicity: packages/duplicity.md
+    - Network & Security:
+      - Vaultwarden: packages/vaultwarden.md
+      - DNSCrypt Proxy: packages/dnscrypt-proxy.md
+      - Cloudflared: packages/cloudflared.md
+      - AdGuard Home: packages/adguardhome.md
+      - Mosh: packages/mosh.md
+    - Arr Stack:
+      - Radarr/Sonarr: packages/radarr-sonarr.md
+    - Development:
+      - Git: packages/git.md
+      - Mono: packages/mono.md
+    - CLI Tools:
+      - SynoCli Kernel: packages/synocli-kernel.md
+      - SynoCli Net: packages/synocli-net.md
+      - SynoCli File: packages/synocli-file.md
+      - SynoCli Disk: packages/synocli-disk.md
+      - SynoCli Monitor: packages/synocli-monitor.md
+      - SynoCli Misc: packages/synocli-misc.md
+      - SynoCli Devel: packages/synocli-devel.md
+      - SynoCli VideoDriver: packages/synocli-videodriver.md
+      - SynoKernel USB Serial: packages/synokernel-usbserial.md
+    - Other:
+      - MinIO: packages/minio.md
+      - Matrix Synapse: packages/matrix-synapse.md
+      - Salt: packages/salt.md
+      - Beets: packages/beets.md
+      - Flexget: packages/flexget.md
+      - Kiwix: packages/kiwix.md
+      - Google Authenticator: packages/google-authenticator.md
+      - Mozilla Sync: packages/mozilla-sync.md
+      - Adminer: packages/adminer.md
+      - BicBucStriim: packages/bicbucstriim.md
+      - Comskip: packages/comskip.md
+      - Debian Chroot: packages/debian-chroot.md
+      - File Browser: packages/file-browser.md
+      - Node Exporter: packages/node-exporter.md
+      - OpenList: packages/openlist.md
+      - SickBeard Custom: packages/sickbeard-custom.md
   - Contributing:
     - contributing/index.md
     - Development Process: contributing/development-process.md

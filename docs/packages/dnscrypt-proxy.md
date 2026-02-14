@@ -97,4 +97,4 @@ dig @localhost debug.opendns.com TXT
 
 ## Related Packages
 
-- [HAProxy](haproxy.md) - Can work with DNS load balancing
+- HAProxy - Can work with DNS load balancing

@@ -18,7 +18,7 @@ The `occ` command (ownCloud console) is a powerful command-line tool for adminis
 
 ### 1. Enable SSH
 
-Ensure SSH is enabled on your DiskStation. See [FAQ-ssh](../getting-started/faq.md) for instructions.
+Ensure SSH is enabled on your DiskStation. See [FAQ-ssh](dsm-utilities.md) for instructions.
 
 ### 2. Define Shortcuts
 

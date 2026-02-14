@@ -84,4 +84,4 @@ make install
 ## Related Packages
 
 - [Git](git.md) - Version control
-- [Python](python312.md) - Python development
+- Python packages (python311, python312) - Python development

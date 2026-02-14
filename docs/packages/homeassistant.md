@@ -60,7 +60,7 @@ Some are supported only on DiskStation models with x86_64 CPU architecture.
 
 Some Components are fully configurable in the Home Assistant Frontend, but others are based on manual settings in the configuration file.
 
-To access the configuration file, you need to [enable SSH service](FAQ-ssh) to gain access to your system. 
+To access the configuration file, you need to enable SSH service (Control Panel → Terminal & SNMP → Enable SSH service) to gain access to your system. 
 You need a file editor like the default installed `vi` or `vim`. The installation of `nano` is recommended for beginners (contained in [SynoCli File Tools](https://synocommunity.com/package/synocli-file)). 
 
 Then use the following command to edit the configuration according to

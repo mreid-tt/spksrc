@@ -119,7 +119,7 @@ web:
 
 Beets works well with:
 - [Navidrome](navidrome.md) - Music streaming
-- [Lidarr](lidarr.md) - Music management
+- Lidarr - Music management
 
 ## Troubleshooting
 

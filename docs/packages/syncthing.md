@@ -88,4 +88,4 @@ View logs in web UI or `/var/packages/syncthing/var/syncthing.log`
 ## Related Packages
 
 - [rclone](rclone.md) - Cloud storage sync
-- [Restic](restic.md) - Backup solution
+- Restic - Backup solution

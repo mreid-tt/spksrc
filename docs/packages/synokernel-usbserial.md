@@ -77,6 +77,6 @@ Service accounts need access to `/dev/ttyUSB*` devices. Add appropriate udev rul
 
 ## Related Packages
 
-- [SynoKernel CD-ROM](synokernel-cdrom.md) - CD-ROM drivers
+- SynoKernel CD-ROM - CD-ROM drivers
 - [SynoCli Kernel Tools](synocli-kernel.md) - Kernel utilities
 - [Home Assistant](homeassistant.md) - Uses serial devices
