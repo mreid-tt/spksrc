@@ -33,13 +33,3 @@ ENV += OPENSSL_DIR=$(STAGING_INSTALL_PREFIX)
 | x64 | x86_64-unknown-linux-gnu |
 | aarch64 | aarch64-unknown-linux-gnu |
 | armv7 | armv7-unknown-linux-gnueabihf |
-
-## Toolchain Management
-
-```bash
-# Clean Rust installation
-make -C toolchain/syno-x64-7.2 rust-clean
-
-# Reinstall Rust
-make -C toolchain/syno-x64-7.2 rustc
-```

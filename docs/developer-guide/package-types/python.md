@@ -25,29 +25,33 @@ include ../../mk/spksrc.python.mk
 
 ## Service Setup
 
+The framework provides a helper function to simplify virtual environment setup:
+
 ```bash
 PYTHON_DIR="/var/packages/python312/target/bin"
 PATH="${SYNOPKG_PKGDEST}/env/bin:${PYTHON_DIR}:${PATH}"
 
 service_postinst() {
-    ${VIRTUALENV} --system-site-packages ${SYNOPKG_PKGDEST}/env
-    ${SYNOPKG_PKGDEST}/env/bin/pip install --no-deps --no-index \\
-        -f ${SYNOPKG_PKGDEST}/share/wheelhouse \\
-        ${SYNOPKG_PKGDEST}/share/wheelhouse/*.whl
+    install_python_virtualenv
 }
 ```
 
 ## Crossenv Commands
 
+Before building wheels with crossenv, ensure the Python dependency is built first:
+
 ```bash
+# Build Python dependency first
+make -C spk/python312 ARCH=x64 TCVERSION=7.2
+
 # Create crossenv
 make crossenv-x64-7.2
 
 # Debug specific wheel
 WHEEL="lxml-5.2.2" make crossenv-x64-7.2
 
-# Clean crossenv
-make crossenv-clean-x64-7.2
+# Clean crossenv (no arch suffix)
+make crossenvclean
 ```
 
 ## Best Practices
@@ -60,3 +64,5 @@ make crossenv-clean-x64-7.2
 ## Example
 
 See [borgbackup](https://github.com/SynoCommunity/spksrc/tree/master/spk/borgbackup) for a comprehensive Python package.
+
+For a simpler example focused on wheel testing, see [python312-wheels](https://github.com/SynoCommunity/spksrc/tree/master/spk/python312-wheels).

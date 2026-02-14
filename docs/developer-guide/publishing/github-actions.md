@@ -39,10 +39,10 @@ Located at `.github/workflows/build.yml`:
 ```yaml
 # Key environment variables
 env:
-  # Build for DSM 7.x by default
-  TCVERSION: 7.2
+  # DSM 7.1 and DSM 6.2 by default (7.2 opt-in)
+  # DSM 7.1 and DSM 6.2 by default (7.2 opt-in)
   # Enable parallel builds
-  MAKEFLAGS: -j4
+
 ```
 
 ### Build Matrix
@@ -51,11 +51,11 @@ Packages are built across multiple architectures:
 
 | Architecture | Typical Hardware | Build Time |
 |-------------|------------------|------------|
-| x64-7.2 | Modern Intel/AMD | Fast |
-| aarch64-7.2 | ARM64 (DS923+, etc.) | Fast |
-| armv7-7.2 | Older ARM (DS218, etc.) | Medium |
+| x64-7.1 | Modern Intel/AMD | Fast |
+| aarch64-7.1 | ARM64 (DS923+, etc.) | Fast |
+| armv7-7.1 | Older ARM (DS218, etc.) | Medium |
 | comcerto2k-7.1 | Specific ARM SoC | Slow |
-| armv5-7.1 | Legacy ARM | Slow |
+| x64-6.2 | Intel/AMD (DSM 6) | Fast |
 
 ## Build Actions
 
@@ -85,7 +85,7 @@ Cache keys include architecture and version to prevent conflicts:
 - uses: actions/cache@v4
   with:
     path: toolchain/syno-${ARCH}
-    key: toolchain-${ARCH}-${TCVERSION}-v3-${{ hashFiles('...') }}
+  # DSM 7.1 and DSM 6.2 by default (7.2 opt-in)
 ```
 
 ## Triggering Builds

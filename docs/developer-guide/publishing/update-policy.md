@@ -6,8 +6,8 @@ This guide covers the SynoCommunity package update policy, including supported D
 
 | Version | Status | Notes |
 |---------|--------|-------|
-| DSM 7.2 | **Active** | Primary target |
-| DSM 7.1 | **Active** | Supported |
+| DSM 7.1 | **Active** | Primary target |
+| DSM 7.2 | **Active** | Supported (opt-in) |
 | DSM 6.2.4+ | **Active** | Supported |
 | DSM 6.0-6.2.3 | Limited | May work, not tested |
 | DSM 5.2 | Legacy | On request only |
@@ -16,35 +16,6 @@ This guide covers the SynoCommunity package update policy, including supported D
 !!! note
     DSM 5.2 packages are no longer built automatically. Older toolchains may not support recent upstream versions.
 
-## Priority Packages
-
-These packages are prioritized for updates due to user demand and feature importance:
-
-- ffmpeg
-- Transmission
-- Radarr/Sonarr
-- Syncthing
-
-## Known Compatibility Issues
-
-### C++ Standard Library
-
-The following packages require separate DSM 5.2 and DSM 6+ builds due to incompatible `libstdc++` versions:
-
-- mono
-- ffmpeg
-- chromaprint
-- mediainfo
-- Sonarr/Radarr (mediainfo dependency)
-- deluge (Boost dependency)
-
-### Architecture Limitations
-
-Some architectures cannot compile certain packages:
-
-- PPC-based architectures (`ppc*`, `qoriq`) have limited package support
-- ARMv5 (`88f6281`) lacks modern compiler features
-- Some packages require specific kernel versions
 
 ## Testing Checklist
 
@@ -60,10 +31,9 @@ Before publishing, verify:
 
 - [ ] Service starts from Package Center (verify with `ps`)
 - [ ] Service stops from Package Center (verify with `ps`)
-- [ ] "View log" button works
-- [ ] Log files exist in `/var/packages/{package}/target/var/`
+- [ ] "View log" button works (DSM 6.x only)
+- [ ] Log files exist in `/var/packages/{package}/var/`
 - [ ] DSM shortcut opens the interface
-- [ ] Firewall rules appear in DSM Firewall settings
 
 ### Command Line Tools
 
@@ -145,7 +115,7 @@ make publish-arch-x64-7.1 publish-arch-armv7-7.1 publish-arch-aarch64-7.1
 
 After publishing:
 
-1. Log in at [synocommunity.com/admin/build/admin/](https://synocommunity.com/admin/build/admin/)
+1. Log in at [synocommunity.com/admin/](https://synocommunity.com/admin/)
 2. Check your builds at [synocommunity.com/admin/build/](https://synocommunity.com/admin/build/)
 3. Activate your test build
 4. Install/upgrade from DSM Package Center to verify signing

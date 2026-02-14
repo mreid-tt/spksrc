@@ -55,7 +55,7 @@ include ../../mk/spksrc.cross-go.mk
 include ../../mk/spksrc.cross-rust.mk
 
 # Python wheel
-include ../../mk/spksrc.cross-python-module.mk
+include ../../mk/spksrc.python-module.mk
 ```
 
 ### SPK Packaging

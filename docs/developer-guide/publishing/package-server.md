@@ -126,21 +126,19 @@ curl -X POST \
 
 ### Trust Settings
 
-For unsigned packages:
+For unsigned packages (DSM 6.x only):
 
 1. Go to **Settings** > **General**
-2. Set **Trust Level** to "Any publisher"
+2. Set **Trust Level** to "Synology Inc. and trusted publishers"
 
 !!! warning "Security Note"
-    Only trust repositories you control or trust completely.
+    Trust settings do not apply to DSM 7+, which shows a third-party warning for all community packages.
 
 ## Package Signing
 
-### Why Sign Packages?
+### Why Sign Packages? (DSM 6.x)
 
-- DSM 7+ prefers signed packages
-- Users see "Synology" or "Trust" badges
-- Prevents tampering during download
+Package signing is primarily useful for DSM 6.x. DSM 7+ only accepts Synology-signed packages from official sources.
 
 ### Signing Process
 

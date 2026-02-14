@@ -46,10 +46,8 @@ WHEEL="package==version" make wheel-x64-7.2
 cat /var/packages/<pkg>/var/*.log
 
 # System log
-cat /var/log/synopkg.log | grep <pkg>
+sudo cat /var/log/synopkg.log | grep <pkg>
 
-# Check libraries
-ldd /var/packages/<pkg>/target/bin/<binary>
 ```
 
 ## Package Contents

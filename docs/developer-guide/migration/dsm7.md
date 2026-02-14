@@ -6,8 +6,7 @@ Key changes from DSM 6 to DSM 7.
 
 - **Non-root execution** - Packages run as `sc-{packagename}`
 - **New filesystem hierarchy** - Separate directories for data types
-- **Resource-based configuration** - JSON resource files
-- **Wizard templates** - Mustache-based wizards
+- **Web service resource** - JSON-based WebStation integration
 
 ## Filesystem Hierarchy
 
@@ -39,8 +38,8 @@ SERVICE_WIZARD_SHARENAME = wizard_data_share
 {
   "data-share": {
     "shares": [{
-      "name": "{{wizard_data_share}}",
-      "permission": {"rw": ["{{wizard_data_share}}"]}
+      "name": "sc-mypackage",
+      "permission": {"rw": ["sc-mypackage"]}
     }]
   }
 }

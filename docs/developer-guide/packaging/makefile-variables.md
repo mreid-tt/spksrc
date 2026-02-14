@@ -35,8 +35,8 @@ PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 |----------|----------|-------------|
 | `SPK_NAME` | Yes | Package name shown in Package Center |
 | `SPK_VERS` | Yes | Version displayed to users |
-| `SPK_REV` | Yes | Revision number (increment for same version) |
-| `SPK_ICON` | No | Path to package icon (72x72 PNG) |
+| `SPK_REV` | Yes | Revision number (increment for each release) |
+| `SPK_ICON` | No | Path to package icon (256x256+ PNG, auto-resized) |
 
 ## Metadata
 
@@ -45,7 +45,8 @@ PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 | `HOMEPAGE` | No | Project website |
 | `COMMENT` | Yes | Short description |
 | `LICENSE` | Yes | License name (GPLv2, MIT, etc.) |
-| `MAINTAINER` | No | Package maintainer name |
+| `LICENSE_FILE` | No | Path to license agreement file |
+| `MAINTAINER` | Yes | Package maintainer name |
 | `DESCRIPTION` | SPK only | Full description for Package Center |
 | `DISPLAY_NAME` | SPK only | Display name in Package Center |
 | `CHANGELOG` | SPK only | Changes in this version |

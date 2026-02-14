@@ -21,6 +21,8 @@ src/conf_72/resource    # DSM 7.2+
 ## Conditional Configuration
 
 ```makefile
+include ../../mk/spksrc.common.mk
+
 ifeq ($(call version_ge,$(TCVERSION),7.2),1)
 PHP_BACKEND = 11
 else

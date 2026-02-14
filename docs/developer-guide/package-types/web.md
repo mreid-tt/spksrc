@@ -45,7 +45,7 @@ include ../../mk/spksrc.spk.mk
 
 ## Important Timing
 
-WebStation's `pkg_dir_prepare` runs AFTER `service_postinst` but BEFORE `service_prestart`. Configure web files in `service_prestart`.
+WebStation's `pkg_dir_prepare` runs BEFORE `service_postinst`. Any custom web file configuration can be done in `service_postinst`.
 
 ## Example
 

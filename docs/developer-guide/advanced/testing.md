@@ -12,13 +12,12 @@ make -C spk/<package> arch-x64-7.2
 make -C spk/<package> arch-x64-7.2 arch-aarch64-7.2 arch-armv7-7.1
 
 # All architectures
-make -C spk/<package> all-archs
+make -C spk/<package> all-supported
 ```
 
 ## Device Testing
 
-1. Copy SPK to NAS via SCP or File Station
-2. Install via Package Center > Manual Install
+1. Install via Package Center > Manual Install (upload SPK from local computer)
 3. Check `/var/packages/<pkg>/var/*.log`
 4. Verify service starts correctly
 
