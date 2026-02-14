@@ -134,19 +134,14 @@ curl -X POST \
 2. Go to **Settings** > **Package Sources**
 3. Click **Add**
 4. Enter:
-   - **Name**: Your Repository Name
-   - **Location**: `https://packages.example.com`
+    - **Name**: Your Repository Name
+    - **Location**: `https://packages.example.com`
 5. Click **OK**
 
-### Trust Settings
-
-Trust settings only apply to DSM 6.x:
+### Trust Settings (DSM 6.x Only)
 
 1. Go to **Settings** > **General**
 2. Set **Trust Level** to "Synology Inc. and trusted publishers"
-
-!!! note "DSM 7+ Behavior"
-    DSM 7+ always shows a third-party warning for community packages regardless of trust settings.
 
 ## Package Signing
 
