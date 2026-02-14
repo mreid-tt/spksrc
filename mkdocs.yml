@@ -135,6 +135,8 @@ nav:
     - Publishing:
       - developer-guide/publishing/index.md
       - GitHub Actions: developer-guide/publishing/github-actions.md
+      - Manual Publishing: developer-guide/publishing/manual-publishing.md
+      - Repository Activation: developer-guide/publishing/repository-activation.md
       - Package Server: developer-guide/publishing/package-server.md
       - Update Policy: developer-guide/publishing/update-policy.md
   - Reference:

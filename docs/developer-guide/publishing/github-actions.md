@@ -122,17 +122,9 @@ When PRs are merged to master:
 4. Repository index regenerates
 5. Users see updates in Package Center
 
-### Manual Publishing
+After automatic publishing, packages need to be activated. See [Repository Activation](repository-activation.md) for details.
 
-For maintainers with repository access:
-
-```bash
-# Build release package
-make -C spk/mypackage ARCH=x64 TCVERSION=7.2 PUBLISH=1
-
-# Upload to repository (requires credentials in local.mk)
-make -C spk/mypackage publish-arch-x64-7.2
-```
+For manual publishing without CI, see [Manual Publishing](manual-publishing.md).
 
 ## Debugging Build Failures
 
@@ -188,4 +180,6 @@ make -C spk/mypackage publish-arch-x64-7.2
 
 - [Publishing Overview](index.md)
 - [Package Server Setup](package-server.md)
+- [Repository Activation](repository-activation.md)
+- [Manual Publishing](manual-publishing.md)
 - [Build Workflow](../basics/build-workflow.md)
