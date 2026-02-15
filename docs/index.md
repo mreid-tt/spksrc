@@ -59,3 +59,4 @@ spksrc is a cross-compilation framework that:
 
 spksrc is open source and welcomes contributions. See our [Contributing Guide](contributing/index.md) to get started.
 
+<!-- trigger -->
