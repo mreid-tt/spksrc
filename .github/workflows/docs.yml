@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - docs-migration
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
@@ -53,13 +54,13 @@ jobs:
         run: mkdocs build --strict
 
       - name: Upload artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/docs-migration')
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./site
 
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/docs-migration')
     needs: build
     runs-on: ubuntu-latest
     environment:
