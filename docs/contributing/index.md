@@ -77,24 +77,26 @@ See [Development Process](development-process.md) for the full workflow from for
 Use clear, descriptive commit messages:
 
 ```
-{package}: brief description of change
+{DISPLAY_NAME}: brief description of change
 
 Detailed explanation if needed. Reference issues with #123.
 ```
 
+Use the `DISPLAY_NAME` from the package's `spk/*/Makefile` (e.g., "Transmission", "Python 3.12").
+
 Examples:
 
 ```
-transmission: update to v4.0.5
+Transmission: Update to v4.0.5
 
-python312: fix wheel building for armv5
+Python 3.12: Fix wheel building for armv5
 
 docs: add troubleshooting section for PHP packages
 ```
 
 ### Pull Request Guidelines
 
-- **Title**: `{package}: brief description`
+- **Title**: `{DISPLAY_NAME}: brief description`
 - **Description**: Explain what and why, not just how
 - **Testing**: Describe how you tested the changes
 - **Screenshots**: Include for UI changes or wizard updates

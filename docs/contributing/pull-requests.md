@@ -18,13 +18,15 @@ This guide covers requirements and best practices for submitting pull requests t
 Use a clear, descriptive title following this pattern:
 
 ```
-{package}: brief description
+{DISPLAY_NAME}: brief description
 ```
+
+Use the `DISPLAY_NAME` from the package's `spk/*/Makefile` (e.g., "Transmission", "Python 3.12").
 
 **Good titles:**
 
-- `transmission: update to v4.0.5`
-- `python312: fix armv5 wheel building`
+- `Transmission: Update to v4.0.5`
+- `Python 3.12: Fix armv5 wheel building`
 - `docs: add troubleshooting guide`
 
 **Avoid:**

@@ -87,7 +87,7 @@ git checkout -b fix-python-armv5
    ```bash
    make -C cross/mypackage digests
    ```
-5. Update `SPK_REV` (usually increment by 1)
+5. Increment `SPK_REV` (never reset, always increment)
 6. Add changelog entry
 
 ### New Packages
@@ -130,10 +130,12 @@ git add -A
 ### Write Good Commit Messages
 
 ```bash
-git commit -m "transmission: update to v4.0.5"
+git commit -m "Transmission: Update to v4.0.5"
 ```
 
-For complex changes, use a detailed message:
+Use the `DISPLAY_NAME` from the package's `spk/*/Makefile` as the commit prefix.
+
+For complex changes, use a multi-line message:
 
 ```bash
 git commit
@@ -141,7 +143,7 @@ git commit
 ```
 
 ```
-mypackage: fix build failure on armv5
+MyPackage: Fix build failure on armv5
 
 The configure script was failing due to missing LDFLAGS.
 Added explicit library path for cross-compilation.
@@ -206,7 +208,7 @@ vim spk/mypackage/Makefile
 
 # Commit the fix
 git add -A
-git commit -m "mypackage: address review feedback"
+git commit -m "MyPackage: Address review feedback"
 
 # Push to same branch (PR updates automatically)
 git push origin mypackage-update
@@ -248,6 +250,13 @@ After merge, CI will:
 3. Make available in Package Center
 
 This typically takes 1-2 hours after merge.
+
+## Versioning Rules
+
+- `SPK_REV` starts at 1 for new packages
+- Always increment `SPK_REV` (never reset, even when `SPK_VERS` changes)
+- Never decrement version numbers
+- Always rebase your branch against master before final merge
 
 ## Tips for Success
 
