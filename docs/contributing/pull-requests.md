@@ -80,7 +80,7 @@ For updating existing packages:
 - Update `PKG_VERS` to new version
 - Update `PKG_DIST_NAME` if changed
 - Regenerate checksums (`make digests`)
-- Increment `SPK_REV` (usually to 1 for new upstream version)
+- Increment `SPK_REV`
 - Add changelog entry
 
 **Example description:**
@@ -92,7 +92,7 @@ Updates Transmission to version 4.0.5.
 ## Changes
 - Updated PKG_VERS to 4.0.5
 - Updated checksums
-- Reset SPK_REV to 1
+- Incremented SPK_REV
 
 ## Upstream Changes
 - Fixed security vulnerability CVE-2024-XXXXX
