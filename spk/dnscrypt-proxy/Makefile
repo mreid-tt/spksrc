@@ -1,6 +1,6 @@
 SPK_NAME = dnscrypt-proxy
-SPK_VERS = 2.0.44
-SPK_REV = 5
+SPK_VERS = 2.1.15
+SPK_REV = 6
 SPK_ICON = src/dnscrypt-proxy.png
 
 DEPENDS = cross/dnscrypt-proxy
@@ -8,11 +8,11 @@ SPK_CONFLICT = DNSServer
 UNSUPPORTED_ARCHS = $(PPC_ARCHS)
 
 MAINTAINER = publicarray
-DESCRIPTION = A flexible DNS proxy, with support for modern encrypted DNS protocols such as DNSCrypt v2 and DNS-over-HTTPS. https://github.com/jedisct1/dnscrypt-proxy
+DESCRIPTION = A flexible DNS proxy, with support for modern encrypted DNS protocols such as DNSCrypt v2 and DNS-over-HTTPS. https://github.com/DNSCrypt/dnscrypt-proxy
 DISPLAY_NAME = dnscrypt-proxy
-HELPURL = https://github.com/jedisct1/dnscrypt-proxy/wiki
+HELPURL = https://github.com/DNSCrypt/dnscrypt-proxy/wiki
 LICENSE = ISC
-CHANGELOG = "Update to 2.0.44"
+CHANGELOG = "Update to 2.1.15"
 
 STARTABLE = yes
 
