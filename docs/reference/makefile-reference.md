@@ -115,6 +115,36 @@ These variables apply to `spk/` packages with services.
 | `FWPORTS` | Firewall port definitions | `src/transmission.sc` |
 | `SPK_COMMANDS` | Commands for usr-local-linker | `bin/transmission-daemon` |
 
+## Web Interface Variables
+
+These variables configure DSM main menu shortcuts for packages with web interfaces.
+
+### Basic Variables
+
+| Variable | Default | Description | Example |
+|----------|---------|-------------|--------|
+| `DSM_UI_DIR` | `app` | Directory for DSM UI config files | `app` |
+| `SERVICE_PORT` | | Port for web interface (enables auto-generation) | `8096` |
+| `SERVICE_PORT_TITLE` | `$(SPK_NAME)` | Firewall port display name | `Jellyfin (HTTP)` |
+| `ADMIN_PORT` | | Port shown in Package Center admin link | `$(SERVICE_PORT)` |
+| `ADMIN_URL` | `/` | URL path for admin link | `/admin` |
+| `ADMIN_PROTOCOL` | `http` | Protocol for admin link | `https` |
+
+### Advanced Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `NO_SERVICE_SHORTCUT` | | Set to disable automatic shortcut generation |
+| `DSM_UI_CONFIG` | | Path to custom `app/config` file (overrides auto-generation) |
+| `SERVICE_URL` | `/` | URL path for web shortcut |
+| `SERVICE_PORT_PROTOCOL` | `http` | Protocol for web shortcut |
+| `SERVICE_PORT_ALL_USERS` | `true` | Allow all users access to shortcut |
+| `SERVICE_TYPE` | `url` | Shortcut type |
+| `SERVICE_DESC` | `$(DESCRIPTION)` | Tooltip description for shortcut |
+| `DSM_APP_NAME` | `com.synocommunity.packages.$(SPK_NAME)` | Application identifier |
+| `DSM_APP_PAGE` | | DSM 7+ application page |
+| `DSM_APP_LAUNCH_NAME` | | DSM 7+ launch name |
+
 ### Service Control Variables
 
 Used in `service-setup.sh`:

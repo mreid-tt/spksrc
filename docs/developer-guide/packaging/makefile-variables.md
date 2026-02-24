@@ -222,3 +222,54 @@ ADMIN_PORT = 8080
 ADMIN_PROTOCOL = http
 ADMIN_URL = /mypackage
 ```
+
+## Web Interface Shortcuts
+
+Packages with web interfaces can add a shortcut icon to the DSM main menu. For the complete list of variables, see the [Makefile Reference](../../reference/makefile-reference.md#web-interface-variables).
+
+### Automatic Generation (Recommended)
+
+Use `SERVICE_PORT` to automatically generate the shortcut:
+
+```makefile
+DSM_UI_DIR = app
+SERVICE_PORT = 8096
+SERVICE_PORT_TITLE = My App (HTTP)
+ADMIN_PORT = $(SERVICE_PORT)
+```
+
+### Custom Configuration
+
+For custom URL paths or descriptions, create `src/app/config`:
+
+```json
+{
+    ".url": {
+        "com.synocommunity.packages.<pkgname>": {
+            "title": "Package Name",
+            "desc": "Tooltip description",
+            "icon": "images/<pkgname>-{0}.png",
+            "type": "url",
+            "protocol": "http",
+            "port": "8080",
+            "url": "/admin",
+            "allUsers": true
+        }
+    }
+}
+```
+
+Install it in the Makefile:
+
+```makefile
+DSM_UI_DIR = app
+ADMIN_PORT = 8080
+ADMIN_URL = /admin
+
+POST_STRIP_TARGET = mypackage_extra_install
+
+.PHONY: mypackage_extra_install
+mypackage_extra_install:
+	install -m 755 -d $(STAGING_DIR)/app
+	install -m 644 src/app/config $(STAGING_DIR)/app/config
+```
