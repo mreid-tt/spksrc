@@ -14,13 +14,18 @@ This guide walks through the complete workflow for contributing to SynoCommunity
 ## Overview
 
 ```mermaid
-graph LR
-    A[Fork] --> B[Branch]
-    B --> C[Develop]
-    C --> D[Test]
-    D --> E[PR]
-    E --> F[Review]
-    F --> G[Merge]
+block
+  columns 7
+  fork["Fork"] space branch["Branch"] space develop["Develop"] space space
+  space space space space space space test["Test"]
+  merge["Merge"] space review["Review"] space pr["PR"] space space
+
+  fork --> branch
+  branch --> develop
+  develop --> test
+  test --> pr
+  pr --> review
+  review --> merge
 ```
 
 ## Step 1: Fork and Clone

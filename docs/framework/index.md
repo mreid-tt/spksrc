@@ -24,19 +24,14 @@ spksrc is a GNU Make-based build framework that:
 
 Every cross-compilation build in spksrc follows a two-stage process:
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                          Stage 1: Toolchain                          │
-│  Downloads and prepares the cross-compilation toolchain              │
-│  Generates tc_vars*.mk files with environment settings               │
-└──────────────────────────────────────────────────────────────────────┘
-                                  │
-                                  ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                          Stage 2: Package                            │
-│  Builds the package using the cross-compilation environment          │
-│  download → extract → patch → configure → compile → install → plist  │
-└──────────────────────────────────────────────────────────────────────┘
+```mermaid
+block
+  columns 1
+  toolchain["Stage 1: Toolchain<br>Downloads and prepares the cross-compilation toolchain<br>Generates tc_vars*.mk files with environment settings"]
+  space
+  package["Stage 2: Package<br>Builds the package using the cross-compilation environment<br>download → extract → patch → configure → compile → install → plist"]
+
+  toolchain --> package
 ```
 
 ### Directory Structure

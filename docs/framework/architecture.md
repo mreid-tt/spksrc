@@ -6,15 +6,20 @@ This document describes the internal architecture of the spksrc build system, in
 
 The spksrc build system uses a pipeline-based architecture where each build stage depends on the previous one. The pipeline is implemented through GNU Make with cookie files tracking completion.
 
-```
-┌───────────┐   ┌───────────┐   ┌───────────┐   ┌───────────┐
-│  download │ → │  checksum │ → │  extract  │ → │   patch   │
-└───────────┘   └───────────┘   └───────────┘   └───────────┘
-                                                      │
-                                                      ▼
-┌───────────┐   ┌───────────┐   ┌───────────┐   ┌───────────┐
-│   plist   │ ← │  install  │ ← │  compile  │ ← │ configure │
-└───────────┘   └───────────┘   └───────────┘   └───────────┘
+```mermaid
+block
+  columns 7
+  download space checksum space extract space patch
+  space space space space space space space
+  plist space install space compile space configure
+
+  download --> checksum
+  checksum --> extract
+  extract --> patch
+  patch --> configure
+  configure --> compile
+  compile --> install
+  install --> plist
 ```
 
 ## Cross-Compilation Stages
@@ -55,15 +60,20 @@ Stage 2 builds the actual package using the cross-compilation environment:
 
 For `spk/` packages, additional stages create the final SPK:
 
-```
-┌───────────┐   ┌───────────┐   ┌───────────┐   ┌───────────┐
-│  depend   │ → │   copy    │ → │   strip   │ → │ icon/info │
-└───────────┘   └───────────┘   └───────────┘   └───────────┘
-                                                      │
-                                                      ▼
-┌───────────┐   ┌───────────┐   ┌───────────┐   ┌───────────┐
-│  scripts  │ → │  wizards  │ → │  package  │ → │ spk file  │
-└───────────┘   └───────────┘   └───────────┘   └───────────┘
+```mermaid
+block
+  columns 7
+  depend space copy space strip space iconinfo["icon/info"]
+  space space space space space space space
+  spkfile["spk file"] space package space wizards space scripts
+
+  depend --> copy
+  copy --> strip
+  strip --> iconinfo
+  iconinfo --> scripts
+  scripts --> wizards
+  wizards --> package
+  package --> spkfile
 ```
 
 ### SPK Assembly Steps

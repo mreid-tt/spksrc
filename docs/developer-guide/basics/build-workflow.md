@@ -5,13 +5,18 @@ This page explains how spksrc builds work, from source code to installable SPK.
 ## Build Process Overview
 
 ```mermaid
-flowchart LR
-    A[Source Download] --> B[Extract]
-    B --> C[Patch]
-    C --> D[Configure]
-    D --> E[Compile]
-    E --> F[Install]
-    F --> G[Package]
+block
+  columns 7
+  download["Download"] space extract["Extract"] space patch["Patch"] space space
+  space space space space space space configure["Configure"]
+  package["Package"] space install["Install"] space compile["Compile"] space space
+
+  download --> extract
+  extract --> patch
+  patch --> configure
+  configure --> compile
+  compile --> install
+  install --> package
 ```
 
 ### Build Stages
