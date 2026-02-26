@@ -1,8 +1,6 @@
 # PostgreSQL service setup
 # Supports DSM 6 (runs as root) and DSM 7 (runs as package user)
-
-# Package user is defined in conf/privilege and must not contain '-'
-EFF_USER=sc_postgres
+# EFF_USER is provided by the framework (sc-postgresql with SERVICE_USER=auto)
 
 DATABASE_DIR="${SYNOPKG_PKGVAR}/data"
 CFG_FILE="${DATABASE_DIR}/postgresql.conf"
@@ -34,7 +32,7 @@ service_postinst()
     # On DSM 6 (running as root), create data directory and set ownership
     if [ "${SYNOPKG_DSM_VERSION_MAJOR}" -lt 7 ]; then
         mkdir -p "${DATABASE_DIR}"
-        chown -R ${EFF_USER}:sc-postgresql "${SYNOPKG_PKGVAR}"
+        chown -R ${EFF_USER}:$(id -gn ${EFF_USER}) "${SYNOPKG_PKGVAR}"
     fi
 
     # Initialize database cluster with UTF8 encoding

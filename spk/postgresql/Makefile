@@ -20,12 +20,16 @@ SERVICE_PORT_TITLE = PostgreSQL
 # PostgreSQL uses its own protocol, not HTTP - no web UI shortcut
 NO_SERVICE_SHORTCUT = 1
 
-CONF_DIR = src/conf
+include ../../mk/spksrc.common.mk
+
+# libicu dependency doesn't support these architectures
+UNSUPPORTED_ARCHS = $(ARMv5_ARCHS) $(OLD_PPC_ARCHS)
+
+# Use auto-generated service user (sc-postgresql)
+SERVICE_USER = auto
+
 SERVICE_SETUP = src/service-setup.sh
 WIZARDS_DIR = src/wizard
-
-# sc-postgresql is not a valid user (sc_postgres is defined in privilege file as package/service user)
-#SERVICE_USER=auto
 SSS_SCRIPT = src/start-stop-status.sh
 
 include ../../mk/spksrc.spk.mk
