@@ -20,16 +20,9 @@ SERVICE_PORT_TITLE = PostgreSQL
 # PostgreSQL uses its own protocol, not HTTP - no web UI shortcut
 NO_SERVICE_SHORTCUT = 1
 
-include ../../mk/spksrc.common.mk
-ifeq ($(call version_ge, ${TCVERSION}, 7.0),1)
 CONF_DIR = src/conf
-WIZARDS_DIR = src/wizard.dsm7
 SERVICE_SETUP = src/service-setup.sh
-else
-CONF_DIR = src/conf.root
 WIZARDS_DIR = src/wizard
-SERVICE_SETUP = src/service-setup.as-root.sh
-endif
 
 # sc-postgresql is not a valid user (sc_postgres is defined in privilege file as package/service user)
 #SERVICE_USER=auto

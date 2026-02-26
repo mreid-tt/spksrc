@@ -1,28 +1,28 @@
 [{
-    "step_title": "PostgreSQL configuration",
+    "step_title": "PostgreSQL",
     "items": [{
+        "desc": "Create an administrator account to manage your PostgreSQL databases. This account will have full superuser privileges.<br><br>To connect after installation, use:<br><code>/volume1/@appstore/postgresql/bin/psql -h localhost -p 5433 -U &lt;username&gt; -d postgres</code>"
+    }, {
         "type": "textfield",
-        "desc": "DB administrator login. Defaults to pgadmin",
+        "desc": "Administrator username",
         "subitems": [{
             "key": "wizard_pg_username",
-            "desc": "Login",
-            "defaultValue": "pgadmin"
+            "desc": "Username",
+            "validator": {
+                "allowBlank": false,
+                "minLength": 3
+            }
         }]
     }, {
         "type": "password",
-        "desc": "DB administrator password. Defaults to changepassword",
+        "desc": "Administrator password",
         "subitems": [{
             "key": "wizard_pg_password",
             "desc": "Password",
-            "defaultValue": "changepassword"
-        }]
-    }, {
-        "type": "textfield",
-        "desc": "Server Port. Defaults to 5433 (5432 already used by Synology)",
-        "subitems": [{
-            "key": "wizard_pg_port",
-            "desc": "Server Port",
-            "defaultValue": "5433"
+            "validator": {
+                "allowBlank": false,
+                "minLength": 8
+            }
         }]
     }]
 }]
