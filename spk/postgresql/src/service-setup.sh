@@ -12,8 +12,32 @@ PG_PASSWORD=${wizard_pg_password}
 
 # Backup variables from uninstall wizard
 PG_BACKUP=${wizard_pg_dump_directory}
-PG_BACKUP_CONF_DIR="${PG_BACKUP}/conf_$(date +\"%d_%b\")"
-PG_BACKUP_DUMP_DIR="${PG_BACKUP}/databases_$(date +\"%d_%b\")"
+BACKUP_DATE=$(date +%Y-%m-%d)
+PG_BACKUP_CONF_DIR="${PG_BACKUP}/config_${BACKUP_DATE}"
+PG_BACKUP_DUMP_DIR="${PG_BACKUP}/databases_${BACKUP_DATE}"
+
+validate_preuninst()
+{
+    # Validate backup directory if user requested database backup
+    if [ "${wizard_pg_dump_database}" = "true" ]; then
+        if [ -z "${PG_BACKUP}" ]; then
+            echo "Error: Backup directory path is empty."
+            exit 1
+        fi
+        # Try to create directory if it doesn't exist
+        if [ ! -d "${PG_BACKUP}" ]; then
+            mkdir -p "${PG_BACKUP}" 2>/dev/null || {
+                echo "Error: Unable to create backup directory ${PG_BACKUP}. Check permissions."
+                exit 1
+            }
+        fi
+        # Check write permissions
+        if [ ! -w "${PG_BACKUP}" ]; then
+            echo "Error: Backup directory ${PG_BACKUP} is not writable. Check permissions."
+            exit 1
+        fi
+    fi
+}
 
 # Helper function to run commands as the effective user
 # On DSM 7: scripts run as package user, so run directly
@@ -44,12 +68,6 @@ service_postinst()
     # Listen on all interfaces
     run_as_user "sed -e \"s/^#listen_addresses = 'localhost'/listen_addresses = '*'/g\" -i ${CFG_FILE}"
 
-    # Disable autovacuum on DSM 7 - running as non-root user lacks permissions on system tables
-    # Users can run VACUUM manually or set up a DSM scheduled task with root privileges
-    if [ "${SYNOPKG_DSM_VERSION_MAJOR}" -ge 7 ]; then
-        run_as_user "sed -e 's/^#autovacuum = on/autovacuum = off/g' -i ${CFG_FILE}"
-    fi
-
     # Start server temporarily to create roles
     run_as_user "${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} -l ${LOG_FILE} start"
 
@@ -70,11 +88,10 @@ service_preuninst()
         # Start server for backup
         run_as_user "${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} -l ${LOG_FILE} start"
 
-        # Create backup directories
-        if [ ! -d "${PG_BACKUP_CONF_DIR}" ]; then
-            mkdir -p "${PG_BACKUP_CONF_DIR}"
-            chmod 755 "${PG_BACKUP_CONF_DIR}"
-        fi
+        # Create backup directories with package user ownership
+        # Use install command which can set owner/group in one operation
+        install -d -o ${EFF_USER} -g $(id -gn ${EFF_USER}) -m 755 "${PG_BACKUP_CONF_DIR}"
+        install -d -o ${EFF_USER} -g $(id -gn ${EFF_USER}) -m 755 "${PG_BACKUP_DUMP_DIR}"
 
         # Backup configuration files
         cp "${DATABASE_DIR}/pg_hba.conf" "${PG_BACKUP_CONF_DIR}/"
@@ -82,14 +99,9 @@ service_preuninst()
         cp "${DATABASE_DIR}/postgresql.auto.conf" "${PG_BACKUP_CONF_DIR}/"
         cp "${DATABASE_DIR}/postgresql.conf" "${PG_BACKUP_CONF_DIR}/"
 
-        if [ ! -d "${PG_BACKUP_DUMP_DIR}" ]; then
-            mkdir -p "${PG_BACKUP_DUMP_DIR}"
-            chmod 755 "${PG_BACKUP_DUMP_DIR}"
-        fi
-
         # Dump all databases (excluding templates)
-        for database in $(run_as_user "${SYNOPKG_PKGDEST}/bin/psql -A -t -p ${SERVICE_PORT} -d postgres -c \"SELECT datname FROM pg_database WHERE datistemplate = false\""); do
-            run_as_user "${SYNOPKG_PKGDEST}/bin/pg_dump -p ${SERVICE_PORT} -Fc ${database} > ${PG_BACKUP_DUMP_DIR}/${database}.dump"
+        for database in $(run_as_user "${SYNOPKG_PKGDEST}/bin/psql -A -t -p ${SERVICE_PORT} -d postgres -c 'SELECT datname FROM pg_database WHERE datistemplate = false'"); do
+            run_as_user "${SYNOPKG_PKGDEST}/bin/pg_dump -p ${SERVICE_PORT} -Fc ${database} -f ${PG_BACKUP_DUMP_DIR}/${database}.dump"
         done
 
         # Stop server
