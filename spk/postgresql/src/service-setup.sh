@@ -17,10 +17,38 @@ BACKUP_DATE=$(date +%Y-%m-%d)
 PG_BACKUP_CONF_DIR="${PG_BACKUP}/config_${BACKUP_DATE}"
 PG_BACKUP_DUMP_DIR="${PG_BACKUP}/databases_${BACKUP_DATE}"
 
+# Helper function to run commands as the effective user
+# On DSM 7: scripts run as package user, so run directly
+# On DSM 6: scripts run as root, so use su to switch user
+run_as_user()
+{
+    if [ "${SYNOPKG_DSM_VERSION_MAJOR}" -ge 7 ]; then
+        eval "$@"
+    else
+        su - ${EFF_USER} -s /bin/sh -c "$@"
+    fi
+}
+
 validate_preuninst()
 {
     # Validate backup directory if user requested database backup
     if [ "${wizard_pg_dump_database}" = "true" ]; then
+        # Validate password by attempting to connect
+        # Start server temporarily for validation
+        run_as_user "${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} -l ${LOG_FILE} start"
+
+        export PGPASSWORD="${wizard_pg_password}"
+        if ! ${SYNOPKG_PKGDEST}/bin/psql -h localhost -p ${SERVICE_PORT} -U ${EFF_USER} -d postgres -c "SELECT 1" > /dev/null 2>&1; then
+            unset PGPASSWORD
+            run_as_user "${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} stop"
+            echo "Incorrect PostgreSQL administrator password"
+            exit 1
+        fi
+        unset PGPASSWORD
+
+        # Stop server after validation
+        run_as_user "${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} stop"
+
         if [ -z "${PG_BACKUP}" ]; then
             echo "Error: Backup directory path is empty."
             exit 1
@@ -40,18 +68,6 @@ validate_preuninst()
     fi
 }
 
-# Helper function to run commands as the effective user
-# On DSM 7: scripts run as package user, so run directly
-# On DSM 6: scripts run as root, so use su to switch user
-run_as_user()
-{
-    if [ "${SYNOPKG_DSM_VERSION_MAJOR}" -ge 7 ]; then
-        eval "$@"
-    else
-        su - ${EFF_USER} -s /bin/sh -c "$@"
-    fi
-}
-
 service_postinst()
 {
     # On DSM 6 (running as root), create data directory and set ownership
@@ -68,8 +84,9 @@ service_postinst()
         chown ${EFF_USER}:$(id -gn ${EFF_USER}) "${PWFILE}"
     fi
 
-    # Initialize with scram-sha-256 authentication and password file
-    run_as_user "${SYNOPKG_PKGDEST}/bin/initdb -D ${DATABASE_DIR} --encoding=UTF8 --locale=en_US.UTF8 --auth-local=scram-sha-256 --auth-host=scram-sha-256 --pwfile=${PWFILE}"
+    # Initialize database with peer auth for local connections (allows setup without password)
+    # scram-sha-256 for host connections from the start
+    run_as_user "${SYNOPKG_PKGDEST}/bin/initdb -D ${DATABASE_DIR} --encoding=UTF8 --locale=en_US.UTF8 --auth-local=peer --auth-host=scram-sha-256 --pwfile=${PWFILE}"
 
     # Remove password file after initialization
     rm -f "${PWFILE}"
@@ -85,11 +102,16 @@ service_postinst()
     # Start server temporarily to create roles
     run_as_user "${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} -l ${LOG_FILE} start"
 
-    # Set password for the system user (connect via Unix socket)
+    # Set password for the system user (peer auth allows connection without password via Unix socket)
     run_as_user "${SYNOPKG_PKGDEST}/bin/psql -h ${SYNOPKG_PKGVAR} -p ${SERVICE_PORT} -d postgres -c \"ALTER ROLE \\\"${EFF_USER}\\\" WITH PASSWORD '${PG_PASSWORD}';\""
 
-    # Create administrator role from wizard (connect via Unix socket)
+    # Create administrator role from wizard (peer auth via Unix socket)
     run_as_user "${SYNOPKG_PKGDEST}/bin/psql -h ${SYNOPKG_PKGVAR} -p ${SERVICE_PORT} -d postgres -c \"CREATE ROLE ${PG_USERNAME} PASSWORD '${PG_PASSWORD}' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN REPLICATION BYPASSRLS;\""
+
+    # Switch local authentication to scram-sha-256 for regular users
+    # Keep peer auth for the system user (sc-postgresql) to allow passwordless backups
+    # Order matters: first matching rule wins, so system user rule must come first
+    run_as_user "sed -e 's/^local.*all.*all.*peer$/local   all             ${EFF_USER}                             peer\\nlocal   all             all                                     scram-sha-256/' -i ${HBA_FILE}"
 
     # Stop server (will be started by DSM)
     run_as_user "${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} stop"
@@ -102,9 +124,9 @@ service_preuninst()
         # Start server for backup
         run_as_user "${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} -l ${LOG_FILE} start"
 
-        # Create backup directories with package user ownership
-        install -d -o ${EFF_USER} -g $(id -gn ${EFF_USER}) -m 755 "${PG_BACKUP_CONF_DIR}"
-        install -d -o ${EFF_USER} -g $(id -gn ${EFF_USER}) -m 755 "${PG_BACKUP_DUMP_DIR}"
+        # Create backup directories (running as root has write access to shared folders)
+        mkdir -p "${PG_BACKUP_CONF_DIR}"
+        mkdir -p "${PG_BACKUP_DUMP_DIR}"
 
         # Backup configuration files
         cp "${DATABASE_DIR}/pg_hba.conf" "${PG_BACKUP_CONF_DIR}/"
@@ -112,10 +134,13 @@ service_preuninst()
         cp "${DATABASE_DIR}/postgresql.auto.conf" "${PG_BACKUP_CONF_DIR}/"
         cp "${DATABASE_DIR}/postgresql.conf" "${PG_BACKUP_CONF_DIR}/"
 
-        # Dump all databases (excluding templates) - connect via Unix socket
-        for database in $(run_as_user "${SYNOPKG_PKGDEST}/bin/psql -h ${SYNOPKG_PKGVAR} -A -t -p ${SERVICE_PORT} -d postgres -c 'SELECT datname FROM pg_database WHERE datistemplate = false'"); do
-            run_as_user "${SYNOPKG_PKGDEST}/bin/pg_dump -h ${SYNOPKG_PKGVAR} -p ${SERVICE_PORT} -Fc ${database} -f ${PG_BACKUP_DUMP_DIR}/${database}.dump"
+        # Dump all databases (excluding templates)
+        # Use TCP/IP connection with password (PGPASSWORD) - runs as root to write to shared folders
+        export PGPASSWORD="${wizard_pg_password}"
+        for database in $(${SYNOPKG_PKGDEST}/bin/psql -h localhost -p ${SERVICE_PORT} -U ${EFF_USER} -A -t -d postgres -c 'SELECT datname FROM pg_database WHERE datistemplate = false'); do
+            ${SYNOPKG_PKGDEST}/bin/pg_dump -h localhost -p ${SERVICE_PORT} -U ${EFF_USER} -Fc ${database} -f "${PG_BACKUP_DUMP_DIR}/${database}.dump"
         done
+        unset PGPASSWORD
 
         # Stop server
         run_as_user "${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} stop"

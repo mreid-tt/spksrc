@@ -11,8 +11,15 @@
             "defaultValue": true
         }]
     }, {
+        "type": "password",
+        "desc": "Enter the PostgreSQL administrator password for database backup",
+        "subitems": [{
+            "key": "wizard_pg_password",
+            "desc": "Administrator password"
+        }]
+    }, {
         "type": "textfield",
-        "desc": "Specify the backup directory. The directory must be writable by the package user (sc-postgresql).",
+        "desc": "Specify the backup directory.",
         "subitems": [{
             "key": "wizard_pg_dump_directory",
             "desc": "Backup directory",
