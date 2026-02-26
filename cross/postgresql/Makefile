@@ -1,11 +1,11 @@
 PKG_NAME = postgresql
-PKG_VERS = 11.22
+PKG_VERS = 17.4
 PKG_EXT = tar.bz2
 PKG_DIST_NAME = $(PKG_NAME)-$(PKG_VERS).$(PKG_EXT)
 PKG_DIST_SITE = https://ftp.postgresql.org/pub/source/v$(PKG_VERS)
 PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 
-DEPENDS = cross/zlib cross/openssl3 cross/libxml2 cross/libxslt cross/readline
+DEPENDS = cross/zlib cross/openssl3 cross/libxml2 cross/libxslt cross/readline cross/libicu
 
 HOMEPAGE = https://www.postgresql.org
 COMMENT  = PostgreSQL is a powerful, open source object-relational database system with over 30 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance
@@ -38,5 +38,9 @@ CONFIGURE_ARGS += --with-system-tzdata=/usr/share/zoneinfo
 # you must unset MAKELEVEL or set it to zero.
 # see: INSTALL file
 ENV += MAKELEVEL=
+
+# Force export-dynamic for backend executable so extensions can resolve symbols
+# Cross-compilation configure test assumes 'no' since it can't run test programs
+CONFIGURE_ARGS += LDFLAGS_EX_BE="-Wl,--export-dynamic"
 
 include ../../mk/spksrc.cross-cc.mk

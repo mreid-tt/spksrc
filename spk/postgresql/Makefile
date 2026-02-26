@@ -1,6 +1,6 @@
 SPK_NAME = postgresql
-SPK_VERS = 11.22
-SPK_REV = 3
+SPK_VERS = 17.4
+SPK_REV = 1
 SPK_ICON = src/postgresql.png
 
 DEPENDS = cross/postgresql
@@ -11,8 +11,14 @@ CHANGELOG = "Initial package release."
 DISPLAY_NAME = PostgreSQL
 STARTABLE = yes
 
-HOMEPAGE = https://www.postgresql.com
+HOMEPAGE = https://www.postgresql.org
 LICENSE = PostgreSQL Licence
+
+# Default port (Synology uses 5432, so we use 5433)
+SERVICE_PORT = 5433
+SERVICE_PORT_TITLE = PostgreSQL
+# PostgreSQL uses its own protocol, not HTTP - no web UI shortcut
+NO_SERVICE_SHORTCUT = 1
 
 include ../../mk/spksrc.common.mk
 ifeq ($(call version_ge, ${TCVERSION}, 7.0),1)

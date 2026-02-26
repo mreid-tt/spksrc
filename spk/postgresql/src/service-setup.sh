@@ -24,6 +24,9 @@ service_postinst ()
   sed -e "s/^#port = 5432/port=${PG_PORT}/g" -i ${CFG_FILE}
   # Change listen addresses
   sed -e "s/^#listen_addresses = 'localhost'/listen_addresses = '*'/g" -i ${CFG_FILE}
+  # Disable autovacuum - running as non-root user lacks permissions on system tables
+  # Users can run VACUUM manually or set up a DSM scheduled task with root privileges
+  sed -e "s/^#autovacuum = on/autovacuum = off/g" -i ${CFG_FILE}
 
   # Start server
   ${SYNOPKG_PKGDEST}/bin/pg_ctl -D ${DATABASE_DIR} -l ${LOG_FILE} start
