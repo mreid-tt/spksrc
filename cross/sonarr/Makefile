@@ -1,8 +1,8 @@
 PKG_NAME = Sonarr
-PKG_VERS = 4.0.0.733
+PKG_VERS = 4.0.16.2944
 PKG_EXT = tar.gz
-PKG_DIST_NAME = $(PKG_NAME).develop.$(PKG_VERS).linux-$(PKG_DIST_ARCH).$(PKG_EXT)
-PKG_DIST_SITE = https://download.sonarr.tv/v4/develop/$(PKG_VERS)
+PKG_DIST_NAME = $(PKG_NAME).main.$(PKG_VERS).linux-$(PKG_DIST_ARCH).$(PKG_EXT)
+PKG_DIST_SITE = https://github.com/Sonarr/Sonarr/releases/download/v$(PKG_VERS)
 PKG_DIR = $(PKG_NAME)
 
 DEPENDS =
@@ -16,7 +16,7 @@ INSTALL_TARGET = sonarr_install
 # use digests with multiple files
 PKG_DIST_ARCH_LIST = x64 arm arm64
 
-include ../../mk/spksrc.archs.mk
+include ../../mk/spksrc.common.mk
 ifeq ($(findstring $(ARCH),$(x64_ARCHS)),$(ARCH))
 PKG_DIST_ARCH = x64
 else ifeq ($(findstring $(ARCH),$(ARMv7_ARCHS)),$(ARCH))

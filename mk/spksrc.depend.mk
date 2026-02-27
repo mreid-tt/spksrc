@@ -9,8 +9,10 @@
 #  DEPENDS             List of dependencies to go through
 #  REQUIRE_KERNEL      If set, will compile kernel modules and allow
 #                      use of KERNEL_DIR
-#  REQUIRE_TOOLKIT     If set, will download and extract matching toolkit
 #  BUILD_DEPENDS       List of dependencies to go through, PLIST is ignored
+
+### For managing kernel modules dependent builds
+include ../../mk/spksrc.kernel-modules.mk
 
 DEPEND_COOKIE = $(WORK_DIR)/.$(COOKIE_PREFIX)depend_done
 
@@ -30,20 +32,27 @@ else
 $(POST_DEPEND_TARGET): $(DEPEND_TARGET)
 endif
 
-ifeq ($(strip $(REQUIRE_TOOLKIT)),)
-TOOLKIT_DEPEND = 
-else
-TOOLKIT_DEPEND = toolkit/syno-$(ARCH)-$(TCVERSION)
-endif
+native-depend_msg_target:
+	@$(MSG) "Processing NATIVE dependencies of $(NAME)"
 
-ifeq ($(strip $(REQUIRE_KERNEL)),)
-KERNEL_DEPEND = 
-else
-KERNEL_DEPEND = kernel/syno-$(ARCH)-$(TCVERSION)
-ifneq ($(strip $(REQUIRE_KERNEL_MODULE)),)
-KERNEL_MODULE_DEPEND = $(filter-out $(GENERIC_ARCHS),$(addprefix kernel/syno-,$(filter $(addprefix %-,$(filter $(firstword $(subst ., ,$(TCVERSION))).%,$(SUPPORTED_KERNEL_VERSIONS))),$(filter-out $(addsuffix -%,$(UNSUPPORTED_ARCHS)),$(LEGACY_ARCHS)))))
-endif
-endif
+# Called for 'make all-supported' prior to
+# parallalizing build for every arch targets
+native-depend: native-depend_msg_target
+	@set -e; \
+	for native in $(filter native/%,$(BUILD_DEPENDS) $(DEPENDS)); \
+	do                          \
+	  env $(ENV) WORK_DIR= $(MAKE) -C ../../$$native ; \
+	done
+	@set -e; \
+	for depend in $(NATIVE_DEPENDS); \
+	do                          \
+	  env $(ENV) WORK_DIR=$(WORK_DIR) INSTALL_PREFIX=$(INSTALL_PREFIX) $(MAKE) -C ../../$$depend ; \
+	done
+	@set -e; \
+	for depend in $(filter-out native/%,$(BUILD_DEPENDS) $(OPTIONAL_DEPENDS) $(DEPENDS)); \
+	do                          \
+	  env $(ENV) $(MAKE) -C ../../$$depend native-depend; \
+	done
 
 depend_msg_target:
 	@$(MSG) "Processing dependencies of $(NAME)"
@@ -51,8 +60,24 @@ depend_msg_target:
 pre_depend_target: depend_msg_target
 
 depend_target: $(PRE_DEPEND_TARGET)
+ifneq ($(strip $(REQUIRE_KERNEL_MODULE)),)
+# As depend is also ran at toolchain-time, ensure to skip kernel-modules
+ifeq ($(filter toolchain,$(shell basename $(abspath $(CURDIR)/../))),)
+depend_target: kernel-modules
+endif
+endif
 	@set -e; \
-	for depend in $(BUILD_DEPENDS) $(KERNEL_DEPEND) $(TOOLKIT_DEPEND) $(DEPENDS); \
+	for native in $(filter native/%,$(BUILD_DEPENDS) $(DEPENDS)); \
+	do                          \
+	  env $(ENV) WORK_DIR= LOGGING_ENABLED= $(MAKE) -C ../../$$native ; \
+	done
+	@set -e; \
+	for depend in $(NATIVE_DEPENDS); \
+	do                          \
+	  env $(ENV) WORK_DIR=$(WORK_DIR) $(MAKE) -C ../../$$depend ; \
+	done
+	@set -e; \
+	for depend in $(filter-out native/%,$(BUILD_DEPENDS) $(DEPENDS)); \
 	do                          \
 	  env $(ENV) $(MAKE) -C ../../$$depend ; \
 	done

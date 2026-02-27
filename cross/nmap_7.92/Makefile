@@ -6,7 +6,7 @@ PKG_DIST_NAME = $(PKG_NAME)-$(PKG_VERS).$(PKG_EXT)
 PKG_DIST_SITE = https://nmap.org/dist
 PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 
-DEPENDS = cross/libpcap cross/openssl
+DEPENDS = cross/libpcap cross/openssl3
 
 HOMEPAGE = https://nmap.org/
 COMMENT  = Nmap ("Network Mapper") is a free and open source utility for network discovery and security auditing.
@@ -16,7 +16,7 @@ GNU_CONFIGURE = 1
 CONFIGURE_ARGS = --without-zenmap --with-liblua=included --with-libpcre=included
 ADDITIONAL_CPPFLAGS = -O3
 
-include ../../mk/spksrc.archs.mk
+include ../../mk/spksrc.common.mk
 ifeq ($(findstring $(ARCH),$(OLD_PPC_ARCHS)),$(ARCH))
 ADDITIONAL_CPPFLAGS += -DLUA_32BITS
 endif

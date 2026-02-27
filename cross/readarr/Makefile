@@ -1,5 +1,5 @@
 PKG_NAME = Readarr
-PKG_VERS = 0.1.4.1596
+PKG_VERS = 0.4.16.2793
 PKG_EXT = tar.gz
 PKG_DIST_NAME = $(PKG_NAME).develop.$(PKG_VERS).linux-core-$(PKG_DIST_ARCH).$(PKG_EXT)
 PKG_DIST_SITE = https://github.com/Readarr/Readarr/releases/download/v$(PKG_VERS)
@@ -16,7 +16,7 @@ INSTALL_TARGET = readarr_install
 # use digests with multiple files
 PKG_DIST_ARCH_LIST = x86 x64 arm arm64
 
-include ../../mk/spksrc.archs.mk
+include ../../mk/spksrc.common.mk
 ifeq ($(findstring $(ARCH),$(i686_ARCHS)),$(ARCH))
 PKG_DIST_ARCH = x86
 else ifeq ($(findstring $(ARCH),$(x64_ARCHS)),$(ARCH))

@@ -1,6 +1,6 @@
 SPK_NAME = ympd
 SPK_VERS = 1.3.0
-SPK_REV = 1
+SPK_REV = 2
 SPK_ICON = src/ympd.png
 DSM_UI_DIR = app
 
@@ -8,7 +8,7 @@ DEPENDS = cross/ympd
 
 MAINTAINER = hgy59
 DESCRIPTION = ympd: Standalone MPD Web GUI written in C, utilizing Websockets and Bootstrap/JS.
-CHANGELOG = "Initial package release."
+CHANGELOG = "1. Configure MPD socket connection for music directory and playlist directory support. <br/>2. Fix cross-compilation with CMake toolchain file."
 
 DISPLAY_NAME = MPD Web GUI
 
