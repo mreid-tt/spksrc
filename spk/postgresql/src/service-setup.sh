@@ -108,6 +108,11 @@ service_postinst()
     # Create administrator role from wizard (peer auth via Unix socket)
     run_as_user "${SYNOPKG_PKGDEST}/bin/psql -h ${SYNOPKG_PKGVAR} -p ${SERVICE_PORT} -d postgres -c \"CREATE ROLE ${PG_USERNAME} PASSWORD '${PG_PASSWORD}' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN REPLICATION BYPASSRLS;\""
 
+    # Enable PostGIS extension in template1 (so new databases get it automatically)
+    run_as_user "${SYNOPKG_PKGDEST}/bin/psql -h ${SYNOPKG_PKGVAR} -p ${SERVICE_PORT} -d template1 -c 'CREATE EXTENSION IF NOT EXISTS postgis;'"
+    # Enable PostGIS in the default postgres database as well
+    run_as_user "${SYNOPKG_PKGDEST}/bin/psql -h ${SYNOPKG_PKGVAR} -p ${SERVICE_PORT} -d postgres -c 'CREATE EXTENSION IF NOT EXISTS postgis;'"
+
     # Switch local authentication to scram-sha-256 for regular users
     # Keep peer auth for the system user (sc-postgresql) to allow passwordless backups
     # Order matters: first matching rule wins, so system user rule must come first

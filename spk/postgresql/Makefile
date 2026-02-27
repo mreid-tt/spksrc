@@ -3,10 +3,10 @@ SPK_VERS = 17.4
 SPK_REV = 1
 SPK_ICON = src/postgresql.png
 
-DEPENDS = cross/postgresql
+DEPENDS = cross/postgresql cross/postgis
 
 MAINTAINER = DigitalBox98
-DESCRIPTION = PostgreSQL is a powerful, open source object-relational database system with over 30 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance.
+DESCRIPTION = PostgreSQL is a powerful, open source object-relational database system with over 30 years of active development. This package includes PostGIS spatial database extension.
 CHANGELOG = "Initial package release."
 DISPLAY_NAME = PostgreSQL
 STARTABLE = yes
