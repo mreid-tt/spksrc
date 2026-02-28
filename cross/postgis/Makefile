@@ -75,7 +75,7 @@ postgis_setup_wrapper:
 	@echo '  --cflags) "$$NATIVE_PG/bin/pg_config" --cflags ;;' >> $(PG_CONFIG_WRAPPER)
 	@echo '  --cppflags) "$$NATIVE_PG/bin/pg_config" --cppflags ;;' >> $(PG_CONFIG_WRAPPER)
 	@echo '  --ldflags) echo "-L$(CROSS_PG_LIBDIR)" ;;' >> $(PG_CONFIG_WRAPPER)
-	@echo '  --libs) "$$NATIVE_PG/bin/pg_config" --libs ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --libs) echo "-lssl -lcrypto -lpthread -lm" ;;' >> $(PG_CONFIG_WRAPPER)
 	@echo '  --cc) echo "$(TC_PATH)$(TC_PREFIX)gcc" ;;' >> $(PG_CONFIG_WRAPPER)
 	@echo '  "")' >> $(PG_CONFIG_WRAPPER)
 	@echo '    echo "BINDIR = $(CROSS_PG_BINDIR)"' >> $(PG_CONFIG_WRAPPER)
