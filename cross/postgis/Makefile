@@ -14,10 +14,20 @@ LICENSE = GPLv2
 
 GNU_CONFIGURE = 1
 
-# Path to cross-compiled PostgreSQL
-CROSS_PG_CONFIG = $(STAGING_INSTALL_PREFIX)/bin/pg_config
+# For cross-compilation, we use a wrapper script instead of the cross-compiled
+# pg_config binary (which cannot run on the build host). The wrapper returns:
+# - Native PGXS path for building (from native/postgresql)
+# - Cross-compiled library/share paths for installation
+NATIVE_PG_DIR = $(realpath $(WORK_DIR)/../../../native/postgresql/work-native/install/usr/local)
+PG_CONFIG_WRAPPER = $(WORK_DIR)/pg_config_wrapper
 
-CONFIGURE_ARGS  = --with-pgconfig=$(CROSS_PG_CONFIG)
+# Cross-compiled PostgreSQL paths (where PostGIS will be installed)
+CROSS_PG_LIBDIR = $(STAGING_INSTALL_PREFIX)/lib
+CROSS_PG_SHAREDIR = $(STAGING_INSTALL_PREFIX)/share
+CROSS_PG_INCLUDEDIR = $(STAGING_INSTALL_PREFIX)/include
+CROSS_PG_BINDIR = $(STAGING_INSTALL_PREFIX)/bin
+
+CONFIGURE_ARGS  = --with-pgconfig=$(PG_CONFIG_WRAPPER)
 CONFIGURE_ARGS += --with-geosconfig=$(STAGING_INSTALL_PREFIX)/bin/geos-config
 CONFIGURE_ARGS += --with-projdir=$(STAGING_INSTALL_PREFIX)
 
@@ -30,26 +40,66 @@ CONFIGURE_ARGS += --without-gui
 CONFIGURE_ARGS += --without-topology
 
 # Disable parallel build to avoid race conditions in SQL file generation
-COMPILE_MAKE_OPTIONS = -j1
+# Also override CC since native PGXS makefile hardcodes CC=gcc
+COMPILE_MAKE_OPTIONS = -j1 CC="$(TC_PATH)$(TC_PREFIX)gcc"
 
-# Override install to use a custom target that handles PGXS path issues
-# PostGIS uses PGXS which gets paths from pg_config. The cross-compiled
-# pg_config returns paths with INSTALL_DIR baked in (e.g., /workspace/.../install/var/packages/...)
-# Since these paths already contain the install directory, we use DESTDIR=""
-# and PostGIS will install directly to the correct staging location.
+# Set up pg_config wrapper before configure runs
+PRE_CONFIGURE_TARGET = postgis_setup_wrapper
+
+# Custom install target to handle paths correctly
 INSTALL_TARGET = postgis_install
 
 include ../../mk/spksrc.cross-cc.mk
 
+.PHONY: postgis_setup_wrapper
+postgis_setup_wrapper:
+	@echo "Creating pg_config wrapper for cross-compilation..."
+	@echo '#!/bin/sh' > $(PG_CONFIG_WRAPPER)
+	@echo '# pg_config wrapper for PostGIS cross-compilation' >> $(PG_CONFIG_WRAPPER)
+	@echo 'NATIVE_PG="$(NATIVE_PG_DIR)"' >> $(PG_CONFIG_WRAPPER)
+	@echo 'case "$$1" in' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --version) echo "PostgreSQL 17.4" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --pgxs) echo "$$NATIVE_PG/lib/postgresql/pgxs/src/makefiles/pgxs.mk" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --includedir) echo "$(CROSS_PG_INCLUDEDIR)" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --includedir-server) echo "$(CROSS_PG_INCLUDEDIR)/server" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --pkgincludedir) echo "$(CROSS_PG_INCLUDEDIR)" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --libdir) echo "$(CROSS_PG_LIBDIR)" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --pkglibdir) echo "$(CROSS_PG_LIBDIR)" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --sharedir) echo "$(CROSS_PG_SHAREDIR)" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --bindir) echo "$(CROSS_PG_BINDIR)" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --docdir) echo "$(CROSS_PG_SHAREDIR)/doc" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --htmldir) echo "$(CROSS_PG_SHAREDIR)/doc" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --mandir) echo "$(CROSS_PG_SHAREDIR)/man" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --localedir) echo "$(CROSS_PG_SHAREDIR)/locale" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --sysconfdir) echo "$(CROSS_PG_INCLUDEDIR)/../etc" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --cflags) "$$NATIVE_PG/bin/pg_config" --cflags ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --cppflags) "$$NATIVE_PG/bin/pg_config" --cppflags ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --ldflags) echo "-L$(CROSS_PG_LIBDIR)" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --libs) "$$NATIVE_PG/bin/pg_config" --libs ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  --cc) echo "$(TC_PATH)$(TC_PREFIX)gcc" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  "")' >> $(PG_CONFIG_WRAPPER)
+	@echo '    echo "BINDIR = $(CROSS_PG_BINDIR)"' >> $(PG_CONFIG_WRAPPER)
+	@echo '    echo "INCLUDEDIR = $(CROSS_PG_INCLUDEDIR)"' >> $(PG_CONFIG_WRAPPER)
+	@echo '    echo "INCLUDEDIR-SERVER = $(CROSS_PG_INCLUDEDIR)/server"' >> $(PG_CONFIG_WRAPPER)
+	@echo '    echo "LIBDIR = $(CROSS_PG_LIBDIR)"' >> $(PG_CONFIG_WRAPPER)
+	@echo '    echo "PKGLIBDIR = $(CROSS_PG_LIBDIR)"' >> $(PG_CONFIG_WRAPPER)
+	@echo '    echo "SHAREDIR = $(CROSS_PG_SHAREDIR)"' >> $(PG_CONFIG_WRAPPER)
+	@echo '    echo "PGXS = $$NATIVE_PG/lib/postgresql/pgxs/src/makefiles/pgxs.mk"' >> $(PG_CONFIG_WRAPPER)
+	@echo '    echo "VERSION = PostgreSQL 17.4"' >> $(PG_CONFIG_WRAPPER)
+	@echo '    ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo '  *) "$$NATIVE_PG/bin/pg_config" "$$1" ;;' >> $(PG_CONFIG_WRAPPER)
+	@echo 'esac' >> $(PG_CONFIG_WRAPPER)
+	@chmod +x $(PG_CONFIG_WRAPPER)
+	@echo "pg_config wrapper created at $(PG_CONFIG_WRAPPER)"
+
 .PHONY: postgis_install
 postgis_install:
-	@echo "Installing PostGIS with custom target..."
+	@echo "Installing PostGIS..."
 	$(RUN) $(MAKE) install DESTDIR=""
-	@# Verify PostGIS files were installed
-	@PKGLIBDIR=$$($(CROSS_PG_CONFIG) --pkglibdir); \
-	if [ -f "$$PKGLIBDIR/postgis-3.so" ]; then \
-	  echo "PostGIS installation verified: $$PKGLIBDIR/postgis-3.so"; \
+	@# Verify installation
+	@if [ -f "$(CROSS_PG_LIBDIR)/postgis-3.so" ]; then \
+	  echo "PostGIS installed successfully: $(CROSS_PG_LIBDIR)/postgis-3.so"; \
 	else \
-	  echo "ERROR: PostGIS shared library not found at $$PKGLIBDIR"; \
+	  echo "ERROR: PostGIS library not found"; \
 	  exit 1; \
 	fi
