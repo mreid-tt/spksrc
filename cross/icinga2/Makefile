@@ -18,7 +18,7 @@ DEPENDS  = cross/boost_1.86
 DEPENDS += cross/openssl3
 
 # Optional database backends for IDO
-DEPENDS += cross/mariadb-connector-c-latest
+DEPENDS += cross/mariadb-connector-c
 DEPENDS += cross/libpq
 
 HOMEPAGE = https://icinga.com/
