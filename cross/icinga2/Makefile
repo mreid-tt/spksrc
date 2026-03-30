@@ -12,6 +12,8 @@ REQUIRED_MIN_DSM = 7.1
 # comcerto2k has older toolchain than other DSM 7.1 archs
 UNSUPPORTED_ARCHS = comcerto2k
 
+BUILD_DEPENDS = native/icinga2-tools
+
 DEPENDS  = cross/boost_1.86
 DEPENDS += cross/openssl3
 
@@ -82,36 +84,10 @@ CMAKE_ARGS += -DICINGA2_COMMAND_GROUP=icingacmd
 # Skip user/group impersonation - handled by DSM service manager
 ADDITIONAL_CXXFLAGS = -DICINGA2_SKIP_IMPERSONATION
 
-# Build native tools (mkclass, mkembedconfig, mkunity) before cross-compiling
-# These tools run on the host during compilation to generate code
-NATIVE_BUILD_DIR = $(WORK_DIR)/$(PKG_DIR)/native-build
-PRE_CONFIGURE_TARGET = build_native_tools
+# Native tools from native/icinga2-tools package
+NATIVE_BUILD_DIR = $(realpath $(WORK_DIR)/../../../native/icinga2-tools/work-native/install/usr/local)
 
 # Add native build tools to PATH during cross-compilation
-ENV += PATH=$(NATIVE_BUILD_DIR)/Bin/Release:$$PATH
+ENV += PATH=$(NATIVE_BUILD_DIR)/bin:$$PATH
 
 include ../../mk/spksrc.cross-cmake.mk
-
-# Build mkclass, mkembedconfig, mkunity natively for host architecture.
-# These are simple tools that don't need Boost or other libraries.
-# We compile them directly instead of using CMake to avoid dependency checks.
-.PHONY: build_native_tools
-build_native_tools:
-	@$(MSG) "Building native host tools (mkclass, mkembedconfig, mkunity)"
-	mkdir -p $(NATIVE_BUILD_DIR)/Bin/Release
-	# Build mkembedconfig (simple C tool)
-	cc -O2 -o $(NATIVE_BUILD_DIR)/Bin/Release/mkembedconfig \
-		$(WORK_DIR)/$(PKG_DIR)/tools/mkembedconfig/mkembedconfig.c
-	# Build mkunity (simple C tool)
-	cc -O2 -o $(NATIVE_BUILD_DIR)/Bin/Release/mkunity \
-		$(WORK_DIR)/$(PKG_DIR)/tools/mkunity/mkunity.c
-	# Build mkclass (needs flex/bison generated files)
-	mkdir -p $(NATIVE_BUILD_DIR)/mkclass
-	cd $(NATIVE_BUILD_DIR)/mkclass && \
-		bison -d -o class_parser.cc $(WORK_DIR)/$(PKG_DIR)/tools/mkclass/class_parser.yy && \
-		flex -o class_lexer.cc $(WORK_DIR)/$(PKG_DIR)/tools/mkclass/class_lexer.ll && \
-		g++ -O2 -std=c++17 -I. -I$(WORK_DIR)/$(PKG_DIR)/tools/mkclass -o $(NATIVE_BUILD_DIR)/Bin/Release/mkclass \
-			$(WORK_DIR)/$(PKG_DIR)/tools/mkclass/mkclass.cpp \
-			$(WORK_DIR)/$(PKG_DIR)/tools/mkclass/classcompiler.cpp \
-			class_parser.cc \
-			class_lexer.cc
