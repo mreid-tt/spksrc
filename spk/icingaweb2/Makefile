@@ -7,7 +7,8 @@ DEPENDS  = cross/icingaweb2
 # Pure PHP package, make sure ARCH is noarch
 override ARCH=noarch
 
-REQUIRED_MIN_DSM = 7.1
+REQUIRED_MIN_DSM = 7.0
+REQUIRED_MIN_SRM = 3.0
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Icinga Web 2 is a powerful PHP framework for web applications that provides the frontend for Icinga 2 monitoring.
