@@ -12,7 +12,7 @@ REQUIRED_MIN_DSM = 7.1
 MAINTAINER = SynoCommunity
 DESCRIPTION = Icinga Web 2 is a powerful PHP framework for web applications that provides the frontend for Icinga 2 monitoring.
 DISPLAY_NAME = Icinga Web 2
-CHANGELOG = "Initial release of Icinga Web 2 v2.12.6"
+CHANGELOG = "Initial release of Icinga Web 2"
 
 HOMEPAGE = https://icinga.com/
 LICENSE = GPLv2
