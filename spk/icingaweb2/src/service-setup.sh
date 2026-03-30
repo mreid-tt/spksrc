@@ -112,9 +112,6 @@ service_postinst ()
     mkdir -p "${ICINGAWEB2_CONF_DIR}/modules/monitoring"
     mkdir -p "${ICINGAWEB2_CONF_DIR}/enabledModules"
 
-    # Create log directory
-    mkdir -p "${SYNOPKG_PKGVAR}/log"
-
     # Get IDO database credentials from icinga2 package
     IDO_DB_NAME="icinga_ido"
     IDO_DB_USER="icinga2"
