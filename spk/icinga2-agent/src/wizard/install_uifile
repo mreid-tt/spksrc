@@ -1,0 +1,59 @@
+[
+    {
+        "step_title": "Icinga 2 Master Connection",
+        "invalid_next_disabled_v2": true,
+        "items": [
+            {
+                "desc": "Configure this agent to connect to an Icinga 2 master server."
+            },
+            {
+                "type": "textfield",
+                "desc": "Icinga 2 Master Server Hostname",
+                "subitems": [
+                    {
+                        "key": "wizard_master_host",
+                        "desc": "Master hostname or IP",
+                        "validator": {
+                            "allowBlank": false
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "textfield",
+                "desc": "Master API Port",
+                "subitems": [
+                    {
+                        "key": "wizard_master_port",
+                        "desc": "Port (default: 5665)",
+                        "defaultValue": "5665"
+                    }
+                ]
+            },
+            {
+                "type": "textfield",
+                "desc": "Agent Name (optional)",
+                "subitems": [
+                    {
+                        "key": "wizard_agent_name",
+                        "desc": "Defaults to system hostname",
+                        "emptyText": "synology"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "step_title": "Certificate Approval Required",
+        "invalid_next_disabled_v2": true,
+        "items": [
+            {
+                "desc": "After installation, you must approve this agent's certificate on the master server:"
+            },
+            {
+                "type": "textfield",
+                "desc": "1. Log into Icinga Web on the master server<br/>2. Go to: Configuration → Agents (or Security → Certificates)<br/>3. Find the pending request for this agent<br/>4. Click 'Approve' or 'Accept'<br/><br/>Once approved, the agent will connect to the master automatically."
+            }
+        ]
+    }
+]
