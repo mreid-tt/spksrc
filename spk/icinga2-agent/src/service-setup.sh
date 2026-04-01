@@ -34,50 +34,53 @@ service_postinst ()
     mkdir -p "${SYNOPKG_PKGVAR}/run/icinga2/cmd"
 
     if [ "${SYNOPKG_PKG_STATUS}" = "INSTALL" ]; then
-        if [ ! -f "${SYNOPKG_PKGVAR}/etc/icinga2/icinga2.conf" ]; then
-            master_host="${wizard_master_host}"
-            master_port="${wizard_master_port:-5665}"
-            agent_name="${wizard_agent_name:-$(hostname)}"
-            agent_password=$(generate_password)
-            plugin_dir="${SYNOPKG_PKGDEST}/target/usr/lib/nagios/plugins"
+        master_host="${wizard_master_host}"
+        master_port="${wizard_master_port:-5665}"
+        agent_name="${wizard_agent_name:-$(hostname)}"
+        plugin_dir="${SYNOPKG_PKGDEST}/target/bin"
 
-            # Copy templates and customize
-            cp "${SYNOPKG_PKGDEST}/share/templates/icinga2.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/icinga2.conf"
+        # Fetch master's certificate so we trust the master
+        mkdir -p "${SYNOPKG_PKGVAR}/lib/icinga2/certs"
+        "${SYNOPKG_PKGDEST}/sbin/icinga2" pki save-cert --host "${master_host}" --port "${master_port}" \
+            --trustedcert "${SYNOPKG_PKGVAR}/lib/icinga2/certs/trusted-master.crt" 2>/dev/null || true
 
-            sed -e "s|@@PLUGIN_DIR@@|${plugin_dir}|g" \
-                -e "s|@@NODE_NAME@@|${agent_name}|g" \
-                "${SYNOPKG_PKGDEST}/share/templates/constants.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/constants.conf"
+        # Run node setup - creates CSR and certs (regardless of success, we use our own config)
+        NODE_SETUP_ARGS="--cn ${agent_name}"
+        NODE_SETUP_ARGS="${NODE_SETUP_ARGS} --endpoint ${master_host},${master_host},${master_port}"
+        NODE_SETUP_ARGS="${NODE_SETUP_ARGS} --zone ${agent_name}"
+        NODE_SETUP_ARGS="${NODE_SETUP_ARGS} --parent_zone master"
+        NODE_SETUP_ARGS="${NODE_SETUP_ARGS} --parent_host ${master_host}"
+        NODE_SETUP_ARGS="${NODE_SETUP_ARGS} --trustedcert ${SYNOPKG_PKGVAR}/lib/icinga2/certs/trusted-master.crt"
+        NODE_SETUP_ARGS="${NODE_SETUP_ARGS} --accept-commands --accept-config --disable-confd"
 
-            sed -e "s|@@MASTER_HOST@@|${master_host}|g" \
-                -e "s|@@MASTER_PORT@@|${master_port}|g" \
-                -e "s|@@AGENT_NAME@@|${agent_name}|g" \
-                "${SYNOPKG_PKGDEST}/share/templates/zones.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/zones.conf"
+        # Run node setup (for CSR generation) - ignore errors
+        "${SYNOPKG_PKGDEST}/sbin/icinga2" node setup ${NODE_SETUP_ARGS} 2>&1 || true
 
-            sed -e "s|@@API_PASSWORD@@|${agent_password}|g" \
-                "${SYNOPKG_PKGDEST}/share/templates/api-users.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/api-users.conf"
+        # Always use our templates for config (not node setup's)
+        cp "${SYNOPKG_PKGDEST}/share/templates/icinga2.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/icinga2.conf"
 
-            # Enable API feature
-            ln -sf "../features-available/api.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/features-enabled/api.conf"
+        sed -e "s|@@PLUGIN_DIR@@|${plugin_dir}|g" \
+            -e "s|@@NODE_NAME@@|${agent_name}|g" \
+            "${SYNOPKG_PKGDEST}/share/templates/constants.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/constants.conf"
 
-            # Generate self-signed certificate for initial setup
-            mkdir -p "${SYNOPKG_PKGVAR}/lib/icinga2/certs"
-            if [ ! -f "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${agent_name}.crt" ]; then
-                openssl req -new -x509 -keyout "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${agent_name}.key" \
-                    -out "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${agent_name}.crt" \
-                    -days 365 -nodes -subj "/CN=${agent_name}" 2>/dev/null
-                cp "${SYNOPKG_PKGVAR}/lib/icinga2/certs/${agent_name}.crt" \
-                    "${SYNOPKG_PKGVAR}/lib/icinga2/certs/ca.crt" 2>/dev/null
-            fi
+        sed -e "s|@@MASTER_HOST@@|${master_host}|g" \
+            -e "s|@@MASTER_PORT@@|${master_port}|g" \
+            -e "s|@@AGENT_NAME@@|${agent_name}|g" \
+            "${SYNOPKG_PKGDEST}/share/templates/zones.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/zones.conf"
 
-            # Fetch master's certificate so agent trusts the master
-            mkdir -p "${SYNOPKG_PKGVAR}/lib/icinga2/certs"
-            "${SYNOPKG_PKGDEST}/sbin/icinga2" pki save-cert --host "${master_host}" --port "${master_port}" \
-                --trustedcert "${SYNOPKG_PKGVAR}/lib/icinga2/certs/trusted-master.crt" 2>/dev/null || true
-
-            # Secure config directory
-            find "${SYNOPKG_PKGVAR}/etc/icinga2" -type f -exec chmod 640 {} \;
-            find "${SYNOPKG_PKGVAR}/etc/icinga2" -type d -exec chmod 750 {} \;
+        # Copy features-available to features-enabled
+        if [ -d "${SYNOPKG_PKGDEST}/etc/icinga2/features-available" ]; then
+            cp "${SYNOPKG_PKGDEST}/etc/icinga2/features-available/"*.conf "${SYNOPKG_PKGVAR}/etc/icinga2/features-enabled/" 2>/dev/null || true
         fi
+
+        # Generate API user password
+        agent_password=$(generate_password)
+        sed -e "s|@@API_PASSWORD@@|${agent_password}|g" \
+            "${SYNOPKG_PKGDEST}/share/templates/api-users.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/api-users.conf"
+
+        # Secure config directory
+        find "${SYNOPKG_PKGVAR}/etc/icinga2" -type f -exec chmod 640 {} \;
+        find "${SYNOPKG_PKGVAR}/etc/icinga2" -type d -exec chmod 750 {} \;
     fi
 
     return 0

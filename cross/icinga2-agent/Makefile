@@ -56,10 +56,10 @@ CMAKE_ARGS += -DOPENSSL_SSL_LIBRARY=$(STAGING_INSTALL_PREFIX)/lib/libssl.so
 CMAKE_ARGS += -DJSON_INCLUDE:PATH=$(WORK_DIR)/$(PKG_DIR)/third-party/nlohmann_json
 CMAKE_ARGS += -DUTF8CPP_INCLUDE:PATH=$(WORK_DIR)/$(PKG_DIR)/third-party/utf8cpp/source
 
-# Installation directories
-CMAKE_ARGS += -DICINGA2_USER=icinga
-CMAKE_ARGS += -DICINGA2_GROUP=icinga
-CMAKE_ARGS += -DICINGA2_COMMAND_GROUP=icingacmd
+# Installation directories (DSM user/group)
+CMAKE_ARGS += -DICINGA2_USER=sc-icinga2-agent
+CMAKE_ARGS += -DICINGA2_GROUP=synocommunity
+CMAKE_ARGS += -DICINGA2_COMMAND_GROUP=synocommunity
 
 # Skip user/group impersonation
 ADDITIONAL_CXXFLAGS = -DICINGA2_SKIP_IMPERSONATION
