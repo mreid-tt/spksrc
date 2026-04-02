@@ -66,12 +66,12 @@ try {
 
         if (!$hostaliveCmd) {
             echo "Creating hostalive command in Director...\n";
-            // Use Icinga 2's built-in format with PluginDir constant
+            // Use check_ping (monitoring-plugins) with proper arguments
             $connection->insert('icinga_command', [
                 'uuid' => generateUuid(),
                 'object_name' => 'hostalive',
                 'object_type' => 'external',
-                'command' => '[ PluginDir + "/check_hostalive", "-H", "$address$" ]',
+                'command' => '[ PluginDir + "/check_ping", "-H", "$address$", "-w", "3000,80%", "-c", "5000,100%" ]',
             ]);
             $hostaliveCmd = $connection->fetchRow(
                 $connection->select()
