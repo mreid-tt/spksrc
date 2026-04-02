@@ -18,6 +18,8 @@ CONFIGURE_ARGS += --with-sudo-command=/bin/sudo
 CONFIGURE_ARGS += --with-rpcinfo-command=/sbin/rpcinfo
 CONFIGURE_ARGS += --with-smbclient-command=/bin/smbclient
 CONFIGURE_ARGS += --without-apt-get-command
+CONFIGURE_ARGS += --with-ping-command="/bin/ping -c %d %s"
+CONFIGURE_ARGS += --with-ping6-command="/bin/ping6 -c %d %s"
 
 PRE_CONFIGURE_TARGET = monitoring_plugins_autogen
 
