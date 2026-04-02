@@ -37,6 +37,9 @@
                         "emptyText": "This device's hostname"
                     }
                 ]
+            },
+            {
+                "desc": "<b>Note:</b> If you are re-installing this agent, please ensure that its host is first removed from Icinga Director on the master server."
             }
         ]
     },
@@ -48,7 +51,7 @@
                 "desc": "To automatically register this agent and receive a signed certificate, enter the Self-Service API key from your Icinga master."
             },
             {
-                "desc": "On the master server, you can find this key at: /volume1/@appdata/icingaweb2/etc/icingaweb2/self-service-api.key"
+                "desc": "On the master server, you can find this key at: <code>/volume1/@appdata/icingaweb2/etc/icingaweb2/self-service-api.key</code>"
             },
             {
                 "type": "textfield",
@@ -58,9 +61,6 @@
                         "desc": "Self-Service API Key"
                     }
                 ]
-            },
-            {
-                "desc": "Note: If you are re-installing this agent, please ensure that its host is first removed from Icinga Director on the master server."
             }
         ]
     }
