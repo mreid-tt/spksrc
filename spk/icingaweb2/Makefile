@@ -28,7 +28,7 @@ DSM_UI_DIR = app
 DSM_UI_CONFIG = src/app/config
 
 SERVICE_SETUP = src/service-setup.sh
-STARTABLE = no
+STARTABLE = yes
 
 include ../../mk/spksrc.common.mk
 
@@ -51,11 +51,21 @@ include ../../mk/spksrc.spk.mk
 icingaweb2_extra_install:
 	install -m 755 -d $(STAGING_DIR)/web
 	install -m 755 -d $(STAGING_DIR)/share/templates/modules/monitoring
+	install -m 755 -d $(STAGING_DIR)/share/templates/modules/director
 	install -m 644 src/templates/*.ini $(STAGING_DIR)/share/templates/
 	install -m 644 src/templates/modules/monitoring/*.ini $(STAGING_DIR)/share/templates/modules/monitoring/
+	install -m 644 src/templates/modules/director/*.ini $(STAGING_DIR)/share/templates/modules/director/
 	# Install custom index.php wrapper for environment variables
 	install -m 644 src/index.php $(STAGING_DIR)/share/icingaweb2/public/index.php
 	# Install .htaccess for URL rewriting
 	install -m 644 src/htaccess $(STAGING_DIR)/share/icingaweb2/public/.htaccess
 	# Install PHP script for creating admin user programmatically
 	install -m 755 src/create-admin.php $(STAGING_DIR)/share/create-admin.php
+	# Install PHP script for setting up Director agent template
+	install -m 755 src/setup-director-template.php $(STAGING_DIR)/share/setup-director-template.php
+	# Rename original icingacli and install wrapper that sets env vars
+	mv $(STAGING_DIR)/share/icingaweb2/bin/icingacli $(STAGING_DIR)/share/icingaweb2/bin/icingacli.real
+	install -m 755 src/icingacli $(STAGING_DIR)/share/icingaweb2/bin/icingacli
+	# Create package var directory structure for non-startable packages
+	install -m 755 -d $(STAGING_DIR)/var/etc/icingaweb2
+	install -m 755 -d $(STAGING_DIR)/var/storage
