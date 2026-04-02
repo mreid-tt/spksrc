@@ -132,8 +132,10 @@ service_postinst()
     # Copy default configuration if not present (first install)
     if [ ! -f "${SYNOPKG_PKGVAR}/etc/icinga2/icinga2.conf" ]; then
         cp -r "${SYNOPKG_PKGDEST}/etc/icinga2/"* "${SYNOPKG_PKGVAR}/etc/icinga2/"
-        # Use custom constants.conf with correct plugin paths
-        cp "${TEMPLATES_DIR}/constants.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/constants.conf"
+        # Use custom constants.conf with correct plugin paths and TicketSalt
+        TICKET_SALT=$(generate_password)
+        sed -e "s|const TicketSalt = \"\"|const TicketSalt = \"${TICKET_SALT}\"|g" \
+            "${TEMPLATES_DIR}/constants.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/constants.conf"
 
         # Secure config directory - only owner and group can read
         find "${SYNOPKG_PKGVAR}/etc/icinga2" -type f -exec chmod 640 {} \;

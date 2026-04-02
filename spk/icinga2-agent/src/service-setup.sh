@@ -166,6 +166,10 @@ service_postinst ()
         sed -e "s|@@API_PASSWORD@@|${agent_password}|g" \
             "${SYNOPKG_PKGDEST}/share/templates/api-users.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/api-users.conf"
 
+        # Copy agent services (provides basic ping service)
+        sed -e "s|@@NODE_NAME@@|${agent_name}|g" \
+            "${SYNOPKG_PKGDEST}/share/templates/services.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/services.conf"
+
         # Secure config directory
         find "${SYNOPKG_PKGVAR}/etc/icinga2" -type f -exec chmod 640 {} \;
         find "${SYNOPKG_PKGVAR}/etc/icinga2" -type d -exec chmod 750 {} \;
