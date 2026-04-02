@@ -55,16 +55,46 @@ try {
 
         // Create the template
         echo "Creating agent template '$templateName'...\n";
-        $connection->insert('icinga_host', [
+
+        // hostalive is a built-in Icinga 2 command from ITL
+        // Look it up or create it with correct plugin path
+        $hostaliveCmd = $connection->fetchRow(
+            $connection->select()
+                ->from('icinga_command', ['id'])
+                ->where('object_name', 'hostalive')
+        );
+
+        if (!$hostaliveCmd) {
+            echo "Creating hostalive command in Director...\n";
+            // Use Icinga 2's built-in format with PluginDir constant
+            $connection->insert('icinga_command', [
+                'uuid' => generateUuid(),
+                'object_name' => 'hostalive',
+                'object_type' => 'external',
+                'command' => '[ PluginDir + "/check_hostalive", "-H", "$address$" ]',
+            ]);
+            $hostaliveCmd = $connection->fetchRow(
+                $connection->select()
+                    ->from('icinga_command', ['id'])
+                    ->where('object_name', 'hostalive')
+            );
+        }
+
+        $templateData = [
             'uuid' => generateUuid(),
             'object_name' => $templateName,
             'object_type' => 'template',
-            'display_name' => 'Agent Template',
             'has_agent' => 'y',
             'accept_config' => 'y',
             'master_should_connect' => 'y',
             'api_key' => $apiKey,
-        ]);
+        ];
+
+        if ($hostaliveCmd) {
+            $templateData['check_command_id'] = $hostaliveCmd->id;
+        }
+
+        $connection->insert('icinga_host', $templateData);
         echo "Agent template created successfully\n";
     }
 

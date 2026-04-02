@@ -278,9 +278,20 @@ service_postinst ()
             director kickstart run 2>/dev/null || true
     fi
 
+    # Run kickstart again to ensure built-in templates are imported
+    # This is needed before creating our agent template with inheritance
+    if [ -f "${ICINGAWEB2_CONF_DIR}/modules/director/kickstart.ini" ]; then
+        sleep 2
+        "${SYNOPKG_PKGDEST}/share/icingaweb2/bin/icingacli" \
+            director kickstart run 2>/dev/null || true
+    fi
+
     # Setup Director agent template for self-service registration
-    # Run after kickstart to ensure Director tables exist
+    # Run after kickstart to ensure Director tables exist and templates are synced
     if [ -f "${ICINGAWEB2_CONF_DIR}/modules/director/kickstart.ini" ]; then
         "${PHP}" "${SYNOPKG_PKGDEST}/share/setup-director-template.php" "agent-template" 2>/dev/null || true
+        # Deploy initial configuration to Icinga 2
+        "${SYNOPKG_PKGDEST}/share/icingaweb2/bin/icingacli" \
+            director config deploy 2>/dev/null || true
     fi
 }
