@@ -56,30 +56,6 @@ try {
         // Create the template
         echo "Creating agent template '$templateName'...\n";
 
-        // hostalive is a built-in Icinga 2 command from ITL
-        // Look it up or create it with correct plugin path
-        $hostaliveCmd = $connection->fetchRow(
-            $connection->select()
-                ->from('icinga_command', ['id'])
-                ->where('object_name', 'hostalive')
-        );
-
-        if (!$hostaliveCmd) {
-            echo "Creating hostalive command in Director...\n";
-            // Use check_ping (monitoring-plugins) with proper arguments
-            $connection->insert('icinga_command', [
-                'uuid' => generateUuid(),
-                'object_name' => 'hostalive',
-                'object_type' => 'external',
-                'command' => '[ PluginDir + "/check_ping", "-H", "$address$", "-w", "3000,80%", "-c", "5000,100%" ]',
-            ]);
-            $hostaliveCmd = $connection->fetchRow(
-                $connection->select()
-                    ->from('icinga_command', ['id'])
-                    ->where('object_name', 'hostalive')
-            );
-        }
-
         $templateData = [
             'uuid' => generateUuid(),
             'object_name' => $templateName,
@@ -90,12 +66,56 @@ try {
             'api_key' => $apiKey,
         ];
 
+        // Look up hostalive command ID (built-in, always exists from kickstart)
+        $hostaliveCmd = $connection->fetchRow(
+            $connection->select()
+                ->from('icinga_command', ['id'])
+                ->where('object_name', 'hostalive')
+        );
         if ($hostaliveCmd) {
             $templateData['check_command_id'] = $hostaliveCmd->id;
         }
 
         $connection->insert('icinga_host', $templateData);
         echo "Agent template created successfully\n";
+
+        // Get the host template ID for assigning services
+        $hostTemplate = $connection->fetchRow(
+            $connection->select()
+                ->from('icinga_host', ['id'])
+                ->where('object_name', $templateName)
+                ->where('object_type', 'template')
+        );
+
+        // Create services assigned directly to the host template
+        // Using built-in ITL commands with their default thresholds
+        if ($hostTemplate) {
+            $services = [
+                ['name' => 'disk', 'display' => 'Disk Space'],
+                ['name' => 'load', 'display' => 'CPU Load'],
+                ['name' => 'procs', 'display' => 'Processes'],
+                ['name' => 'swap', 'display' => 'Swap Usage'],
+            ];
+
+            foreach ($services as $svc) {
+                $cmd = $connection->fetchRow(
+                    $connection->select()
+                        ->from('icinga_command', ['id'])
+                        ->where('object_name', $svc['name'])
+                );
+
+                if ($cmd) {
+                    $connection->insert('icinga_service', [
+                        'uuid' => generateUuid(),
+                        'object_name' => $svc['name'],
+                        'object_type' => 'object',
+                        'host_id' => $hostTemplate->id,
+                        'check_command_id' => $cmd->id,
+                    ]);
+                    echo "Service created: {$svc['name']}\n";
+                }
+            }
+        }
     }
 
     // Save API key to file for agents to use
