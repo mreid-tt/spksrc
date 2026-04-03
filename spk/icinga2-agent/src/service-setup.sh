@@ -4,11 +4,25 @@ SERVICE_COMMAND="${SYNOPKG_PKGDEST}/sbin/icinga2 daemon -c ${SYNOPKG_PKGVAR}/etc
 SVC_BACKGROUND=y
 SVC_WRITE_PID=y
 
+# Helper: generate random password
 generate_password ()
 {
     head -c 32 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | head -c 24
 }
 
+# Helper: copy template file and substitute placeholder variables
+copy_config()
+{
+    src=$1 dest=$2
+    shift 2
+    cp "${src}" "${dest}"
+    while [ $# -gt 0 ]; do
+        sed -i "s|$1|g" "${dest}"
+        shift
+    done
+}
+
+# Verify master hostname and port are reachable
 validate_preinst ()
 {
     if [ "${SYNOPKG_PKG_STATUS}" = "INSTALL" ]; then
@@ -25,6 +39,7 @@ validate_preinst ()
     fi
 }
 
+# Register agent with master via Director Self-Service API
 register_on_master ()
 {
     if [ -z "${wizard_api_key}" ]; then
@@ -107,11 +122,8 @@ service_postinst ()
         master_zone="${master_zone:-${master_host}}"
 
         # Save config for use at runtime
-        sed -e "s|@@MASTER_HOST@@|${master_host}|g" \
-            -e "s|@@MASTER_PORT@@|${master_port}|g" \
-            -e "s|@@AGENT_NAME@@|${agent_name}|g" \
-            -e "s|@@MASTER_ZONE@@|${master_zone}|g" \
-            "${SYNOPKG_PKGDEST}/share/templates/agent-config.conf" > "${SYNOPKG_PKGVAR}/etc/agent-config.conf"
+        copy_config "${SYNOPKG_PKGDEST}/share/templates/agent-config.conf" "${SYNOPKG_PKGVAR}/etc/agent-config.conf" \
+            "@@MASTER_HOST@@" "${master_host}" "@@MASTER_PORT@@" "${master_port}" "@@AGENT_NAME@@" "${agent_name}" "@@MASTER_ZONE@@" "${master_zone}"
         chmod 600 "${SYNOPKG_PKGVAR}/etc/agent-config.conf"
 
         # Register with Director (creates host, zone, endpoint)
@@ -151,20 +163,16 @@ service_postinst ()
         # Copy configuration templates
         cp "${SYNOPKG_PKGDEST}/share/templates/icinga2.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/icinga2.conf"
 
-        sed -e "s|@@PLUGIN_DIR@@|${plugin_dir}|g" \
-            -e "s|@@NODE_NAME@@|${agent_name}|g" \
-            "${SYNOPKG_PKGDEST}/share/templates/constants.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/constants.conf"
+        copy_config "${SYNOPKG_PKGDEST}/share/templates/constants.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/constants.conf" \
+            "@@PLUGIN_DIR@@" "${plugin_dir}" "@@NODE_NAME@@" "${agent_name}"
 
-        sed -e "s|@@MASTER_HOST@@|${master_host}|g" \
-            -e "s|@@MASTER_PORT@@|${master_port}|g" \
-            -e "s|@@AGENT_NAME@@|${agent_name}|g" \
-            -e "s|@@MASTER_ZONE@@|${master_zone}|g" \
-            "${SYNOPKG_PKGDEST}/share/templates/zones.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/zones.conf"
+        copy_config "${SYNOPKG_PKGDEST}/share/templates/zones.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/zones.conf" \
+            "@@MASTER_HOST@@" "${master_host}" "@@MASTER_PORT@@" "${master_port}" "@@AGENT_NAME@@" "${agent_name}" "@@MASTER_ZONE@@" "${master_zone}"
 
         # Generate API user password
         agent_password=$(generate_password)
-        sed -e "s|@@API_PASSWORD@@|${agent_password}|g" \
-            "${SYNOPKG_PKGDEST}/share/templates/api-users.conf" > "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/api-users.conf"
+        copy_config "${SYNOPKG_PKGDEST}/share/templates/api-users.conf" "${SYNOPKG_PKGVAR}/etc/icinga2/conf.d/api-users.conf" \
+            "@@API_PASSWORD@@" "${agent_password}"
 
         # Secure config directory
         find "${SYNOPKG_PKGVAR}/etc/icinga2" -type f -exec chmod 640 {} \;

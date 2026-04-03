@@ -56,16 +56,16 @@ icingaweb2_extra_install:
 	install -m 644 src/templates/modules/monitoring/*.ini $(STAGING_DIR)/share/templates/modules/monitoring/
 	install -m 644 src/templates/modules/director/*.ini $(STAGING_DIR)/share/templates/modules/director/
 	# Install custom index.php wrapper for environment variables
-	install -m 644 src/index.php $(STAGING_DIR)/share/icingaweb2/public/index.php
+	install -m 644 src/lib/index.php $(STAGING_DIR)/share/icingaweb2/public/index.php
 	# Install .htaccess for URL rewriting
-	install -m 644 src/htaccess $(STAGING_DIR)/share/icingaweb2/public/.htaccess
+	install -m 644 src/lib/htaccess $(STAGING_DIR)/share/icingaweb2/public/.htaccess
 	# Install PHP script for creating admin user programmatically
-	install -m 755 src/create-admin.php $(STAGING_DIR)/share/create-admin.php
+	install -m 755 src/lib/create-admin.php $(STAGING_DIR)/share/create-admin.php
 	# Install PHP script for setting up Director agent template
-	install -m 755 src/setup-director-template.php $(STAGING_DIR)/share/setup-director-template.php
+	install -m 755 src/lib/setup-director-template.php $(STAGING_DIR)/share/setup-director-template.php
 	# Rename original icingacli and install wrapper that sets env vars
 	mv $(STAGING_DIR)/share/icingaweb2/bin/icingacli $(STAGING_DIR)/share/icingaweb2/bin/icingacli.real
-	install -m 755 src/icingacli $(STAGING_DIR)/share/icingaweb2/bin/icingacli
+	install -m 755 src/lib/icingacli $(STAGING_DIR)/share/icingaweb2/bin/icingacli
 	# Create package var directory structure for non-startable packages
 	install -m 755 -d $(STAGING_DIR)/var/etc/icingaweb2
 	install -m 755 -d $(STAGING_DIR)/var/storage
