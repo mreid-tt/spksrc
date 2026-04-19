@@ -9,6 +9,7 @@ HOMEPAGE = https://www.monitoring-plugins.org
 COMMENT  = Standard plugins for Icinga, Naemon, Nagios, Shinken, Sensu, and other monitoring applications.
 LICENSE  = GPLv3
 
+GNU_AUTORECONF = 1
 GNU_CONFIGURE = 1
 
 CONFIGURE_ARGS  = --disable-static
