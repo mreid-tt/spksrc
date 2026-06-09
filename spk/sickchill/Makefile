@@ -3,9 +3,10 @@ SPK_VERS = 20240301
 SPK_REV = 13
 SPK_ICON = src/sickchill.png
 
-PYTHON_PACKAGE = python312
+PYTHON_PACKAGE = python314
 
 # archs without C++11 support are not supported [greenlet]
+REQUIRED_MIN_DSM = 7.0
 UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS) $(ARMv5_ARCHS) $(ARMv7L_ARCHS)
 
 WHEELS = src/requirements-crossenv.txt src/requirements-pure.txt
@@ -14,7 +15,7 @@ MAINTAINER = miigotu
 DESCRIPTION = Automatic Video Library Manager for TV Shows. It watches for new episodes of your favorite shows, and when they are posted it does its magic.
 STARTABLE = yes
 DISPLAY_NAME = SickChill
-CHANGELOG = "1. Maintenance update of packages for Setuptools in Python 3.12.13."
+CHANGELOG = "1. Migrate to Python 3.14 and update dependency versions."
 
 HOMEPAGE = https://sickchill.github.io/
 LICENSE = GPLv3+
@@ -39,13 +40,6 @@ include ../../mk/spksrc.common.mk
 # [cryptography]
 DEPENDS += cross/openssl3
 
-# [greenlet]
-ifeq ($(call version_ge, $(TC_GCC), 5.0),1)
-WHEELS += src/requirements-crossenv-greenlet-v3.txt
-else
-WHEELS += src/requirements-crossenv-greenlet-v3-gcc4.txt
-WHEELS_CPPFLAGS += [greenlet] -std=c++11 -fpermissive
-endif
 
 # [lxml]
 DEPENDS += cross/libxml2
