@@ -90,7 +90,6 @@ RUN apt update && apt install --no-install-recommends -y \
 RUN apt install --no-install-recommends -y \
 	httpie \
 	mercurial \
-	meson \
 	ninja-build \
 	python3 \
 	python3-jinja2 \
@@ -99,6 +98,11 @@ RUN apt install --no-install-recommends -y \
 	python3-setuptools \
 	python3-virtualenv \
 	python3-yaml
+
+# Meson from pip, pinned: upstreams keep raising the floor while the
+# frozen apt suite lags (neither trixie nor trixie-backports carries
+# a new enough meson).
+RUN pip install --break-system-packages --no-cache-dir "meson==1.12.1"
 
 ###
 ### Keeping backport channel management for later use
