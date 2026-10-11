@@ -11,9 +11,9 @@ PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 # the hold-back note in cross/libassuan-2.5); the virtual would resolve 3.0.
 DEPENDS = cross/libgpg-error cross/libassuan-2.5
 
-# gcc: unrecognized command line options "-Wno-format-truncation" "-Wno-sizeof-pointer-div"
-# this might be solved by a patch...
-UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS)
+# Needs gcc >= 4.8: the C++ bindings require C++11 (proven: 4.7.3 fails,
+# 4.9.3 builds); older toolchains get no gpgme.
+MIN_GCC_VERSION = 4.8
 
 HOMEPAGE = https://gnupg.org/related_software/gpgme/
 COMMENT  = GnuPG Made Easy (GPGME) is a library designed to make access to GnuPG easier for applications. It provides a High-Level Crypto API for encryption, decryption, signing, signature verification and key management..

@@ -11,10 +11,6 @@ MIN_GCC_VERSION = 5
 
 DEPENDS = cross/libgpg-error cross/libassuan
 
-# gcc: unrecognized command line options "-Wno-format-truncation" "-Wno-sizeof-pointer-div"
-# this might be solved by a patch...
-UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS)
-
 HOMEPAGE = https://gnupg.org/related_software/gpgme/
 COMMENT  = GnuPG Made Easy (GPGME) is a library designed to make access to GnuPG easier for applications. It provides a High-Level Crypto API for encryption, decryption, signing, signature verification and key management..
 LICENSE  = GPLv3
