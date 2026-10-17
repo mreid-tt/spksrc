@@ -1,5 +1,5 @@
 PKG_NAME = git
-PKG_VERS = 2.55.0
+PKG_VERS = 2.56.0
 PKG_EXT = tar.xz
 PKG_DIST_NAME = $(PKG_NAME)-$(PKG_VERS).$(PKG_EXT)
 PKG_DIST_SITE = https://kernel.org/pub/software/scm/git
@@ -39,6 +39,7 @@ INSTALL_ARGS = install DESTDIR=$(INSTALL_DIR) prefix=$(INSTALL_PREFIX)
 # compiling needs access to curl-config from cross/curl
 ENV += PATH=$$PATH:$(STAGING_INSTALL_PREFIX)/bin
 
+# Rust is compiled by default since 2.55, but the cross toolchain has no cargo/rustc
 ENV += NO_RUST=1
 include ../../mk/spksrc.cross-cc.mk
 
