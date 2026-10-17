@@ -7,7 +7,7 @@ DEPENDS = cross/git
 OPTIONAL_DEPENDS = cross/git-lfs
 
 # fsmonitor daemon requires inotify_init1 (glibc >= 2.9)
-UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS)
+MIN_GLIBC_VERSION = 2.9
 
 MAINTAINER = SynoCommunity
 DESCRIPTION = Git is a fast, scalable, distributed revision control system with an unusually rich command set that provides both high-level operations and full access to internals.
