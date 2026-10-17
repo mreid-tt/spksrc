@@ -1,15 +1,13 @@
 PKG_NAME = ruby
-PKG_VERS = 3.4.5
+PKG_VERS = 3.4.11
 PKG_EXT = tar.xz
 PKG_DIST_NAME = $(PKG_NAME)-$(PKG_VERS).$(PKG_EXT)
 PKG_DIST_SITE = https://cache.ruby-lang.org/pub/ruby/$(word 1,$(subst ., ,$(PKG_VERS))).$(word 2,$(subst ., ,$(PKG_VERS)))
 PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 
 BUILD_DEPENDS = native/ruby
-DEPENDS = cross/openssl3 cross/readline cross/gdbm cross/berkeleydb cross/libffi cross/libyaml
+DEPENDS = cross/openssl3 cross/readline cross/libffi cross/libyaml
 
-# Ruby 3.1.2 is the latest version that compiles without std=c++11 support (ARMv5_ARCHS)
-# even it compiles with older cross/gdbm, ruby crashes at runtime
 UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS)
 
 HOMEPAGE = http://www.ruby-lang.org/
@@ -27,9 +25,6 @@ NATIVE_RUBY = $(realpath $(WORK_DIR)/../../../native/$(PKG_NAME)/work-native/ins
 # Configure
 GNU_CONFIGURE = 1
 CONFIGURE_ARGS = --with-baseruby=$(NATIVE_RUBY) --prefix=$(INSTALL_PREFIX) --disable-install-doc --enable-rjit
-ifeq ($(findstring $(ARCH),$(64bit_ARCHS)),$(ARCH))
-CONFIGURE_ARGS += --enable-yjit
-endif
 
 ADDITIONAL_CFLAGS = -O2
 
