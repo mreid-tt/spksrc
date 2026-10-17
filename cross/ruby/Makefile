@@ -6,9 +6,10 @@ PKG_DIST_SITE = https://cache.ruby-lang.org/pub/ruby/$(word 1,$(subst ., ,$(PKG_
 PKG_DIR = $(PKG_NAME)-$(PKG_VERS)
 
 BUILD_DEPENDS = native/ruby
-DEPENDS = cross/openssl3 cross/readline cross/libffi cross/libyaml
+DEPENDS = cross/openssl3 cross/libffi cross/libyaml
 
-UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS)
+# M:N thread scheduler uses epoll_create1 with EPOLL_CLOEXEC (glibc >= 2.9)
+MIN_GLIBC_VERSION = 2.9
 
 HOMEPAGE = http://www.ruby-lang.org/
 COMMENT  = Ruby Programming Language.

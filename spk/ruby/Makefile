@@ -5,7 +5,8 @@ SPK_ICON = src/ruby.png
 
 DEPENDS = cross/ruby
 
-UNSUPPORTED_ARCHS = $(OLD_PPC_ARCHS)
+# M:N thread scheduler uses epoll_create1 with EPOLL_CLOEXEC (glibc >= 2.9)
+MIN_GLIBC_VERSION = 2.9
 
 CHANGELOG = "1. Update to v3.4.11."
 
